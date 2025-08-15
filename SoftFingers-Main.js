@@ -49,7 +49,9 @@
 
       // Word banks
       const WORDS = {
-        Beginner: ["during","after","today","below","other","without","between","could","should","however","about","should","since","yourself"],
+        Beginner: ["during","after","today","between","behind", "defend", "divine", "middle", "under", "magic", "beneath", "withdraw",
+                   "influence", "frame", "inside", "intern", "mediate","final","female","mandate","hunger","hungry","number","figure",
+                   "habit","things","matter","synthesis","grant","redeem","floor","major","subject","attract","indeed", "below","other","without","between","could","should","however","about","should","since","yourself"],
         Intermediate: ["synthesis","resolve","gradient","interaction","parallel","compute","framework","latency","protocol","asynchronous","concurrency","optimization","rendering"],
         Advanced: ["antidisestablishmentarianism","transubstantiation","quintessentially","epistemological","philosophically","heterogeneous","microarchitecture","electroencephalography","counterintuitively","neurophysiological"]
       };
@@ -529,4 +531,5 @@
 
       // initial
       loadNewPassage();
+
     });
