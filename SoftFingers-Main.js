@@ -50,7 +50,11 @@
       // Word banks
       const WORDS = {
         Beginner: ["during","after","today","between","behind", "defend", "divine", "middle", "under", "magic", "beneath", "withdraw",
-                   "influence", "frame", "inside", "intern", "mediate","final","female","mandate","hunger","hungry","number","figure",
+                   "believer","believe","release","adapt","construct","idiot","heaven","ignite","super","superb","dreadful","hover",
+                   "infinite","Jordan","coward","flame","previous","maintain","honorary","legacy","legit","graze","content","grass",
+                   "introduce","luggage","enter","ease","radio","junk","jelly","juice","juvenile","order","other","backspace","loop",
+                   "museum","hail","loving","Ghana","America","hundred","attract","abnormal","adjust","down","pages","pages","vile",
+                   "zebra","xylophone","lobby","easy","over","gamers","games","like","leave","leaves","lift","influence", "frame", "inside", "intern", "mediate","final","female","mandate","hunger","hungry","number","figure",
                    "habit","things","matter","synthesis","grant","redeem","floor","major","subject","attract","indeed", "below","other","without","between","could","should","however","about","should","since","yourself"],
         Intermediate: ["synthesis","resolve","gradient","interaction","parallel","compute","framework","latency","protocol","asynchronous","concurrency","optimization","rendering"],
         Advanced: ["antidisestablishmentarianism","transubstantiation","quintessentially","epistemological","philosophically","heterogeneous","microarchitecture","electroencephalography","counterintuitively","neurophysiological"]
@@ -533,3 +537,4 @@
       loadNewPassage();
 
     });
+
