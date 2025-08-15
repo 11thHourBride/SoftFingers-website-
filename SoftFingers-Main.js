@@ -404,6 +404,33 @@
         }).join('');
         passageDisplay.innerHTML = html;
       }
+    function renderPassage() {
+  const target = targetText;
+  const position = typed.length;
+  const html = [...target].map((ch,i) => {
+    const typedChar = typed[i];
+    let classes = [];
+    if (i === position) classes.push('current');
+    if (typedChar === undefined) {
+      return `<span${classes.length?` class="${classes.join(' ')}"`:''}>${escapeHtml(ch)}</span>`;
+    }
+    if (typedChar === ch) classes.push('correct');
+    else classes.push('incorrect');
+    return `<span class="${classes.join(' ')}">${escapeHtml(ch)}</span>`;
+  }).join('');
+  passageDisplay.innerHTML = html;
+
+  // === AUTO-SCROLL ADDITION ===
+  const currentChar = passageDisplay.querySelector('.current');
+  if (currentChar) {
+    currentChar.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'nearest'
+    });
+  }
+}
+
 
       function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -537,4 +564,5 @@
       loadNewPassage();
 
     });
+
 
