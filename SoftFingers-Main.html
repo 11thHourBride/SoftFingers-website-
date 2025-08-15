@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Typing Flow Master with Login + Firestore</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Firebase compat SDKs -->
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="SoftFingers-Main.css">
+</head>
+<body>
+
+  <div class="layout">
+    <!-- Header -->
+    <div class="card full" aria-label="App header">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div>
+          <h1>Welcome To SoftFingers-Typing</h1>
+          <div class="small">Speed &amp; accuracy, saved per user. Protected behind login.</div>
+        </div>
+        <div id="auth-summary" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"></div>
+      </div>
+    </div>
+
+
+    <!-- Typing test area -->
+    <div class="card" id="typing-section">
+      <div class="flex" style="justify-content:space-between;align-items:center;flex-wrap:wrap;">
+        <div class="tabs" role="tablist" style="flex:1;min-width:220px;">
+          <div class="tab active" data-diff="Beginner">Beginner</div>
+          <div class="tab" data-diff="Intermediate">Intermediate</div>
+          <div class="tab" data-diff="Advanced">Advanced</div>
+        </div>
+
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+          <!-- Mode toggle -->
+          <div>
+            <div class="small">Mode</div>
+            <select id="mode-select" aria-label="Typing mode">
+              <option value="passage" selected>Passage (by difficulty)</option>
+              <option value="quote">Quote</option>
+            </select>
+          </div>
+          <!-- Quote selector (shown only in quote mode) -->
+          <div id="quote-controls" style="display:none; min-width:220px;">
+            <div class="small">Quote</div>
+            <select id="quote-select" aria-label="Choose quote">
+              <option value="__random__">Random quote</option>
+            </select>
+            <div class="small" id="quote-author" style="margin-top:4px;"></div>
+          </div>
+
+          <div>
+            <div class="small">Timer</div>
+            <select id="duration-select" aria-label="Timer duration">
+              <option value="30">30s</option>
+              <option value="60" selected>60s</option>
+              <option value="90">90s</option>
+              <option value="120">120s</option>
+              <option value="150">150s</option>
+              <option value="180">180s</option>
+              <option value="210">210s</option>
+              <option value="240">240s</option>
+              <option value="270">270s</option>
+              <option value="300">300s</option>
+              <option value="330">330s</option>
+              <option value="360">360s</option>
+            </select>
+          </div>
+          <div>
+            <div class="small">Difficulty</div>
+            <div id="current-diff" class="pill">Beginner</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-row" style="margin-top:10px;">
+        <div class="stat">
+          <div class="small">Time Left</div>
+          <div id="stat-time" style="font-weight:700;">60s</div>
+        </div>
+        
+        <div class="stat">
+          <div class="small">WPM</div>
+          <div id="stat-wpm" style="font-weight:700;">0</div>
+        </div>
+        <div class="stat">
+          <div class="small">Accuracy</div>
+          <div id="stat-acc" style="font-weight:700;">100%</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <div class="passage" id="passage-display" aria-label="Target passage"></div>
+      </div>
+
+      <div style="margin-top:8px;">
+        <textarea id="typing-input" placeholder="Start typing..." aria-label="Typing input" autocomplete="off" spellcheck="false" disabled></textarea>
+      </div>
+
+      <div class="flex" style="margin-top:12px;gap:14px;">
+        <button class="btn" id="retry-btn">Retry</button>
+      
+   
+        <div class="small" id="typing-hint">Typing starts on first keystroke; finishes when passage complete or timer ends.</div>
+      </div>
+    </div>
+    
+
+    <!-- Sidebar / dashboard -->
+    <div class="card" style="position:sticky;top:16px;">
+      <div>
+        <div class="inline">
+          <div class="tag" id="user-email-tag">Not signed in</div>
+          <div id="email-verif-status"></div>
+        </div>
+        <div style="margin-top:6px;">
+          <button class="btn secondary" id="logout-btn" style="margin-right:6px;">Log out</button>
+          <button class="btn secondary" id="send-verif-btn">Resend verification</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div>
+        <div class="small">Your Best (this diff &amp; duration)</div>
+        <div class="flex" style="gap:12px;margin-top:6px;">
+          <div class="stat" style="flex:1;">
+            <div class="small">Best WPM</div>
+            <div id="best-wpm" style="font-weight:700;">0</div>
+          </div>
+          <div class="stat" style="flex:1;">
+            <div class="small">Best Accuracy</div>
+            <div id="best-acc" style="font-weight:700;">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div>
+        <div class="small">Your recent runs</div>
+        <table class="score-table" aria-label="Recent runs" id="recent-table">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>WPM</th>
+              <th>Acc</th>
+              <th>Dur</th>
+              <th>Diff</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+
+      <div>
+        <div class="small">Leaderboard (top 10 WPM)</div>
+        <div class="leaderboard">
+          <table class="score-table" aria-label="Leaderboard" id="leaderboard-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>WPM</th>
+                <th>Acc</th>
+                <th>When</th>
+              </tr>
+            </thead>
+            <tbody><!-- Authentication section -->
+    <div class="card full" id="auth-card" aria-label="Authentication card">
+      <div class="auth-box">
+        <div class="form-wrapper">
+          <h1 style="margin-bottom:4px;">Log in / Sign up</h1>
+          <div class="small">You must be signed in to save scores and view your dashboard.</div>
+          <div class="tabs" style="margin-top:12px;">
+            <div class="tab active" data-mode="login" id="tab-login">Login</div>
+            <div class="tab" data-mode="signup" id="tab-signup">Sign up</div>
+          </div>
+
+          <div id="form-wrapper">
+            <!-- login -->
+            <form id="login-form">
+              <div>
+                <label class="small" for="login-email">Email</label>
+                <input id="login-email" type="email" required placeholder="you@example.com" autocomplete="username" />
+              </div>
+              <div>
+                <label class="small" for="login-pass">Password</label>
+                <input id="login-pass" type="password" required placeholder="••••••••" autocomplete="current-password" />
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <div class="link" id="forgot-btn">Forgot password?</div>
+                <button class="btn" type="submit" id="login-submit">Log In</button>
+              </div>
+            </form>
+            <!-- signup -->
+            <form id="signup-form" style="display:none;">
+              <div>
+                <label class="small" for="signup-email">Email</label>
+                <input id="signup-email" type="email" required placeholder="you@example.com" autocomplete="username" />
+              </div>
+              <div>
+                <label class="small" for="signup-pass">Password</label>
+                <input id="signup-pass" type="password" required placeholder="At least 6 chars" autocomplete="new-password" />
+              </div>
+              <button class="btn" type="submit" id="signup-submit">Sign Up</button>
+            </form>
+          </div>
+          <div id="auth-message" class="small"></div>
+        </div></tbody>
+          </table>
+        </div>
+      </div>
+ 
+
+      </div>
+    </div>
+    
+  </div>
+
+  <script src="SoftFingers-Main.js"></script>
+</body>
+</html>
