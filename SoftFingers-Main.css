@@ -148,7 +148,7 @@
     .badge{ padding:4px 10px; border-radius:999px; font-size:10px; display:inline-block; }
     .correct { color:#4ade80; }
     .incorrect { color:#f87171; }
-    .current { text-decoration:underline; }
+    .current { background-color: #555; }
     .pill{ background: rgba(255,255,255,.08); padding:4px 12px; border-radius:999px; font-size:11px; }
     .leaderboard{
       max-height:320px;
@@ -164,4 +164,5 @@
     form { display:flex; flex-direction:column; gap:10px; }
     .auth-box { display:flex; gap:22px; flex-wrap:wrap; }
     .form-wrapper { max-width:480px; width:100%; }
+
     #auth-message { margin-top:4px; }
