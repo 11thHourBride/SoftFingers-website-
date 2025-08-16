@@ -65,8 +65,9 @@
                    "chat","chartered","altar","alter","altered","chain","block","music","discord","discount","anger","bitterness","duty","faith",
                    "individual","group","measure","kite","kiwi","forest","manner","statue","stature","Bible","chief","linquist","quick","quartz",
                    "ghost","narrow","road","rapture","beast","brute","human","acquaint","scarlet","brown","black","white","blue","peach","parrot",
-                   "severe","several","plate","shadow","slain","three","eleven","computer","hazard","manager","account","cashier","clerk","cleriac",
+                   "severe","several","plate","shadow","slain","three","eleven","computer","hazard","manager","account","cashier","clerk","clearance",
                    "heavy","brother","zinc","grapes","choke","banker","mobile","retreate","surrender","water","hybrid","since","yourself"],
+        
         Intermediate: ["synthesis","resolve","gradient","interaction","parallel","compute","framework","latency","protocol","asynchronous","concurrency","optimization","rendering"],
         Advanced: ["antidisestablishmentarianism","transubstantiation","quintessentially","epistemological","philosophically","heterogeneous","microarchitecture","electroencephalography","counterintuitively","neurophysiological"]
       };
@@ -574,6 +575,7 @@
       loadNewPassage();
 
     });
+
 
 
 
