@@ -61,7 +61,7 @@
                    "father","mother","uncle","auntie","nephew","niece","without","between","could","should","however","about","should",
                    "green","purple","yellow","royal","chariot","horses","artist","mechanic","sweep","holler","amnesia","triangle","angel",
                    "activate","windows","leader","settings","keyboard","majority","reel","track","preach","teach","leakage","angle","darkness",
-                   "trace","squeeze","truck","train","training","crystal","clear","clearance","mode","hatred","bitter","selfie","maize","blank"
+                   "trace","squeeze","truck","train","training","crystal","clear","clearance","mode","hatred","bitter","selfie","maize","blank",
                    "chat","chartered","altar","alter","altered","chain","block","music","discord","discount","anger","bitterness","duty","faith",
                    "individual","group","measure","kite","kiwi","forest","manner","statue","stature","Bible","chief","linquist","quick","quartz",
                    "ghost","narrow","road","rapture","beast","brute","human","acquaint","scarlet","brown","black","white","blue","peach","parrot",
@@ -574,6 +574,7 @@
       loadNewPassage();
 
     });
+
 
 
 
