@@ -54,8 +54,19 @@
                    "infinite","Jordan","coward","flame","previous","maintain","honorary","legacy","legit","graze","content","grass",
                    "introduce","luggage","enter","ease","radio","junk","jelly","juice","juvenile","order","other","backspace","loop",
                    "museum","hail","loving","Ghana","America","hundred","attract","abnormal","adjust","down","pages","pages","vile",
-                   "zebra","xylophone","lobby","easy","over","gamers","games","like","leave","leaves","lift","influence", "frame", "inside", "intern", "mediate","final","female","mandate","hunger","hungry","number","figure",
-                   "habit","things","matter","synthesis","grant","redeem","floor","major","subject","attract","indeed", "below","other","without","between","could","should","however","about","should","since","yourself"],
+                   "zebra","xylophone","lobby","easy","over","gamers","games","like","leave","leaves","lift","influence", "frame", 
+                   "insane","breathe","raid","flee","mango","pumpkin","orange","voilet","apple","inside", "intern", "mediate","final",
+                   "review","intend","brave","mapping","view","candle","handle","female","mandate","hunger","hungry","number","figure",
+                   "habit","things","matter","synthesis","grant","redeem","floor","major","subject","attract","indeed", "below","other",
+                   "father","mother","uncle","auntie","nephew","niece","without","between","could","should","however","about","should",
+                   "green","purple","yellow","royal","chariot","horses","artist","mechanic","sweep","holler","amnesia","triangle","angel",
+                   "activate","windows","leader","settings","keyboard","majority","reel","track","preach","teach","leakage","angle","darkness",
+                   "trace","squeeze","truck","train","training","crystal","clear","clearance","mode","hatred","bitter","selfie","maize","blank"
+                   "chat","chartered","altar","alter","altered","chain","block","music","discord","discount","anger","bitterness","duty","faith",
+                   "individual","group","measure","kite","kiwi","forest","manner","statue","stature","Bible","chief","linquist","quick","quartz",
+                   "ghost","narrow","road","rapture","beast","brute","human","acquaint","scarlet","brown","black","white","blue","peach","parrot",
+                   "severe","several","plate","shadow","slain","three","eleven","computer","hazard","manager","account","cashier","clerk","cleriac",
+                   "heavy","brother","zinc","grapes","choke","banker","mobile","retreate","surrender","water","hybrid","since","yourself"],
         Intermediate: ["synthesis","resolve","gradient","interaction","parallel","compute","framework","latency","protocol","asynchronous","concurrency","optimization","rendering"],
         Advanced: ["antidisestablishmentarianism","transubstantiation","quintessentially","epistemological","philosophically","heterogeneous","microarchitecture","electroencephalography","counterintuitively","neurophysiological"]
       };
@@ -71,17 +82,17 @@
         {"quote": "The future belongs to those who believe in the beauty of their dreams.", "author": "Eleanor Roosevelt"},
         {"quote": "What lies behind us and what lies before us are tiny matters compared to what lies within us.", "author": "Ralph Waldo Emerson"},
         {"quote": "Life is what happens when you're busy making other plans.", "author": "John Lennon"},
-        {"quote": "Whether you think you can or you think you can’t, you're right.", "author": "Henry Ford"},
+        {"quote": "Whether you think you can or you think you can't, you're right.", "author": "Henry Ford"},
         {"quote": "It always seems impossible until it's done.", "author": "Nelson Mandela"},
         {"quote": "The journey of a thousand miles begins with one step.", "author": "Lao Tzu"},
         {"quote": "You must be the master of your own destiny.", "author": "Napoleon Hill"},
         {"quote": "Don’t count the days, make the days count.", "author": "Muhammad Ali"},
-        {"quote": "If opportunity doesn’t knock, build a door.", "author": "Milton Berle"},
+        {"quote": "If opportunity doesn't knock, build a door.", "author": "Milton Berle"},
         {"quote": "Strive not to be a success, but rather to be of value.", "author": "Albert Einstein"},
         {"quote": "The best way to predict the future is to invent it.", "author": "Alan Kay"},
         {"quote": "Hardships often prepare ordinary people for an extraordinary destiny.", "author": "C.S. Lewis"},
         {"quote": "What you get by achieving your goals is not as important as what you become by achieving your goals.", "author": "Zig Ziglar"},
-        {"quote": "You miss 100% of the shots you don’t take.", "author": "Wayne Gretzky"},
+        {"quote": "You miss 100% of the shots you don't take.", "author": "Wayne Gretzky"},
         {"quote": "If you want to lift yourself up, lift up someone else.", "author": "Booker T. Washington"},
         {"quote": "You must do the things you think you cannot do.", "author": "Eleanor Roosevelt"},
         {"quote": "Act as if what you do makes a difference. It does.", "author": "William James"},
@@ -95,7 +106,7 @@
         {"quote": "Dream big and dare to fail.", "author": "Norman Vaughan"},
         {"quote": "The greatest glory in living lies not in never falling, but in rising every time we fall.", "author": "Nelson Mandela"},
         {"quote": "Do what you can, with what you have, where you are.", "author": "Theodore Roosevelt"},
-        {"quote": "Everything you’ve ever wanted is on the other side of fear.", "author": "George Addair"},
+        {"quote": "Everything you've ever wanted is on the other side of fear.", "author": "George Addair"},
         {"quote": "You only live once, but if you do it right, once is enough.", "author": "Mae West"},
         {"quote": "A champion is defined not by their wins but by how they recover when they fall.", "author": "Serena Williams"},
         {"quote": "Success usually comes to those who are too busy to be looking for it.", "author": "Henry David Thoreau"},
@@ -120,11 +131,10 @@
         {"quote": "Now, when God makes His ways, just wonder why He feels when He makes a way for us, for our healing, for our salvation, for our comfort, for our peace, and all these things, and we just walk away and leave them. Must make Him feel terribly bad.", "author": "Rev. William Marrion Branham - 61-0125 - Why?"},
         {"quote": "And faith always admits the Word is right. Amen. If your faith don’t punctuate every Word of God’s Word, with an amen, there is something wrong with your experience. The Bible said, “He is the same yesterday, today, and forever.” If it don’t say amen to that, then there is something wrong. Jesus said, “The works that I do shall you do also.” If it don’t say amen to that, then there is something wrong. If it don’t punctuate every Word of God’s promise, with an amen, there is something wrong.", "author": "Rev. William Marrion Branham - 64-0305 - Perseverant"},
         {"quote": "Not always prosperity is a sign of a spiritual blessings, but sometimes on the contrary. People think maybe you have to own a lot of worldly goods, and shows that God is a blessing you. That’s not true. Sometimes it’s the other way.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": " This little, unknown fellow was Amos the prophet. And now we don’t know very much about him. We don’t know where he come from. Prophets usually come on the scene, unknown, leave the same way. We don’t know where they come from, where they go, don’t know about their backgrounds. God just raises them up. He wasn’t much to look at, but he had THUS SAITH THE LORD. That’s the main thing I see. ", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": " There is no excuse. It’s just what’s in the heart. That’s what shows out. It identifies itself. ", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": " And now we find, in this city, it become morally decayed. The preachers was afraid to say anything about it. And, but they had a little, this little old fellow coming up over the hill, was coming to tell them THUS SAITH THE LORD, “Clean this thing up, or you’re going to go into captivity.” And he lived to see the days of his prophecy fulfilled.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": "You see, when people get away from God and won’t listen to the Word, have no more desire for the Word, then there is one diagnoses to it, ‘The soul that sinneth, that soul shall die.’ Unbelief shall separate you from God.” That’s exactly right.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-
+        {"quote": "This little, unknown fellow was Amos the prophet. And now we don’t know very much about him. We don’t know where he come from. Prophets usually come on the scene, unknown, leave the same way. We don’t know where they come from, where they go, don’t know about their backgrounds. God just raises them up. He wasn’t much to look at, but he had THUS SAITH THE LORD. That’s the main thing I see. ", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
+        {"quote": "There is no excuse. It’s just what’s in the heart. That’s what shows out. It identifies itself. ", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
+        {"quote": "And now we find, in this city, it become morally decayed. The preachers was afraid to say anything about it. And, but they had a little, this little old fellow coming up over the hill, was coming to tell them THUS SAITH THE LORD, “Clean this thing up, or you’re going to go into captivity.” And he lived to see the days of his prophecy fulfilled.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
+        {"quote": "You see, when people get away from God and won’t listen to the Word, have no more desire for the Word, then there is one diagnoses to it, ‘The soul that sinneth, that soul shall die.’ Unbelief shall separate you from God.” That’s exactly right.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"}
         {"quote": "Determination kills all difficulty.", "author": "Godfred Mensah"},
         {"quote": "We deem everyone that come closer to us as friend, because we don't know the one who becomes happy when we succeed and who becomes happy when we fail. But God knows the genuine and the hypocrite friends.", "author": "Godfred Mensah"},
         {"quote": "Your ability to lift heavy objects doesn't guarantee your victory in a battle.", "author": "Godfred Mensah"},
@@ -564,5 +574,6 @@
       loadNewPassage();
 
     });
+
 
 
