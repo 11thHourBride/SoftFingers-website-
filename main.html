@@ -2,16 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>SoftFingers Typing Practice</title>
+  <title>SoftFingers-Typing</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <!-- Firebase compat SDKs -->
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <link rel="stylesheet" href="SoftFingers-Main.css">
+
 </head>
 <body>
-
+<!-- Dashboard Section (default visible) -->
+<div id="section-dashboard">
   <div class="layout">
     <!-- Header -->
     <div class="card full" aria-label="App header">
@@ -19,10 +21,24 @@
         <div>
           <h1>Welcome To SoftFingers-Typing</h1>
           <div class="small">Speed &amp; accuracy, saved per user. Protected behind login.</div>
+           
+          <!-- Feature Navigation (Sticky Navbar) -->
+<div class="card full" style="position:sticky; top:0; z-index:1000; margin-bottom:12px;">
+  <div class="tabs" id="feature-tabs">
+    <div class="tab active" data-feature="dashboard">Dashboard</div>
+ <div class="tab" data-feature="lessons" onclick="window.location.href='lessons.html'">Lessons</div>
+    <div class="tab" data-feature="achievements">Achievements</div>
+    <div class="tab" data-feature="competition">Competition</div>
+    <div class="tab" data-feature="darkroom">Darkroom</div>
+    <div class="tab" data-feature="import-text">Import Text</div>
+    <div class="tab" data-feature="audio">Audio Challenge</div>
+  </div>
+</div>
         </div>
         <div id="auth-summary" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"></div>
       </div>
     </div>
+ 
 
 
     <!-- Typing test area -->
@@ -121,6 +137,44 @@
           <button class="btn secondary" id="send-verif-btn">Resend verification</button>
         </div>
       </div>
+      <!-- Lessons Section -->
+<div class="card hidden" id="section-lessons">
+  <h2>Lessons</h2>
+  <p>Structured typing lessons will appear here.</p>
+</div>
+
+<!-- Achievements Section -->
+<div class="card hidden" id="section-achievements">
+  <h2>Achievements</h2>
+  <p>Your badges and milestones will appear here.</p>
+</div>
+
+<!-- Competition Section -->
+<div class="card hidden" id="section-competition">
+  <h2>Competition</h2>
+  <p>Join real-time typing competitions.</p>
+</div>
+
+<!-- Darkroom Challenge -->
+<div class="card hidden" id="section-darkroom">
+  <h2>Darkroom Challenge</h2>
+  <p>Type in hardcore mode with blurred/hidden text.</p>
+</div>
+
+<!-- Import Own Text -->
+<div class="card hidden" id="section-import-text">
+  <h2>Import Your Own Text</h2>
+  <textarea id="custom-text" placeholder="Paste or type your own text here..."></textarea>
+  <button class="btn" id="start-custom">Start Typing</button>
+</div>
+
+<!-- Audio Challenge -->
+<div class="card hidden" id="section-audio">
+  <h2>Audio Challenge</h2>
+  <audio controls id="challenge-audio"></audio>
+  <textarea id="audio-input" placeholder="Type what you hear..." disabled></textarea>
+  <button class="btn" id="start-audio">Start Challenge</button>
+</div>
 
       <div class="divider"></div>
 
@@ -159,7 +213,7 @@
       <div class="divider"></div>
 
       <div>
-        <div class="small">Leaderboard (top 10 WPM)</div>
+        <div class="small">Leaderboard (top 100WPM)</div>
         <div class="leaderboard">
           <table class="score-table" aria-label="Leaderboard" id="leaderboard-table">
             <thead>
@@ -222,9 +276,27 @@
     </div>
     
   </div>
+  
 
   <script src="SoftFingers-Main.js"></script>
+  <script>
+document.querySelectorAll("#feature-tabs .tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    // remove active from all tabs
+    document.querySelectorAll("#feature-tabs .tab")
+      .forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+
+    // hide all sections
+    document.querySelectorAll("[id^='section-']")
+      .forEach(sec => sec.classList.add("hidden"));
+
+    // show selected section
+    const target = tab.dataset.feature;
+    document.getElementById("section-" + target).classList.remove("hidden");
+  });
+});
+</script>
+
 </body>
 </html>
-
-
