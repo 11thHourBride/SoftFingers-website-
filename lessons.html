@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SoftFingers Lessons</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="lessons.css">
+
+</head>
+<body>
+  <div class="layout">
+    <!-- Header -->
+    <div class="card full">
+      <h1>Typing Lessons</h1>
+      <div class="small">Your journey to typing mastery begins here 🚀</div>
+    </div>
+
+    <!-- Introduction -->
+    <div class="card full">
+      <h2>Introduction to Touch Typing</h2>
+      <p><span class="highlight">Touch Typing</span> is the skill of typing without looking at the keyboard. It helps you type faster, more accurately, and with less strain.</p>
+      
+
+      <div class="grid-2">
+        <div>
+          <h3>Sitting Position</h3>
+          <ul>
+            <li>Sit upright with your back straight.</li>
+            <li>Keep feet flat on the floor.</li>
+            <li>Wrists should be slightly raised, not resting on the keyboard.</li>
+            <li>Maintain a comfortable distance from the screen.</li>
+          </ul>
+        </div>
+        <div>
+          <img src="correcting-your-sitting-posture-1.jpg" alt="Sitting Posture" class="diagram">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h3>Hand Positioning</h3>
+          <p>Your fingers rest on the <span class="highlight">Home Row Keys</span>:  
+          <b>A S D F</b> (left hand) and <b>J K L ;</b> (right hand).  
+          Thumbs rest on the <b>Spacebar</b>.</p>
+        </div>
+        <div>
+          <img src="keybd_hand_position.jpg" alt="Hand Positioning Keyboard" class="diagram">
+        </div>
+      </div>
+
+      <h3>Typing Metrics</h3>
+      <p><b>WPM (Words Per Minute):</b> Measures typing speed. One word = 5 characters.</p>
+      <p><b>Accuracy:</b> Percentage of correctly typed characters/words.</p>
+      <p><b>AWPM (Adjusted WPM):</b> WPM after deducting errors (true typing speed).</p>
+    </div>
+    <section class="lesson-section" id="beginner-lessons">
+  <h2>Beginner Lessons</h2>
+  <p>
+    These lessons focus on the <b>Home Row Keys</b>, which are the foundation of touch typing. 
+    Practice them carefully before moving to the next level.
+  </p>
+
+<!-- lessons.html (only Beginner part shown for now) -->
+<section class="lesson-section" id="beginner-lessons">
+  <h2>Beginner Lessons</h2>
+  <p>Practice the <b>Home Row Keys</b> before moving on.</p>
+  
+  <div class="lesson-nav">
+    <button id="prev-lesson" disabled>Previous</button>
+    <button id="next-lesson">Next</button>
+    <button id="retry-lesson">Retry</button>
+  </div>
+  
+  <div class="exercise-box">
+    <p id="lesson-text"></p>
+    <textarea id="lesson-input" placeholder="Start typing here..."></textarea>
+  </div>
+  
+  <div class="results">
+    <p>WPM: <span id="lesson-wpm">0</span></p>
+    <p>Accuracy: <span id="lesson-accuracy">0%</span></p>
+    
+  </div>
+</section>
+
+
+<section class="lesson-section locked" id="intermediate-lessons">
+  <h2>Intermediate Lessons 🔒</h2>
+  <p class="lock-msg">Complete Beginner lessons with at least <b>20 WPM</b> and <b>90% Accuracy</b> to unlock.</p>
+</section>
+
+<section class="lesson-section locked" id="advanced-lessons">
+  <h2>Advanced Lessons 🔒</h2>
+  <p class="lock-msg">Complete Intermediate lessons to unlock Advanced.</p>
+</section>
+
+
+
+    <!-- Tabs -->
+    <div class="card full">
+      <div class="tabs" id="lesson-tabs">
+        <div class="tab active" data-level="beginner">Beginner</div>
+        <div class="tab" data-level="intermediate">Intermediate</div>
+        <div class="tab" data-level="advanced">Advanced</div>
+      </div>
+    </div>
+
+    <!-- Sections -->
+    <div class="card" id="section-beginner">
+      <h2>Beginner Lessons</h2>
+      <div class="lesson-box">Lesson 1: Home row practice</div>
+      <div class="lesson-box">Lesson 2: Basic words</div>
+    </div>
+
+    <div class="card hidden" id="section-intermediate">
+      <h2>Intermediate Lessons</h2>
+      <div class="lesson-box">Lesson 1: Longer sentences</div>
+      <div class="lesson-box">Lesson 2: Numbers and punctuation</div>
+    </div>
+
+    <div class="card hidden" id="section-advanced">
+      <h2>Advanced Lessons</h2>
+      <div class="lesson-box">Lesson 1: Full paragraph typing</div>
+      <div class="lesson-box">Lesson 2: Speed and accuracy drills</div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="card full">
+      <button class="btn" onclick="window.location.href='main.html'">⬅ Back to Dashboard</button>
+    </div>
+  </div>
+
+  <script src="lessons.js"></script>
+  </script>
+</body>
+</html>
