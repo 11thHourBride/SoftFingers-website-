@@ -410,16 +410,27 @@ function loadProgress() {
     return;
   }
 
-  Object.keys(progress).forEach(lessonIndex => {
-    const p = progress[lessonIndex];
-    const li = document.createElement("li");
-    li.textContent = `Lesson ${parseInt(lessonIndex) + 1}: 
-      WPM ${p.wpm}, Accuracy ${p.acc}%, 
-      Status: ${p.passed ? "✅ Passed" : "❌ Failed"} 
-      Keystrokes ${p.keystrokes || 0} correct keys ${p.correctKeys || 0} incorrect keys ${p.incorrectKeys || 0}`;
-    if (p.passed) passedCount++;
-    list.appendChild(li);
-  });
+ Object.keys(progress).forEach(lessonIndex => {
+  const p = progress[lessonIndex];
+  const li = document.createElement("li");
+
+  const idx = parseInt(lessonIndex) + 1;
+  const ks = p.keystrokes || 0;
+  const ck = p.correctKeys || 0;
+  const ik = p.incorrectKeys || Math.max(0, ks - ck);
+  const passed = !!p.passed;
+
+  li.innerHTML = `
+    Lesson ${idx}: 
+    WPM ${p.wpm}, Accuracy ${p.acc}%, 
+    Status: ${passed ? "✅ Passed" : "❌ Failed"}
+    Keystrokes ${ks} correct keys ${ck} incorrect keys ${ik}
+  `;
+
+  if (p.passed) passedCount++;
+  list.appendChild(li);
+});
+
 
   const percent = (passedCount / totalLessons) * 120;
   progressBar.style.width = percent + "%";
@@ -484,6 +495,7 @@ window.addEventListener("click", (e) => {
     progressModal.style.display = "none";
   }
 });
+
 
 
 
