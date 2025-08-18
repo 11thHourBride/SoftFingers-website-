@@ -1,294 +1,384 @@
- // Tab switching logic
-    document.querySelectorAll("#lesson-tabs .tab").forEach(tab => {
-      tab.addEventListener("click", () => {
-        document.querySelectorAll("#lesson-tabs .tab").forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
+ /* --------------------------
+       DATA: 100 Beginner Lessons
+       -------------------------- */
+    const beginnerLessons = [
+      // Stage 1: Home row drills (1–20)
+      "asdf jkl;", "fjdksla;", "jjff kkdd", "aa ss dd ff", "jj kk ll ;;",
+      "asdf asdf jkl; jkl;", "fj fj fj fj", "dk dk dk dk", "sl sl sl sl",
+      "a s d f j k l ;", "ff jj dd kk", "aa ss ll ;;", "asdfg hjkl;",
+      "fjdk sl; fjdk sl;", "aj ak al a;", "sd sl sk sj", "df dk dl d;",
+      "fj fj fj fj dk dk dk", "as as as as jl jl jl", "asdf jkl; asdf jkl;",
+      // Stage 2: Upper row drills (21–40)
+      "qwer uiop", "qq ww ee rr", "uu ii oo pp", "qw er ty ui op",
+      "qwe rty uio p", "qp qp qp qp", "we we we we", "er er er er",
+      "ty ty ty ty", "io io io io", "qw qw qw qw", "ui ui ui ui",
+      "op op op op", "qwerty qwerty", "uiop uiop", "qwe qwe qwe",
+      "rty rty rty", "uio uio uio", "qwert uiop", "qw er ui op",
+      // Stage 3: Lower row drills (41–60)
+      "zxcv nm,.", "zz xx cc vv", "nn mm ,, ..", "zx zx zx zx",
+      "cv cv cv cv", "nm nm nm nm", "zc zc zc zc", "xv xv xv xv",
+      "mn mn mn mn", ",. ,. ,. ,.", "zxc zxc zxc", "vnm vnm vnm",
+      "zx nm zx nm", "cv ., cv ., ", "zxcv zxcv", "nm,. nm,.",
+      "zx cv nm ,.", "zxcv nm,.", "zxvnm ,.zx", "mncv zx,.",
+      // Stage 4: Mixed rows (61–80)
+      "asdf qwer zxcv", "jkl; uiop nm,.", "asd qwe zxc", "jkl uio nm,",
+      "asdfg qwert", "hjkl uiopn", "qaz wsx edc rfv", "tgb yhn ujm ik,",
+      "qwe asd zxc", "rty fgh vbn", "uio jkl m,.", "qaz wsx edc",
+      "rfv tgb yhn", "ujm ik, ol.", "pl; okm inj", "uhb ygv tfc",
+      "qazwsx qazwsx", "edcrfv edcrfv", "tgbtgb tgbtgb", "yhnujm yhnujm",
+      // Stage 5: Words & simple sentences (81–100)
+      "cat dog man", "sun run fun", "jam ham ram", "pen hen men",
+      "top hop mop", "red bed fed", "sit fit hit", "cup pup sup",
+      "fan can ran", "mad sad bad", "rat mat bat", "lap cap map",
+      "tip sip dip", "log fog hog", "pig wig big", "box fox ox",
+      "you are good", "we can go", "he is mad", "she is sad",
+      "I can type", "you can run", "we are one", "cats and dogs",
+      "fish swim fast", "the sun is hot", "a red pen", "big and small",
+      "dogs run fast", "time to go", "I am happy", "we play well",
+      "he can win", "she will go", "they all ran", "you did it",
+      "this is fun", "that is big", "here we go", "good job done"
+    ];
 
-        document.querySelectorAll("[id^='section-']").forEach(sec => sec.classList.add("hidden"));
-        document.getElementById("section-" + tab.dataset.level).classList.remove("hidden");
-      });
+    /* --------------------------
+       STATE / STORAGE
+       -------------------------- */
+    const PASS_WPM = 30;
+    const PASS_ACC = 90;
+    const DURATION = 120; // seconds
+    const STORAGE_KEY = "beginnerResults_v1"; // { [index]: {wpm, acc, passed, ts} }
+
+    let results = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    let currentIndex = findFirstUnpassed();
+    let timerId = null;
+    let timeLeft = DURATION;
+    let startedAt = null;
+    let typingLocked = false;
+
+    /* --------------------------
+       ELEMENTS
+       -------------------------- */
+    const tabs = document.getElementById("lesson-tabs");
+    const sections = {
+      beginner: document.getElementById("section-beginner"),
+      intermediate: document.getElementById("section-intermediate"),
+      advanced: document.getElementById("section-advanced"),
+    };
+
+    const progressText = document.getElementById("progress-text");
+    const progressBar = document.getElementById("progress-bar");
+    const lessonsGrid = document.getElementById("lessons-grid");
+
+    const passage = document.getElementById("passage");
+    const typing = document.getElementById("typing");
+    const statWpm = document.getElementById("stat-wpm");
+    const statAcc = document.getElementById("stat-acc");
+    const timerEl = document.getElementById("timer");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const retryBtn = document.getElementById("retry-btn");
+
+    const interLockBox = document.getElementById("intermediate-lock");
+    const interContent = document.getElementById("intermediate-content");
+    const advLockBox = document.getElementById("advanced-lock");
+    const advContent = document.getElementById("advanced-content");
+
+    /* --------------------------
+       TABS
+       -------------------------- */
+    tabs.addEventListener("click", (e) => {
+      const t = e.target.closest(".tab");
+      if (!t) return;
+      [...tabs.querySelectorAll(".tab")].forEach(x => x.classList.remove("active"));
+      t.classList.add("active");
+      const level = t.dataset.level;
+      Object.keys(sections).forEach(k => sections[k].classList.add("hidden"));
+      sections[level].classList.remove("hidden");
     });
 
-// === Beginner Lessons (100 total) ===
-const beginnerLessons = [
-  // === Stage 1: Home row drills (40) ===
-  "asdf jkl;", "asdf asdf jkl; jkl;", "aa ss dd ff jj kk ll ;;",
-  "adsf lk;j", "fjdksla ;laskdjf", "a s d f j k l ;", "ff jj kk ll aa ss dd ;;",
-  "asdf asdf asdf", "jkl; jkl; jkl;", "a a a s s s d d d f f f",
-  "j j j k k k l l l ; ; ;", "asdf jkl; asdf jkl;", "aa jj ss kk dd ll ff ;;",
-  "asdfg hjkl;", "a s d f g h j k l ;", "asdfgh jkl;", "a j s k d l f ;",
-  "aj sk dl f;", "jk; asd fgh", "a s j k d l f ;",
-  "asdf jkl; asdf jkl;", "adsfjkl; adsfjkl;", "aa ss dd ff jj kk ll ;; aa ss",
-  "ff jj ff jj ff jj", "asdfg hjkl; asdfg hjkl;", "a s d f j k l ; a s d f j",
-  "fff jjj ddd kkk lll ;;; aaa sss", "asdf jkl; aaaa ssss dddd ffff",
-  "jjjj kkkk llll ;;;; aaaa ssss dddd ffff",
-  "asdf jkl; fjdk sl; ajsl dkjf",
-  "jjjj aaaa kkkk ssss llll dddd ;;;; ffff",
-  "adsf jkl; asdf jkl;", "asdf jkl; asdf jkl;", "aaaa jjjj ssss kkkk",
-  "ll ll ;; ;; dd dd ff ff aa aa", "adsf adsf jkl; jkl;", "sdfj kl; asdf jkl;",
-  "asdf asdf jkl; jkl;", "asdf jkl; adsf lk;j",
+    /* --------------------------
+       RENDERERS
+       -------------------------- */
+    function renderLessonsGrid(){
+      lessonsGrid.innerHTML = "";
+      beginnerLessons.forEach((_, i) => {
+        const btn = document.createElement("button");
+        btn.className = "lesson-btn";
+        btn.textContent = `Lesson ${i+1}`;
+        const prevPassed = i === 0 ? true : !!(results[i-1]?.passed);
+        const passed = !!(results[i]?.passed);
 
-  // === Stage 2: Words (30) ===
-  "dad sad lad", "fall all sall", "jazz add flask", "dad fad lad bad",
-  "all fall hall mall", "lass mass pass gas", "fall sad dad lad",
-  "jazz lad sad dad", "dad had a lad", "Sam sat", "lad sad dad fad",
-  "fall hall mall tall", "sass mass lass pass", "dad lad sad tad",
-  "add jazz fizz", "fall lad dad bad", "hall mall call tall",
-  "lad bad sad mad", "lass mass bass sass", "dad lad add sad",
-  "fall tall wall hall", "jazz pass mass lass", "fad lad add dad",
-  "sass lass mass jazz", "lad sad dad fad bad", "Sam had lad", "Dad had lad",
-  "fall lad dad mall", "lass bass mass pass", "jazz sass lass mass",
+        if (passed) btn.classList.add("passed");
+        if (!prevPassed && !passed) btn.disabled = true;
 
-  // === Stage 3: Sentences (30) ===
-  "Sam sat on a mat", "Dad had a lad", "Jill said all is well",
-  "A lad had a sad fall", "All dads fall and all lads fall",
-  "Sam had a flask", "Jill had a lad and dad", "Dad said lad sat",
-  "A lad fell and dad fell", "Jill and Sam had a lad",
-  "Dad had a small flask", "All lads sat and all dads sat",
-  "Sam said Jill had a lad", "Dad and lad had a fall",
-  "All fall and all had a lad", "Dad said all lads sat",
-  "Sam had lad and dad had lad", "A lad had fall and dad had fall",
-  "All lads had dad and all dads had lad",
-  "Dad and Sam had lad and Jill had lad",
-  "All dads sat and lads sat", "A lad sat and dad sat",
-  "Sam had flask and dad had flask",
-  "All lads had flask and all dads had flask",
-  "Jill had dad and lad had flask", "Sam had lad and dad had flask",
-  "All lads sat and all dads had lad",
-  "Sam had dad and lad and Jill had flask",
-  "Dad had lad and flask and Sam had lad",
-  "All lads sat and all dads had flask"
-]
-
-
-let currentLesson = 0;
-let startTime = null;
-
-let currentLessonIndex = 0;
-let passedLessons = JSON.parse(localStorage.getItem("passedLessons")) || [];
-let timerInterval;
-let timeLeft = 120;
-let typingLocked = false; // 🔒 NEW FLAG
-
-function renderLessons() {
-  const container = document.getElementById("lessons-list");
-  container.innerHTML = "";
-
-  beginnerLessons.forEach((lesson, index) => {
-    const btn = document.createElement("button");
-    btn.textContent = `Lesson ${index + 1}`;
-    btn.className = "lesson-btn";
-
-    if (passedLessons.includes(index)) {
-      btn.classList.add("passed");
-    } else if (index > 0 && !passedLessons.includes(index - 1)) {
-      btn.disabled = true;
+        btn.addEventListener("click", () => {
+          if (btn.disabled) return;
+          loadLesson(i);
+        });
+        lessonsGrid.appendChild(btn);
+      });
+      updateProgressBar();
     }
 
-    btn.onclick = () => loadLesson(index);
-    container.appendChild(btn);
-  });
-
-  updateProgress();
-}
-
-function updateProgress() {
-  const completed = passedLessons.length;
-  const total = beginnerLessons.length;
-  const percent = (completed / total) * 100;
-
-  document.getElementById("progress-text").textContent = 
-    `Progress: ${completed} / ${total} lessons passed`;
-  document.getElementById("progress-bar").style.width = percent + "%";
-}
-
-function loadLesson(index) {
-  currentLessonIndex = index;
-  document.getElementById("lesson-text").textContent = beginnerLessons[index];
-
-  typingLocked = false; // 🔓 Unlock typing
-  document.getElementById("typing-input").disabled = false;
-  document.getElementById("typing-input").value = "";
-
-  resetTimer();
-  startTimer();
-}
-
-function resetTimer() {
-  clearInterval(timerInterval);
-  timeLeft = 120;
-  document.getElementById("timer").textContent = "Time: 120s";
-}
-
-function startTimer() {
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    document.getElementById("timer").textContent = `Time: ${timeLeft}s`;
-
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      typingLocked = true; // 🔒 Lock typing
-      document.getElementById("typing-input").disabled = true;
-
-      // End lesson (simulate results)
-      completeLesson(getRandomWPM(), getRandomAccuracy()); 
+    function updateProgressBar(){
+      const passedCount = Object.values(results).filter(r => r.passed).length;
+      const total = beginnerLessons.length;
+      const pct = (passedCount/total)*100;
+      progressText.textContent = `Progress: ${passedCount} / ${total} lessons passed`;
+      progressBar.style.width = pct + "%";
+      // Unlock Intermediate when all 100 passed
+      const allPassed = passedCount === total;
+      interLockBox.classList.toggle("hidden", allPassed);
+      interContent.classList.toggle("hidden", !allPassed);
+      // Keep Advanced locked for now (depends on your intermediate pass logic)
+      advLockBox.classList.toggle("hidden", false);
+      advContent.classList.toggle("hidden", true);
     }
-  }, 1000);
-}
 
-// Placeholder until real typing logic is wired
-function getRandomWPM() { return Math.floor(Math.random() * 50) + 20; }
-function getRandomAccuracy() { return Math.floor(Math.random() * 20) + 80; }
+    function renderPassage(){
+      const target = beginnerLessons[currentIndex];
+      const user = typing.value || "";
+      const parts = [];
+      const len = Math.max(target.length, user.length);
+      let correct = 0;
+      let typed = user.length;
 
-function completeLesson(wpm, accuracy) {
-  clearInterval(timerInterval);
+      for (let i=0;i<len;i++){
+        const tChar = target[i] ?? "";
+        const uChar = user[i];
+        if (i < user.length){
+          if (uChar === tChar){
+            parts.push(`<span class="ok">${escapeHtml(tChar)}</span>`);
+            correct++;
+          } else {
+            parts.push(`<span class="bad">${escapeHtml(tChar || " ")}</span>`);
+          }
+        } else {
+          // remaining
+          const cls = i === user.length ? "rest caret" : "rest";
+          parts.push(`<span class="${cls}">${escapeHtml(tChar)}</span>`);
+        }
+      }
+      passage.innerHTML = parts.join("");
 
-  if (wpm >= 30 && accuracy >= 90) {
-    if (!passedLessons.includes(currentLessonIndex)) {
-      passedLessons.push(currentLessonIndex);
-      localStorage.setItem("passedLessons", JSON.stringify(passedLessons));
+      // live stats
+      const elapsedMin = startedAt ? ((Date.now()-startedAt)/60000) : 0;
+      const wpm = elapsedMin > 0 ? Math.round((correct/5)/elapsedMin) : 0;
+      const acc = typed > 0 ? Math.round((correct/typed)*100) : 100;
+      statWpm.textContent = String(wpm);
+      statAcc.textContent = `${acc}%`;
+
+      return { correct, typed, acc, wpm, targetLen: target.length };
     }
-    if (currentLessonIndex + 1 < beginnerLessons.length) {
-      loadLesson(currentLessonIndex + 1);
+
+    /* --------------------------
+       LESSON FLOW
+       -------------------------- */
+    function loadLesson(i){
+      currentIndex = i;
+      typingLocked = false;
+      typing.disabled = false;
+      typing.value = "";
+      startedAt = null;
+
+      stopTimer();
+      timeLeft = DURATION;
+      timerEl.textContent = `${timeLeft}s`;
+
+      // Render passage fresh
+      renderPassage();
+
+      // nav buttons
+      prevBtn.disabled = i === 0;
+      nextBtn.disabled = i >= beginnerLessons.length - 1;
+
+      // focus
+      typing.focus();
     }
-    renderLessons();
-  } else {
-    alert(`Lesson failed!\nWPM: ${wpm}, Accuracy: ${accuracy}%\nNeed at least 30 WPM and 90% accuracy.`);
-  }
-}
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderLessons();
-  loadLesson(0);
-});
-
-
-const lessonTextEl = document.getElementById("lesson-text");
-const lessonInputEl = document.getElementById("lesson-input");
-const lessonWpmEl = document.getElementById("lesson-wpm");
-const lessonAccEl = document.getElementById("lesson-accuracy");
-const prevBtn = document.getElementById("prev-lesson");
-const nextBtn = document.getElementById("next-lesson");
-const retryBtn = document.getElementById("retry-lesson");
-
-// Result + Progress
-const resultMsgEl = document.createElement("p");
-document.querySelector(".results").appendChild(resultMsgEl);
-
-const progressEl = document.createElement("p");
-progressEl.style.marginTop = "10px";
-progressEl.style.fontWeight = "bold";
-document.querySelector(".results").appendChild(progressEl);
-
-function saveProgress() {
-  localStorage.setItem("beginnerProgress", JSON.stringify(passedLessons));
-}
-
-function updateProgress() {
-  const passedCount = passedLessons.filter(p => p).length;
-  progressEl.textContent = `Progress: ${passedCount}/${beginnerLessons.length} lessons passed`;
-}
-
-function loadLesson(index) {
-  lessonTextEl.textContent = beginnerLessons[index];
-  lessonInputEl.value = "";
-  lessonWpmEl.textContent = "0";
-  lessonAccEl.textContent = "0%";
-  resultMsgEl.textContent = "";
-  prevBtn.disabled = index === 0;
-  nextBtn.disabled = index === beginnerLessons.length - 1;
-  startTime = null;
-  updateProgress();
-}
-
-loadLesson(currentLesson);
-
-// Navigation
-prevBtn.addEventListener("click", () => {
-  if (currentLesson > 0) {
-    currentLesson--;
-    loadLesson(currentLesson);
-  }
-});
-
-nextBtn.addEventListener("click", () => {
-  if (currentLesson < beginnerLessons.length - 1) {
-    currentLesson++;
-    loadLesson(currentLesson);
-  }
-});
-
-retryBtn.addEventListener("click", () => {
-  loadLesson(currentLesson);
-});
-
-// Typing logic
-lessonInputEl.addEventListener("input", () => {
-  if (!startTime) startTime = new Date(); // start timer when typing begins
-
-  const target = lessonTextEl.textContent.trim();
-  const typed = lessonInputEl.value.trim();
-
-  const targetWords = target.split(/\s+/);
-  const typedWords = typed.split(/\s+/);
-
-  let correctWords = 0;
-  typedWords.forEach((word, i) => {
-    if (word === targetWords[i]) correctWords++;
-  });
-
-  const accuracy = Math.round((correctWords / targetWords.length) * 100) || 0;
-  lessonAccEl.textContent = accuracy + "%";
-
-  // Calculate elapsed time in minutes
-  const elapsedTime = (new Date() - startTime) / 1000 / 60;
-  const wpm = Math.round(correctWords / (elapsedTime || 1));
-  lessonWpmEl.textContent = wpm;
-
-  // Pass/fail check
-  if (typed.length >= target.length) {
-    if (wpm >= 30 && accuracy >= 90) {
-      resultMsgEl.textContent = "✅ Lesson Passed!";
-      resultMsgEl.style.color = "green";
-      passedLessons[currentLesson] = true;
-      saveProgress();
-      updateProgress();
-
-      // Auto-advance to next lesson if available
-      setTimeout(() => {
-        if (currentLesson < beginnerLessons.length - 1) {
-          currentLesson++;
-          loadLesson(currentLesson);
+    function startTimer(){
+      stopTimer();
+      timerId = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = `${timeLeft}s`;
+        if (timeLeft <= 0){
+          finishLesson("timeout");
         }
       }, 1000);
-    } else {
-      resultMsgEl.textContent = "❌ Try Again. (Need 30 WPM & 90% Accuracy)";
-      resultMsgEl.style.color = "red";
     }
+    function stopTimer(){
+      if (timerId){ clearInterval(timerId); timerId = null; }
+    }
+
+    function finishLesson(reason){
+      stopTimer();
+      typingLocked = true;
+      typing.disabled = true;
+
+      // compute final stats from latest render
+      const {correct, typed} = renderPassage();
+      const elapsedMin = startedAt ? ((Date.now()-startedAt)/60000) : (DURATION/60);
+      const wpm = elapsedMin > 0 ? Math.round((correct/5)/elapsedMin) : 0;
+      const acc = typed > 0 ? Math.round((correct/typed)*100) : 0;
+
+      const passed = (wpm >= PASS_WPM) && (acc >= PASS_ACC);
+      results[currentIndex] = { wpm, acc, passed, ts: Date.now() };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
+      renderLessonsGrid();
+       // refresh pass styles and progress
+
+      alert(`${passed ? "✅ Passed" : "❌ Failed"} — WPM: ${wpm}, Accuracy: ${acc}%${reason==="timeout"?" (time up)":""}`);
+
+      if (passed && currentIndex < beginnerLessons.length-1){
+        // auto-advance
+        setTimeout(() => {
+          loadLesson(currentIndex+1);
+        }, 600);
+      }
+    }
+
+    function findFirstUnpassed(){
+      for (let i=0;i<beginnerLessons.length;i++){
+        if (!results[i]?.passed) return i;
+      }
+      return 0; // all passed -> start at first
+    }
+
+    /* --------------------------
+       EVENTS
+       -------------------------- */
+    typing.addEventListener("input", () => {
+      if (typingLocked) return;
+      if (!startedAt){
+        startedAt = Date.now();
+        startTimer();
+      }
+      const {acc, wpm, targetLen} = renderPassage();
+
+      // If fully matched target text, finish early
+      if (typing.value.length >= targetLen && typing.value === beginnerLessons[currentIndex]){
+        finishLesson("completed");
+      }
+    });
+
+    prevBtn.addEventListener("click", () => {
+      // can always go back to review/practice
+      const prev = Math.max(0, currentIndex-1);
+      loadLesson(prev);
+    });
+    nextBtn.addEventListener("click", () => {
+      // only allow going forward if current is passed (or next already unlocked)
+      const curPassed = !!(results[currentIndex]?.passed);
+      const nextIdx = Math.min(beginnerLessons.length-1, currentIndex+1);
+      const nextAllowed = curPassed || !!(results[nextIdx-1]?.passed);
+      if (!nextAllowed){
+        alert("Pass the current lesson to unlock the next one (≥ 30 WPM & ≥ 90% accuracy).");
+        return;
+      }
+      loadLesson(nextIdx);
+    });
+    retryBtn.addEventListener("click", () => loadLesson(currentIndex));
+
+    /* --------------------------
+       UTIL
+       -------------------------- */
+    function escapeHtml(s){
+      return (s ?? "").replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[m]));
+    }
+
+    /* --------------------------
+       INIT
+       -------------------------- */
+    (function init(){
+      // tab default visible
+      Object.values(sections).forEach(s => s.classList.add("hidden"));
+      sections.beginner.classList.remove("hidden");
+
+      renderLessonsGrid();
+      // load first unpassed (or 1st)
+      loadLesson(currentIndex);
+      // initial render to paint caret
+      renderPassage();
+    })();
+    
+    /* --------------------------
+   PROGRESS CHECK
+   -------------------------- */
+function loadProgress() {
+  const progress = results; // reuse your results object
+  const list = document.getElementById("progressList");
+  list.innerHTML = "";
+
+  if (Object.keys(progress).length === 0) {
+    list.innerHTML = "<li>No lessons attempted yet.</li>";
+    return;
   }
-});
 
-
-
-
-  // ✅ Save progress if requirements met
-  if (wpm >= 20 && accuracy >= 90) {
-    beginnerProgress[currentLesson] = true;
-    localStorage.setItem("beginnerProgress", JSON.stringify(beginnerProgress));
-    checkUnlocks();
-  }
-
-
-function checkUnlocks() {
-  const allPassed = beginnerLessons.every((_, i) => beginnerProgress[i]);
-  if (allPassed) {
-    document.getElementById("intermediate-lessons").classList.remove("locked");
-    document.getElementById("intermediate-lessons").classList.add("unlocked");
-    document.querySelector("#intermediate-lessons h2").textContent = "Intermediate Lessons ✅";
-    document.querySelector("#intermediate-lessons .lock-msg").textContent = "Unlocked! Start practicing.";
-  }
+  Object.keys(progress).forEach(lessonIndex => {
+    const p = progress[lessonIndex];
+    const li = document.createElement("li");
+    li.textContent = `Lesson ${parseInt(lessonIndex) + 1}: 
+      WPM ${p.wpm}, Accuracy ${p.acc}%, 
+      Status: ${p.passed ? "✅ Passed" : "❌ Failed"}`;
+    list.appendChild(li);
+  });
 }
 
-// Load first lesson
-loadLesson(currentLesson);
-checkUnlocks();
+// Hook up to button
+document.getElementById("Progress-btn").addEventListener("click", loadProgress);
+
+function loadProgress() {
+  const progress = results; 
+  const list = document.getElementById("progressList");
+  const progressBar = document.getElementById("progressBar");
+  const progressText = document.getElementById("progressText");
+
+  list.innerHTML = "";
+
+  const totalLessons = 120; // Beginner lessons
+  let passedCount = 0;
+
+  if (Object.keys(progress).length === 0) {
+    list.innerHTML = "<li>No lessons attempted yet.</li>";
+    progressBar.style.width = "0%";
+    progressText.textContent = "0 / " + totalLessons + " lessons passed";
+    return;
+  }
+
+  Object.keys(progress).forEach(lessonIndex => {
+    const p = progress[lessonIndex];
+    const li = document.createElement("li");
+    li.textContent = `Lesson ${parseInt(lessonIndex) + 1}: 
+      WPM ${p.wpm}, Accuracy ${p.acc}%, 
+      Status: ${p.passed ? "✅ Passed" : "❌ Failed"}`;
+    if (p.passed) passedCount++;
+    list.appendChild(li);
+  });
+
+  // Update progress bar
+  const percent = (passedCount / totalLessons) * 120;
+  progressBar.style.width = percent + "%";
+  progressText.textContent = `${passedCount} / ${totalLessons} lessons passed`;
+}
+
+
+// Modal handling
+const progressModal = document.getElementById("progressModal");
+const progressBtn = document.getElementById("Progress-btn");
+const closeBtn = document.getElementById("closeProgress");
+
+progressBtn.addEventListener("click", () => {
+  loadProgress();
+  progressModal.style.display = "block";
+});
+
+closeBtn.addEventListener("click", () => {
+  progressModal.style.display = "none";
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === progressModal) {
+    progressModal.style.display = "none";
+  }
+});
