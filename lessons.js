@@ -209,8 +209,8 @@
       if (timerId){ clearInterval(timerId); timerId = null; }
     }
 
-    /* --------------------------
-   LESSON FLOW (update finishLesson + retry handling)
+   /* --------------------------
+   LESSON FLOW (update finishLesson)
    -------------------------- */
 function finishLesson(reason){
   stopTimer();
@@ -227,6 +227,9 @@ function finishLesson(reason){
   results[currentIndex] = { wpm, acc, passed, ts: Date.now() };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
   renderLessonsGrid();
+
+  // show/hide retry button based on pass/fail
+  retryBtn.style.display = passed ? "inline-block" : "none";
 
   alert(`${passed ? "✅ Passed" : "❌ Failed. Please try again and score 30WPM with 90% Accuracy or above to proceed"} — WPM: ${wpm}, Accuracy: ${acc}%${reason==="timeout"?" (time up)":""}`);
 
@@ -246,6 +249,36 @@ function finishLesson(reason){
     document.addEventListener("keydown", retryHandler);
   }
 }
+
+/* --------------------------
+   LESSON LOAD (update to reset retryBtn visibility)
+   -------------------------- */
+function loadLesson(i){
+  currentIndex = i;
+  typingLocked = false;
+  typing.disabled = false;
+  typing.value = "";
+  startedAt = null;
+
+  stopTimer();
+  timeLeft = DURATION;
+  timerEl.textContent = `${timeLeft}s`;
+
+  // Render passage fresh
+  renderPassage();
+
+  // nav buttons
+  prevBtn.disabled = i === 0;
+  nextBtn.disabled = i >= beginnerLessons.length - 1;
+
+  // show retry button only if no attempt yet OR passed
+  const lastResult = results[i];
+  retryBtn.style.display = (!lastResult || lastResult.passed) ? "inline-block" : "none";
+
+  // focus
+  typing.focus();
+}
+
 
 /* --------------------------
    EVENTS (update typing event)
@@ -423,5 +456,6 @@ window.addEventListener("click", (e) => {
     progressModal.style.display = "none";
   }
 });
+
 
 
