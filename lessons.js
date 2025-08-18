@@ -224,7 +224,21 @@ function finishLesson(reason){
   const acc = typed > 0 ? Math.round((correct/typed)*100) : 0;
 
   const passed = (wpm >= PASS_WPM) && (acc >= PASS_ACC);
-  results[currentIndex] = { wpm, acc, passed, ts: Date.now() };
+
+  // new keystroke tracking
+  const correctKeys = correct;
+  const incorrectKeys = Math.max(0, typed - correct);
+  const keystrokes = typed;
+
+  results[currentIndex] = { 
+    wpm, 
+    acc, 
+    passed, 
+    ts: Date.now(),
+    keystrokes,
+    correctKeys,
+    incorrectKeys
+  };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
   renderLessonsGrid();
 
@@ -234,21 +248,20 @@ function finishLesson(reason){
   alert(`${passed ? "✅ Passed" : "❌ Failed. Please try again and score 30WPM with 90% Accuracy or above to proceed"} — WPM: ${wpm}, Accuracy: ${acc}%${reason==="timeout"?" (time up)":""}`);
 
   if (passed && currentIndex < beginnerLessons.length-1){
-    // auto-advance
     setTimeout(() => {
       loadLesson(currentIndex+1);
     }, 600);
   } else if (!passed) {
-    // listen for Enter to retry automatically
     const retryHandler = (e) => {
       if (e.key === "Enter") {
         document.removeEventListener("keydown", retryHandler);
-        loadLesson(currentIndex); // retry same lesson
+        loadLesson(currentIndex); 
       }
     };
     document.addEventListener("keydown", retryHandler);
   }
 }
+
 
 /* --------------------------
    LESSON LOAD (update to reset retryBtn visibility)
@@ -380,12 +393,20 @@ retryBtn.addEventListener("click", () => {
    PROGRESS CHECK
    -------------------------- */
 function loadProgress() {
-  const progress = results; // reuse your results object
+  const progress = results; 
   const list = document.getElementById("progressList");
+  const progressBar = document.getElementById("progressBar");
+  const progressText = document.getElementById("progressText");
+
   list.innerHTML = "";
+
+  const totalLessons = 120; 
+  let passedCount = 0;
 
   if (Object.keys(progress).length === 0) {
     list.innerHTML = "<li>No lessons attempted yet.</li>";
+    progressBar.style.width = "0%";
+    progressText.textContent = "0 / " + totalLessons + " lessons passed";
     return;
   }
 
@@ -394,10 +415,17 @@ function loadProgress() {
     const li = document.createElement("li");
     li.textContent = `Lesson ${parseInt(lessonIndex) + 1}: 
       WPM ${p.wpm}, Accuracy ${p.acc}%, 
-      Status: ${p.passed ? "✅ Passed" : "❌ Failed"}`;
+      Status: ${p.passed ? "✅ Passed" : "❌ Failed"} 
+      Keystrokes ${p.keystrokes || 0} correct keys ${p.correctKeys || 0} incorrect keys ${p.incorrectKeys || 0}`;
+    if (p.passed) passedCount++;
     list.appendChild(li);
   });
+
+  const percent = (passedCount / totalLessons) * 120;
+  progressBar.style.width = percent + "%";
+  progressText.textContent = `${passedCount} / ${totalLessons} lessons passed`;
 }
+
 
 // Hook up to button
 document.getElementById("Progress-btn").addEventListener("click", loadProgress);
@@ -456,6 +484,7 @@ window.addEventListener("click", (e) => {
     progressModal.style.display = "none";
   }
 });
+
 
 
 
