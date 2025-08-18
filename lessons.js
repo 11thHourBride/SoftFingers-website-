@@ -226,7 +226,7 @@
       renderLessonsGrid();
        // refresh pass styles and progress
 
-      alert(`${passed ? "✅ Passed" : "❌ Failed"} — WPM: ${wpm}, Accuracy: ${acc}%${reason==="timeout"?" (time up)":""}`);
+      alert(`${passed ? "✅ Passed" : "❌ Failed. Please try again and score 30WPM with 90% Accuracy or above and proceed to the next lesson"} — WPM: ${wpm}, Accuracy: ${acc}%${reason==="timeout"?" (time up)":""}`);
 
       if (passed && currentIndex < beginnerLessons.length-1){
         // auto-advance
@@ -382,3 +382,4 @@ window.addEventListener("click", (e) => {
     progressModal.style.display = "none";
   }
 });
+
