@@ -209,32 +209,73 @@
       if (timerId){ clearInterval(timerId); timerId = null; }
     }
 
-    function finishLesson(reason){
-      stopTimer();
-      typingLocked = true;
-      typing.disabled = true;
+    /* --------------------------
+   LESSON FLOW (update finishLesson + retry handling)
+   -------------------------- */
+function finishLesson(reason){
+  stopTimer();
+  typingLocked = true;
+  typing.disabled = true;
 
-      // compute final stats from latest render
-      const {correct, typed} = renderPassage();
-      const elapsedMin = startedAt ? ((Date.now()-startedAt)/60000) : (DURATION/60);
-      const wpm = elapsedMin > 0 ? Math.round((correct/5)/elapsedMin) : 0;
-      const acc = typed > 0 ? Math.round((correct/typed)*100) : 0;
+  // compute final stats from latest render
+  const {correct, typed} = renderPassage();
+  const elapsedMin = startedAt ? ((Date.now()-startedAt)/60000) : (DURATION/60);
+  const wpm = elapsedMin > 0 ? Math.round((correct/5)/elapsedMin) : 0;
+  const acc = typed > 0 ? Math.round((correct/typed)*100) : 0;
 
-      const passed = (wpm >= PASS_WPM) && (acc >= PASS_ACC);
-      results[currentIndex] = { wpm, acc, passed, ts: Date.now() };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
-      renderLessonsGrid();
-       // refresh pass styles and progress
+  const passed = (wpm >= PASS_WPM) && (acc >= PASS_ACC);
+  results[currentIndex] = { wpm, acc, passed, ts: Date.now() };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
+  renderLessonsGrid();
 
-      alert(`${passed ? "✅ Passed" : "❌ Failed. Please try again and score 30WPM with 90% Accuracy or above and proceed to the next lesson"} — WPM: ${wpm}, Accuracy: ${acc}%${reason==="timeout"?" (time up)":""}`);
+  alert(`${passed ? "✅ Passed" : "❌ Failed. Please try again and score 30WPM with 90% Accuracy or above to proceed"} — WPM: ${wpm}, Accuracy: ${acc}%${reason==="timeout"?" (time up)":""}`);
 
-      if (passed && currentIndex < beginnerLessons.length-1){
-        // auto-advance
-        setTimeout(() => {
-          loadLesson(currentIndex+1);
-        }, 600);
+  if (passed && currentIndex < beginnerLessons.length-1){
+    // auto-advance
+    setTimeout(() => {
+      loadLesson(currentIndex+1);
+    }, 600);
+  } else if (!passed) {
+    // listen for Enter to retry automatically
+    const retryHandler = (e) => {
+      if (e.key === "Enter") {
+        document.removeEventListener("keydown", retryHandler);
+        loadLesson(currentIndex); // retry same lesson
       }
-    }
+    };
+    document.addEventListener("keydown", retryHandler);
+  }
+}
+
+/* --------------------------
+   EVENTS (update typing event)
+   -------------------------- */
+typing.addEventListener("input", () => {
+  if (typingLocked) return;
+  if (!startedAt){
+    startedAt = Date.now();
+    startTimer();
+  }
+  const {acc, wpm, targetLen} = renderPassage();
+
+  // End lesson as soon as all chars typed (regardless of correctness)
+  if (typing.value.length >= targetLen){
+    finishLesson("completed");
+  }
+});
+
+/* --------------------------
+   Disable retry button when failed
+   -------------------------- */
+retryBtn.addEventListener("click", () => {
+  const lastResult = results[currentIndex];
+  if (lastResult && !lastResult.passed){
+    alert("❌ You must retry this lesson by pressing ENTER after failing. Retry button is disabled for failed lessons.");
+    return;
+  }
+  loadLesson(currentIndex);
+});
+
 
     function findFirstUnpassed(){
       for (let i=0;i<beginnerLessons.length;i++){
@@ -382,4 +423,5 @@ window.addEventListener("click", (e) => {
     progressModal.style.display = "none";
   }
 });
+
 
