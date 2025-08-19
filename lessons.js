@@ -1,43 +1,72 @@
- /* --------------------------
-       DATA: 100 Beginner Lessons
-       -------------------------- */
-    const beginnerLessons = [
-      // Stage 1: Home row drills (1–20)
-      "asdf jkl;", "fjdksla;", "jjff kkdd", "aa ss dd ff", "jj kk ll ;;",
-      "asdf asdf jkl; jkl;", "fj fj fj fj", "dk dk dk dk", "sl sl sl sl",
-      "a s d f j k l ;", "ff jj dd kk", "aa ss ll ;;", "asdfg hjkl;",
-      "fjdk sl; fjdk sl;", "aj ak al a;", "sd sl sk sj", "df dk dl d;",
-      "fj fj fj fj dk dk dk", "as as as as jl jl jl", "asdf jkl; asdf jkl;",
-      // Stage 2: Upper row drills (21–40)
-      "qwer uiop", "qq ww ee rr", "uu ii oo pp", "qw er ty ui op",
-      "qwe rty uio p", "qp qp qp qp", "we we we we", "er er er er",
-      "ty ty ty ty", "io io io io", "qw qw qw qw", "ui ui ui ui",
-      "op op op op", "qwerty qwerty", "uiop uiop", "qwe qwe qwe",
-      "rty rty rty", "uio uio uio", "qwert uiop", "qw er ui op",
-      // Stage 3: Lower row drills (41–60)
-      "zxcv nm,.", "zz xx cc vv", "nn mm ,, ..", "zx zx zx zx",
-      "cv cv cv cv", "nm nm nm nm", "zc zc zc zc", "xv xv xv xv",
-      "mn mn mn mn", ",. ,. ,. ,.", "zxc zxc zxc", "vnm vnm vnm",
-      "zx nm zx nm", "cv ., cv ., ", "zxcv zxcv", "nm,. nm,.",
-      "zx cv nm ,.", "zxcv nm,.", "zxvnm ,.zx", "mncv zx,.",
-      // Stage 4: Mixed rows (61–80)
-      "asdf qwer zxcv", "jkl; uiop nm,.", "asd qwe zxc", "jkl uio nm,",
-      "asdfg qwert", "hjkl uiopn", "qaz wsx edc rfv", "tgb yhn ujm ik,",
-      "qwe asd zxc", "rty fgh vbn", "uio jkl m,.", "qaz wsx edc",
-      "rfv tgb yhn", "ujm ik, ol.", "pl; okm inj", "uhb ygv tfc",
-      "qazwsx qazwsx", "edcrfv edcrfv", "tgbtgb tgbtgb", "yhnujm yhnujm",
-      // Stage 5: Words & simple sentences (81–100)
-      "cat dog man", "sun run fun", "jam ham ram", "pen hen men",
-      "top hop mop", "red bed fed", "sit fit hit", "cup pup sup",
-      "fan can ran", "mad sad bad", "rat mat bat", "lap cap map",
-      "tip sip dip", "log fog hog", "pig wig big", "box fox ox",
-      "you are good", "we can go", "he is mad", "she is sad",
-      "I can type", "you can run", "we are one", "cats and dogs",
-      "fish swim fast", "the sun is hot", "a red pen", "big and small",
-      "dogs run fast", "time to go", "I am happy", "we play well",
-      "he can win", "she will go", "they all ran", "you did it",
-      "this is fun", "that is big", "here we go", "good job done"
-    ];
+// Beginner lesson titles by stage
+const lessonTitles = {
+  1: "🏠 Home row drills",
+  21: "🔼 Upper row drills",
+  41: "🔽 Lower row drills",
+  61: "🔀 Mixed rows",
+  81: "📝 Words & simple sentences"
+};
+
+// Function to get the correct title based on lesson index
+function getLessonTitle(index) {
+  if (index >= 81) return lessonTitles[81];
+  if (index >= 61) return lessonTitles[61];
+  if (index >= 41) return lessonTitles[41];
+  if (index >= 21) return lessonTitles[21];
+  return lessonTitles[1];
+}
+
+// Example: when loading a lesson
+function loadLesson(index) {
+  const lessonText = beginnerLessons[index];
+  const lessonTitle = getLessonTitle(index + 1); // +1 since array is 0-based
+
+  // Show title above typing input
+  document.getElementById("lessonTitle").textContent = lessonTitle;
+
+  // Clear typing input
+  document.getElementById("typing").value = "";
+  document.getElementById("typing").setAttribute("data-lesson-text", lessonText);
+}
+
+const beginnerLessons = [
+  // Stage 1: Home row drills (1–20)
+  "asdf jkl;", "fjdksla;", "jjff kkdd", "aa ss dd ff", "jj kk ll ;;",
+  "asdf asdf jkl; jkl;", "fj fj fj fj", "dk dk dk dk", "sl sl sl sl",
+  "a s d f j k l ;", "ff jj dd kk", "aa ss ll ;;", "asdfg hjkl;",
+  "fjdk sl; fjdk sl;", "aj ak al a;", "sd sl sk sj", "df dk dl d;",
+  "fj fj fj fj dk dk dk", "as as as as jl jl jl", "asdf jkl; asdf jkl;",
+  // Stage 2: Upper row drills (21–40)
+  "qwer uiop", "qq ww ee rr", "uu ii oo pp", "qw er ty ui op",
+  "qwe rty uio p", "qp qp qp qp", "we we we we", "er er er er",
+  "ty ty ty ty", "io io io io", "qw qw qw qw", "ui ui ui ui",
+  "op op op op", "qwerty qwerty", "uiop uiop", "qwe qwe qwe",
+  "rty rty rty", "uio uio uio", "qwert uiop", "qw er ui op",
+  // Stage 3: Lower row drills (41–60)
+  "zxcv nm,.", "zz xx cc vv", "nn mm ,, ..", "zx zx zx zx",
+  "cv cv cv cv", "nm nm nm nm", "zc zc zc zc", "xv xv xv xv",
+  "mn mn mn mn", ",. ,. ,. ,.", "zxc zxc zxc", "vnm vnm vnm",
+  "zx nm zx nm", "cv ., cv ., ", "zxcv zxcv", "nm,. nm,.",
+  "zx cv nm ,.", "zxcv nm,.", "zxvnm ,.zx", "mncv zx,.",
+  // Stage 4: Mixed rows (61–80)
+  "asdf qwer zxcv", "jkl; uiop nm,.", "asd qwe zxc", "jkl uio nm,",
+  "asdfg qwert", "hjkl uiopn", "qaz wsx edc rfv", "tgb yhn ujm ik,",
+  "qwe asd zxc", "rty fgh vbn", "uio jkl m,.", "qaz wsx edc",
+  "rfv tgb yhn", "ujm ik, ol.", "pl; okm inj", "uhb ygv tfc",
+  "qazwsx qazwsx", "edcrfv edcrfv", "tgbtgb tgbtgb", "yhnujm yhnujm",
+  // Stage 5: Words & simple sentences (81–100)
+  "cat dog man", "sun run fun", "jam ham ram", "pen hen men",
+  "top hop mop", "red bed fed", "sit fit hit", "cup pup sup",
+  "fan can ran", "mad sad bad", "rat mat bat", "lap cap map",
+  "tip sip dip", "log fog hog", "pig wig big", "box fox ox",
+  "you are good", "we can go", "he is mad", "she is sad",
+  "I can type", "you can run", "we are one", "cats and dogs",
+  "fish swim fast", "the sun is hot", "a red pen", "big and small",
+  "dogs run fast", "time to go", "I am happy", "we play well",
+  "he can win", "she will go", "they all ran", "you did it",
+  "this is fun", "that is big", "here we go", "good job done"
+];
+ 
 
     /* --------------------------
        STATE / STORAGE
@@ -481,21 +510,76 @@ const progressModal = document.getElementById("progressModal");
 const progressBtn = document.getElementById("Progress-btn");
 const closeBtn = document.getElementById("closeProgress");
 
-progressBtn.addEventListener("click", () => {
-  loadProgress();
-  progressModal.style.display = "block";
+const modalList = progressModal ? progressModal.querySelector("#progressList") : document.getElementById("progressList");
+const modalBar  = progressModal ? progressModal.querySelector("#progressBar")  : document.getElementById("progressBar");
+const modalText = progressModal ? progressModal.querySelector("#progressText") : document.getElementById("progressText");
+
+function loadProgress() {
+  const progress = results; 
+  const list = modalList;
+  const progressBarEl = modalBar;
+  const progressTextEl = modalText;
+
+  if (!list || !progressBarEl || !progressTextEl) return;
+
+  list.innerHTML = "";
+
+  const totalLessons = beginnerLessons.length; // 100
+  let passedCount = 0;
+
+  if (Object.keys(progress).length === 0) {
+    list.innerHTML = "<li>No lessons attempted yet.</li>";
+    progressBarEl.style.width = "0%";
+    progressTextEl.textContent = `0 / ${totalLessons} lessons passed`;
+    return;
+  }
+
+  Object.keys(progress).forEach(lessonIndex => {
+  const p = progress[lessonIndex];
+  const li = document.createElement("li");
+
+  const idx = parseInt(lessonIndex) + 1;
+  const ks = p.keystrokes || 0;
+  const ck = p.correctKeys || 0;
+  const ik = p.incorrectKeys || Math.max(0, ks - ck);
+  const passed = !!p.passed;
+
+  // format timestamp inline
+  let timeStr = "";
+  if (p.ts) {
+    const date = new Date(p.ts);
+    timeStr = date.toLocaleString(); 
+  }
+
+  li.textContent = `Lesson ${idx}: WPM ${p.wpm}, Accuracy ${p.acc}%, Status: ${passed ? "✅ Passed" : "❌ Failed"} Keystrokes ${ks} correct keys ${ck} incorrect keys ${ik} 📅 ${timeStr}`;
+
+  if (p.passed) passedCount++;
+  list.appendChild(li);
 });
 
-closeBtn.addEventListener("click", () => {
-  progressModal.style.display = "none";
-});
+  // Update progress bar correctly
+  const percent = (passedCount / totalLessons) * 100;
+  progressBarEl.style.width = percent + "%";
+  progressTextEl.textContent = `${passedCount} / ${totalLessons} lessons passed`;
+}
 
+// Modal handling
+if (progressBtn) {
+  progressBtn.addEventListener("click", () => {
+    loadProgress();
+    if (progressModal) progressModal.style.display = "block";
+  });
+}
+if (closeBtn) {
+  closeBtn.addEventListener("click", () => {
+    if (progressModal) progressModal.style.display = "none";
+  });
+}
 window.addEventListener("click", (e) => {
-  if (e.target === progressModal) {
+  if (progressModal && e.target === progressModal) {
     progressModal.style.display = "none";
   }
 });
-
 
 
 
