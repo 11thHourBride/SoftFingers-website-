@@ -190,3 +190,36 @@
   background:linear-gradient(135deg,var(--accent-start),var(--accent-end));
   border-radius: 20px;
 }
+#lessonTitle {
+  text-align: center;
+  font-size: 1.5rem;   /* nice big title */
+  font-weight: bold;
+  color: #ffffff;      /* white (or pick any color that fits your theme) */
+  margin-bottom: 10px; /* space below before the progress bar */
+  margin-top: 5px;     /* small gap from top */
+  text-transform: capitalize; /* make titles look neat */
+}
+#lessonHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #f5f5f5;
+}
+
+#lessonTitle {
+  font-weight: bold;
+}
+
+#lessonTimestamp {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #ccc;
+}
+
+
+#lessonTitle.fade-out {
+  opacity: 0;
+}
+
