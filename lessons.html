@@ -23,12 +23,37 @@
         <div class="tab" data-level="intermediate">Intermediate</div>
         <div class="tab" data-level="advanced">Advanced</div>
       </div>
+      
     </div>
+    </div>
+ <!-- Intermediate Section -->
+    <div class="card hidden" id="section-intermediate">
+      <div class="lockedBox" id="intermediate-lock">
+        <h2>Intermediate Lessons 🔒</h2>
+        <p class="lock-msg">Complete all Beginner lessons (pass each with ≥ 30 WPM & ≥ 90% accuracy) to unlock.</p>
+      </div>
+      <div id="intermediate-content" class="hidden">
+        <h2>Intermediate Lessons ✅</h2>
+        <p>Unlocked! (We’ll add structured content here next.)</p>
+      </div>
+    </div>
+
+    <!-- Advanced Section -->
+    <div class="card hidden" id="section-advanced">
+      <div class="lockedBox" id="advanced-lock">
+        <h2>Advanced Lessons 🔒</h2>
+        <p class="lock-msg">Complete Intermediate lessons to unlock Advanced.</p>
+      </div>
+      <div id="advanced-content" class="hidden">
+        <h2>Advanced Lessons ✅</h2>
+        <p>Unlocked! (Coming up after Intermediate.)</p>
+      </div>
     </div>
 
    
 
     <!-- Beginner Section -->
+     
     <div class="card" id="section-beginner">
       <h2>Introduction to Touch Typing</h2>
       <p><b>Touch Typing</b> means typing without looking at the keyboard. It improves speed, accuracy, and reduces strain.</p>
@@ -77,7 +102,7 @@
       </div>
 
       <!-- Lesson -->
-        
+       <div id="beginnerSection" style="margin:20px;"> 
       <div class="lesson-area">
          <h2 id="lessonHeader">
   <span id="lessonTitle"></span>
@@ -101,7 +126,8 @@
 
 <!-- Progress Modal --> <div id="progressModal" class="modal"> 
   <div class="modal-content"> <span id="closeProgress" class="close">&times;</span> <h2>📊 Lesson Progress Bar</h2>
-    <!-- Progress bar container --> <div id="progressContainer"> <div id="progressBar"></div>
+    <!-- Progress bar container -->
+      <div id="progressContainer"> <div id="progressBar"></div>
     </div> <p id="progressText"></p> <h2>Progress History📊 </h2> <ul id="progressList"></ul> </div> </div> </div> <button class="btn secondary" id="Progress-btn">Check Your Lesson History Here</button> <ul id="progressList"></ul> </div> </div>
 
    <!-- Live Keyboard -->
@@ -251,38 +277,96 @@
       <!-- Lesson list -->
       <div class="lessons-grid" id="lessons-grid"></div>
     </div>
-
-    <!-- Intermediate Section -->
-    <div class="card hidden" id="section-intermediate">
-      <div class="lockedBox" id="intermediate-lock">
-        <h2>Intermediate Lessons 🔒</h2>
-        <p class="lock-msg">Complete all Beginner lessons (pass each with ≥ 30 WPM & ≥ 90% accuracy) to unlock.</p>
-      </div>
-      <div id="intermediate-content" class="hidden">
-        <h2>Intermediate Lessons ✅</h2>
-        <p>Unlocked! (We’ll add structured content here next.)</p>
-      </div>
-    </div>
-
-    <!-- Advanced Section -->
-    <div class="card hidden" id="section-advanced">
-      <div class="lockedBox" id="advanced-lock">
-        <h2>Advanced Lessons 🔒</h2>
-        <p class="lock-msg">Complete Intermediate lessons to unlock Advanced.</p>
-      </div>
-      <div id="advanced-content" class="hidden">
-        <h2>Advanced Lessons ✅</h2>
-        <p>Unlocked! (Coming up after Intermediate.)</p>
-      </div>
-    </div>
-
+<!-- Add this button inside your Beginner tab (hidden by default) -->
+<button id="downloadCertificateBtn" style="display:none; margin-top:20px; padding:10px 20px; background:#4CAF50; color:white; border:none; border-radius:8px; cursor:pointer;">
+  🎓 Download Beginner Certificate
+</button>
+   
     <!-- Back -->
     <div class="card">
       <button class="btn back" onclick="window.location.href='main.html'">⬅ Back to Dashboard</button>
     </div>
   </div>
 
-  <script src="lessons.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+ // ====== Track Beginner Results ======
+  let beginnerResults = []; // {lesson: number, wpm: number, accuracy: number}
+
+  function saveLessonResult(lessonNumber, wpm, accuracy) {
+    beginnerResults.push({ lesson: lessonNumber, wpm, accuracy });
+
+    // Check if all 120 lessons are done
+    if (beginnerResults.length >= 120) {
+      document.getElementById("downloadCertificateBtn").style.display = "inline-block";
+    }
+  }
+
+  // ====== Calculate Overall Score ======
+  function calculateOverallScores() {
+    let totalWPM = 0, totalAccuracy = 0;
+    beginnerResults.forEach(r => {
+      totalWPM += r.wpm;
+      totalAccuracy += r.accuracy;
+    });
+    let avgWPM = (totalWPM / beginnerResults.length).toFixed(2);
+    let avgAccuracy = (totalAccuracy / beginnerResults.length).toFixed(2);
+    return { avgWPM, avgAccuracy };
+  }
+
+  // ====== Generate Certificate ======
+  document.getElementById("downloadCertificateBtn").addEventListener("click", () => {
+    const { avgWPM, avgAccuracy } = calculateOverallScores();
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF("landscape");
+
+    // Background gradient rectangle
+    const gradient = doc.setFillColor(240, 240, 255);
+    doc.rect(0, 0, 297, 210, "F"); // A4 landscape size in mm
+
+    // Logo placeholder (replace base64 later)
+    const logoBase64 = "data:image/png;base64,...."; // <-- Replace with SoftFingers logo
+    doc.addImage(logoBase64, "PNG", 120, 10, 60, 30);
+
+    // Title
+    doc.setFontSize(28);
+    doc.setFont("helvetica", "bold");
+    doc.text("Certificate of Completion", 148, 70, { align: "center" });
+
+    // Subtitle
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "normal");
+    doc.text("This certifies that", 148, 90, { align: "center" });
+
+    // User Name (replace with dynamic username if available)
+    let userName = "User Name"; 
+    doc.setFontSize(22);
+    doc.setFont("times", "bolditalic");
+    doc.text(userName, 148, 105, { align: "center" });
+
+    // Achievement text
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "normal");
+    doc.text(`has successfully completed the Beginner Level`, 148, 120, { align: "center" });
+    doc.text(`with an Overall WPM of ${avgWPM} and Accuracy of ${avgAccuracy}%`, 148, 135, { align: "center" });
+
+    // Motivational Quote
+    doc.setFont("times", "italic");
+    doc.setFontSize(12);
+    doc.text("“Determination kills all difficulties”", 148, 170, { align: "center" });
+
+    // Footer
+    const today = new Date().toLocaleDateString();
+    doc.setFont("helvetica", "normal");
+    doc.text(`Date: ${today}`, 30, 190);
+    doc.text("____________________", 250, 190);
+    doc.text("Signature", 250, 200);
+
+    // Save PDF
+    doc.save("Beginner_Certificate.pdf");
+  });
+  </script>
+<script src="lessons.js"></script>
   <script src="livekeyboard.js"></script>
 </body>
 </html>
