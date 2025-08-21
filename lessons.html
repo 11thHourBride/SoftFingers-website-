@@ -1,116 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>SoftFingers Lessons</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="lessons.css">
-  <link rel="stylesheet" href="livekeyboad.css">
-  <style>
-   
-  </style>
-</head>
-<body>
-  <div class="layout">
-    <!-- Header -->
-    <div class="card">
-      <h1>Typing Lessons</h1>
-      <div class="small">Your journey to typing mastery begins here 🚀</div>
-       <!-- Tabs -->
-    <div class="card">
-      <div class="tabs" id="lesson-tabs">
-      <div class="tab active" data-level="beginner">Beginner
-           </div>
-     
-      <div class="tab" data-level="intermediate">Intermediate</div>
-        <div class="tab" data-level="advanced">Advanced</div>
-      </div>
-      
-    </div>
-    </div>
- <!-- Intermediate Section -->
-    <div class="card hidden" id="section-intermediate">
-      <div class="lockedBox" id="intermediate-lock">
-        <h2>Intermediate Lessons 🔒</h2>
-        <p class="lock-msg">Complete all Beginner lessons (pass each with ≥ 30 WPM & ≥ 90% accuracy) to unlock.</p>
-      </div>
-      <div id="intermediate-content" class="hidden">
-        <h2>Intermediate Lessons ✅</h2>
-        <p>Unlocked! (We’ll add structured content here next.)</p>
-      </div>
-    </div>
-
-    <!-- Advanced Section -->
-    <div class="card hidden" id="section-advanced">
-      <div class="lockedBox" id="advanced-lock">
-        <h2>Advanced Lessons 🔒</h2>
-        <p class="lock-msg">Complete Intermediate lessons to unlock Advanced.</p>
-      </div>
-      <div id="advanced-content" class="hidden">
-        <h2>Advanced Lessons ✅</h2>
-        <p>Unlocked! (Coming up after Intermediate.)</p>
-      </div>
-    </div>
-
-   
-
-    <!-- Beginner Section -->
-     
-    <div class="card" id="section-beginner">
-      <h2>Introduction to Touch Typing</h2>
-      <p><b>Touch Typing</b> means typing without looking at the keyboard. It improves speed, accuracy, and reduces strain.</p>
-
-      <div class="grid-2" style="margin:10px 0 16px;">
-        <div>
-          <h3>Sitting Position</h3>
-          <ul>
-            <li>Sit upright with your back straight and shoulders relaxed.</li>
-            <li>Feet flat on the floor; monitor at eye level.</li>
-            <li>Wrists slightly raised; don’t rest them on the keyboard.</li>
-            <li>Keep forearms parallel to the floor; take regular breaks.</li>
-          </ul>
-        </div>
-        <div>
-          <img class="diagram" src="correcting-your-sitting-posture-1.jpg" alt="Sitting posture (light bg)">
-        </div>
-      </div>
-
-      <div class="grid-2" style="margin-bottom:16px;">
-        <div>
-          <h3>Hand Positioning</h3>
-          <p>Rest on <b>Home Row</b>: <b>A S D F</b> (left) and <b>J K L ;</b> (right). Thumbs on <b>Space</b>. Return to home row after each key.</p>
-        </div>
-        <div>
-          <img class="diagram" src="keybd_hand_position.jpg" alt="Hand positioning (light bg)">
-        </div>
-      </div>
-
-      <h3>Typing Metrics</h3>
-      <p><b>WPM</b> = Words Per Minute (1 word ≈ 5 characters). <b>Accuracy</b> = Correct characters ÷ Typed characters. <b>AWPM</b> = WPM × Accuracy.</p>
-
-      <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
-
-      <h2>Beginner Lessons</h2>
-      <p class="small">Pass requirement: <b>≥ 30 WPM</b> and <b>≥ 90% accuracy</b>. Each lesson is 120 seconds.</p>
-
-
-     
-
-
-      <!-- Progress -->
-      <div class="progress-wrap">
-        <div class="small" id="progress-text">Progress: 0 / 120 lessons passed</div>
-        <div class="progress-line"><div class="progress-bar" id="progress-bar"></div></div>
-      </div>
-
-      <!-- Lesson -->
-       <div id="beginnerSection" style="margin:20px;"> 
-      <div class="lesson-area">
-         <h2 id="lessonHeader">
-  <span id="lessonTitle"></span>
-  <span id="lessonTimestamp"></span>
-</h2>
-  <div id="passage"></div>
+lessons.htmllessons.html  <div id="passage"></div>
 
   <input id="typing" type="text" placeholder="Start typing here…" autocomplete="off" spellcheck="false"/>
 </div>
@@ -282,7 +170,7 @@
     <div class="card">
       <button class="btn back" onclick="window.location.href='main.html'">⬅ Back to Dashboard</button>
     </div>
-  </div>
+  
 
   
 
@@ -290,6 +178,7 @@
   <script src="livekeyboard.js"></script>
 </body>
 </html>
+
 
 
 
