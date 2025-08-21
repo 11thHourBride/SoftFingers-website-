@@ -284,88 +284,13 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
- // ====== Track Beginner Results ======
-  let beginnerResults = []; // {lesson: number, wpm: number, accuracy: number}
+  
 
-  function saveLessonResult(lessonNumber, wpm, accuracy) {
-    beginnerResults.push({ lesson: lessonNumber, wpm, accuracy });
-
-    // Check if all 120 lessons are done
-    if (beginnerResults.length >= 120) {
-      document.getElementById("downloadCertificateBtn").style.display = "inline-block";
-    }
-  }
-
-  // ====== Calculate Overall Score ======
-  function calculateOverallScores() {
-    let totalWPM = 0, totalAccuracy = 0;
-    beginnerResults.forEach(r => {
-      totalWPM += r.wpm;
-      totalAccuracy += r.accuracy;
-    });
-    let avgWPM = (totalWPM / beginnerResults.length).toFixed(2);
-    let avgAccuracy = (totalAccuracy / beginnerResults.length).toFixed(2);
-    return { avgWPM, avgAccuracy };
-  }
-
-  // ====== Generate Certificate ======
-  document.getElementById("downloadCertificateBtn").addEventListener("click", () => {
-    const { avgWPM, avgAccuracy } = calculateOverallScores();
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF("landscape");
-
-    // Background gradient rectangle
-    const gradient = doc.setFillColor(240, 240, 255);
-    doc.rect(0, 0, 297, 210, "F"); // A4 landscape size in mm
-
-    // Logo placeholder (replace base64 later)
-    const logoBase64 = "data:image/png;base64,...."; // <-- Replace with SoftFingers logo
-    doc.addImage(logoBase64, "PNG", 120, 10, 60, 30);
-
-    // Title
-    doc.setFontSize(28);
-    doc.setFont("helvetica", "bold");
-    doc.text("Certificate of Completion", 148, 70, { align: "center" });
-
-    // Subtitle
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "normal");
-    doc.text("This certifies that", 148, 90, { align: "center" });
-
-    // User Name (replace with dynamic username if available)
-    let userName = "User Name"; 
-    doc.setFontSize(22);
-    doc.setFont("times", "bolditalic");
-    doc.text(userName, 148, 105, { align: "center" });
-
-    // Achievement text
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "normal");
-    doc.text(`has successfully completed the Beginner Level`, 148, 120, { align: "center" });
-    doc.text(`with an Overall WPM of ${avgWPM} and Accuracy of ${avgAccuracy}%`, 148, 135, { align: "center" });
-
-    // Motivational Quote
-    doc.setFont("times", "italic");
-    doc.setFontSize(12);
-    doc.text("“Determination kills all difficulties”", 148, 170, { align: "center" });
-
-    // Footer
-    const today = new Date().toLocaleDateString();
-    doc.setFont("helvetica", "normal");
-    doc.text(`Date: ${today}`, 30, 190);
-    doc.text("____________________", 250, 190);
-    doc.text("Signature", 250, 200);
-
-    // Save PDF
-    doc.save("Beginner_Certificate.pdf");
-  });
-  </script>
 <script src="lessons.js"></script>
   <script src="livekeyboard.js"></script>
 </body>
 </html>
+
 
 
 
