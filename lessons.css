@@ -226,4 +226,103 @@
 #lessonTitle.fade-out {
   opacity: 0;
 }
+.certificate-link {
+    margin-top: 20px;
+    text-align: center;
+  }
+.cert-btn {
+  display: inline-block;
+  background: #4CAF50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.7s ease-in-out, box-shadow 0.8s ease-in-out, transform 0.6s ease-in-out, text-shadow 0.6s ease-in-out;
+  animation: greenGlow 2.5s infinite ease-in-out;
+}
+
+.cert-btn {
+  display: inline-block;
+  background: #4CAF50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.7s ease-in-out, box-shadow 0.8s ease-in-out, transform 0.6s ease-in-out, text-shadow 0.6s ease-in-out;
+  animation: greenGlow 2.5s infinite ease-in-out;
+}
+
+.cert-btn {
+  display: inline-block;
+  background: #4CAF50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.7s ease-in-out, box-shadow 0.8s ease-in-out, transform 0.6s ease-in-out, text-shadow 0.6s ease-in-out;
+  animation: greenGlow 2.5s infinite ease-in-out;
+}
+
+.cert-btn {
+  display: inline-block;
+  background: #4CAF50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.7s ease-in-out, box-shadow 0.8s ease-in-out, transform 0.6s ease-in-out, text-shadow 0.6s ease-in-out;
+  animation: greenGlow 2.5s infinite ease-in-out;
+}
+
+/* Hover: rainbow background + glow */
+.cert-btn:hover {
+  border-radius: 20px;
+  padding: 10px 30% 10px 30%;
+  font-weight: bold;
+  text-align: center;
+  transform: scale(1.08);
+  color: white;
+  animation: rainbowGlow 3s infinite linear, rainbowBG 6s infinite linear;
+  background-size: 400% 400%;
+  text-shadow: 0 0 10px red, 0 0 20px orange, 0 0 30px yellow, 0 0 40px green, 0 0 50px blue, 0 0 60px indigo, 0 0 70px violet;
+}
+
+/* Idle green glow */
+@keyframes greenGlow {
+  0% {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), 0 0 8px #4CAF50, 0 0 15px #4CAF50;
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), 0 0 18px #4CAF50, 0 0 35px #4CAF50;
+  }
+  100% {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), 0 0 8px #4CAF50, 0 0 15px #4CAF50;
+  }
+}
+
+/* Rainbow glow */
+@keyframes rainbowGlow {
+  0% {
+    box-shadow: 0 0 20px red, 0 0 40px orange, 0 0 60px yellow, 0 0 80px green, 0 0 100px blue, 0 0 120px indigo, 0 0 140px violet;
+  }
+  50% {
+    box-shadow: 0 0 40px violet, 0 0 60px indigo, 0 0 80px blue, 0 0 100px green, 0 0 120px yellow, 0 0 140px orange, 0 0 160px red;
+  }
+  100% {
+    box-shadow: 0 0 20px red, 0 0 40px orange, 0 0 60px yellow, 0 0 80px green, 0 0 100px blue, 0 0 120px indigo, 0 0 140px violet;
+  }
+}
+
+/* Rainbow background animation */
+@keyframes rainbowBG {
+  0% { background: linear-gradient(135deg, red, orange, yellow, green, blue, indigo, violet); }
+  50% { background: linear-gradient(135deg, violet, indigo, blue, green, yellow, orange, red); }
+  100% { background: linear-gradient(135deg, red, orange, yellow, green, blue, indigo, violet); }
+}
+
+
 
