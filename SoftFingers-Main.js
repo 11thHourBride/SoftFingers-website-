@@ -1,78 +1,111 @@
-  document.addEventListener('DOMContentLoaded', () => {
-    // ==== FIREBASE CONFIG - your real config ====
-    const firebaseConfig = {
-      apiKey: "AIzaSyCoQO4vR_lIStx2lMPSy_YhHYPh75gHRSQ",
-      authDomain: "softfingers-typing.firebaseapp.com",
-      projectId: "softfingers-typing",
-      storageBucket: "softfingers-typing.firebasestorage.app",
-      messagingSenderId: "896354348357",
-      appId: "1:896354348357:web:72fda3e79dce5f5b8b622c",
-      measurementId: "G-SLF302PVR4"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-      // Elements
-      const loginTab = document.getElementById('tab-login');
-      const signupTab = document.getElementById('tab-signup');
-      const loginForm = document.getElementById('login-form');
-      const signupForm = document.getElementById('signup-form');
-      const authCard = document.getElementById('auth-card');
-      const authMessage = document.getElementById('auth-message');
-      const forgotBtn = document.getElementById('forgot-btn');
+document.addEventListener('DOMContentLoaded', () => {
+  // ==== FIREBASE CONFIG - your real config ====
+  const firebaseConfig = {
+    apiKey: "AIzaSyCoQO4vR_lIStx2lMPSy_YhHYPh75gHRSQ",
+    authDomain: "softfingers-typing.firebaseapp.com",
+    projectId: "softfingers-typing",
+    storageBucket: "softfingers-typing.firebasestorage.app",
+    messagingSenderId: "896354348357",
+    appId: "1:896354348357:web:72fda3e79dce5f5b8b622c",
+    measurementId: "G-SLF302PVR4"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-      const userEmailTag = document.getElementById('user-email-tag');
-      const emailVerifStatus = document.getElementById('email-verif-status');
-      const logoutBtn = document.getElementById('logout-btn');
-      const sendVerifBtn = document.getElementById('send-verif-btn');
-      const authSummary = document.getElementById('auth-summary');
+  // ==== ELEMENTS (existing IDs from your HTML) ====
+  const loginTab = document.getElementById('tab-login');
+  const signupTab = document.getElementById('tab-signup');
+  const loginForm = document.getElementById('login-form');
+  const signupForm = document.getElementById('signup-form');
+  const authCard = document.getElementById('auth-card');
+  const authMessage = document.getElementById('auth-message');
+  const forgotBtn = document.getElementById('forgot-btn');
 
-      const bestWPMEl = document.getElementById('best-wpm');
-      const bestAccEl = document.getElementById('best-acc');
-      const recentTableBody = document.querySelector('#recent-table tbody');
-      const leaderboardBody = document.querySelector('#leaderboard-table tbody');
+  const userEmailTag = document.getElementById('user-email-tag');
+  const emailVerifStatus = document.getElementById('email-verif-status');
+  const logoutBtn = document.getElementById('logout-btn');
+  const sendVerifBtn = document.getElementById('send-verif-btn');
+  const authSummary = document.getElementById('auth-summary');
 
-      const statTime = document.getElementById('stat-time');
-      const statWPM = document.getElementById('stat-wpm');
-      const statAcc = document.getElementById('stat-acc');
-      const passageDisplay = document.getElementById('passage-display');
-      const typingInput = document.getElementById('typing-input');
-      const retryBtn = document.getElementById('retry-btn');
-      const currentDiffBadge = document.getElementById('current-diff');
-      const durationSelect = document.getElementById('duration-select');
+  const bestWPMEl = document.getElementById('best-wpm');
+  const bestAccEl = document.getElementById('best-acc');
+  const recentTableBody = document.querySelector('#recent-table tbody');
+  const leaderboardBody = document.querySelector('#leaderboard-table tbody');
 
-      const diffTabs = document.querySelectorAll('.tab[data-diff]');
-      const modeSelect = document.getElementById('mode-select');
-      const quoteControls = document.getElementById('quote-controls');
-      const quoteSelect = document.getElementById('quote-select');
-      const quoteAuthorEl = document.getElementById('quote-author');
+  const statTime = document.getElementById('stat-time');
+  const statWPM = document.getElementById('stat-wpm');
+  const statAcc = document.getElementById('stat-acc');
+  const passageDisplay = document.getElementById('passage-display');
+  const typingInput = document.getElementById('typing-input');
+  const retryBtn = document.getElementById('retry-btn');
+  const currentDiffBadge = document.getElementById('current-diff');
+  const durationSelect = document.getElementById('duration-select');
 
-      // Word banks
-      const WORDS = {
-        Beginner: ["during","after","today","between","behind", "defend", "divine", "middle", "under", "magic", "beneath", "withdraw",
-                   "believer","believe","release","adapt","construct","idiot","heaven","ignite","super","superb","dreadful","hover",
-                   "infinite","Jordan","coward","flame","previous","maintain","honorary","legacy","legit","graze","content","grass",
-                   "introduce","luggage","enter","ease","radio","junk","jelly","juice","juvenile","order","other","backspace","loop",
-                   "museum","hail","loving","Ghana","America","hundred","attract","abnormal","adjust","down","pages","pages","vile",
-                   "zebra","xylophone","lobby","easy","over","gamers","games","like","leave","leaves","lift","influence", "frame", 
-                   "insane","breathe","raid","flee","mango","pumpkin","orange","voilet","apple","inside", "intern", "mediate","final",
-                   "review","intend","brave","mapping","view","candle","handle","female","mandate","hunger","hungry","number","figure",
-                   "habit","things","matter","synthesis","grant","redeem","floor","major","subject","attract","indeed", "below","other",
-                   "father","mother","uncle","auntie","nephew","niece","without","between","could","should","however","about","should",
-                   "green","purple","yellow","royal","chariot","horses","artist","mechanic","sweep","holler","amnesia","triangle","angel",
-                   "activate","windows","leader","settings","keyboard","majority","reel","track","preach","teach","leakage","angle","darkness",
-                   "trace","squeeze","truck","train","training","crystal","clear","clearance","mode","hatred","bitter","selfie","maize","blank",
-                   "chat","chartered","altar","alter","altered","chain","block","music","discord","discount","anger","bitterness","duty","faith",
-                   "individual","group","measure","kite","kiwi","forest","manner","statue","stature","Bible","chief","linquist","quick","quartz",
-                   "ghost","narrow","road","rapture","beast","brute","human","acquaint","scarlet","brown","black","white","blue","peach","parrot",
-                   "severe","several","plate","shadow","slain","three","eleven","computer","hazard","manager","account","cashier","clerk","clearance",
-                   "heavy","brother","zinc","grapes","choke","banker","mobile","retreat","surrender","water","hybrid","since","yourself"],
-        
-        Intermediate: ["synthesis","resolve","gradient","interaction","parallel","compute","framework","latency","protocol","asynchronous","concurrency","optimization","rendering"],
-        Advanced: ["antidisestablishmentarianism","transubstantiation","quintessentially","epistemological","philosophically","heterogeneous","microarchitecture","electroencephalography","counterintuitively","neurophysiological"]
-      };
+  const diffTabs = document.querySelectorAll('.tab[data-diff]');
+  const modeSelect = document.getElementById('mode-select');
+  const quoteControls = document.getElementById('quote-controls');
+  const quoteSelect = document.getElementById('quote-select');
+  const quoteAuthorEl = document.getElementById('quote-author');
 
-      // Quote bank (from user)
+  // ==== DYNAMIC Story controls (auto-injected; no HTML change needed) ====
+  const storyControls = document.createElement('div');
+  storyControls.id = 'story-controls';
+  storyControls.style.display = 'none';
+  storyControls.style.minWidth = '260px';
+  storyControls.innerHTML = `
+    <div class="small">Story</div>
+    <select id="story-chapter"></select>
+    <select id="story-part" style="margin-left:8px; min-width:120px;">
+      <option value="0">Part 1</option>
+      <option value="1">Part 2</option>
+    </select>
+    <div class="small" id="story-meta" style="margin-top:4px;"></div>
+  `;
+  // insert after quote-controls
+  quoteControls.parentNode.insertBefore(storyControls, quoteControls.nextSibling);
+
+  const storyChapterSelect = storyControls.querySelector('#story-chapter');
+  const storyPartSelect = storyControls.querySelector('#story-part');
+  const storyMetaEl = storyControls.querySelector('#story-meta');
+
+  // ==== WORDS / QUOTES (from your version) ====
+  const WORDS = {
+    Beginner: ["during","after","today","between","behind","defend","divine","middle","under","magic","beneath","withdraw",
+    "Typing is fun when practiced daily.",
+      "The sun sets and rises with a new day.",
+      "Small steps lead to great achievements.",
+      "believer","believe","release","adapt","construct","idiot","heaven","ignite","super","superb","dreadful","hover",
+      "infinite","Jordan","coward","flame","previous","maintain","honorary","legacy","legit","graze","content","grass",
+      "introduce","luggage","enter","ease","radio","junk","jelly","juice","juvenile","order","other","backspace","loop",
+      "museum","hail","loving","Ghana","America","hundred","attract","abnormal","adjust","down","pages","pages","vile",
+      "zebra","xylophone","lobby","easy","over","gamers","games","like","leave","leaves","lift","influence","frame",
+      "insane","breathe","raid","flee","mango","pumpkin","orange","voilet","apple","inside","intern","mediate","final",
+      "review","intend","brave","mapping","view","candle","handle","female","mandate","hunger","hungry","number","figure",
+      "habit","things","matter","synthesis","grant","redeem","floor","major","subject","attract","indeed","below","other",
+      "father","mother","uncle","auntie","nephew","niece","without","between","could","should","however","about","should",
+      "green","purple","yellow","royal","chariot","horses","artist","mechanic","sweep","holler","amnesia","triangle","angel",
+      "activate","windows","leader","settings","keyboard","majority","reel","track","preach","teach","leakage","angle","darkness",
+      "trace","squeeze","truck","train","training","crystal","clear","clearance","mode","hatred","bitter","selfie","maize","blank",
+      "chat","chartered","altar","alter","altered","chain","block","music","discord","discount","anger","bitterness","duty","faith",
+      "individual","group","measure","kite","kiwi","forest","manner","statue","stature","Bible","chief","linquist","quick","quartz",
+      "ghost","narrow","road","rapture","beast","brute","human","acquaint","scarlet","brown","black","white","blue","peach","parrot",
+      "severe","several","plate","shadow","slain","three","eleven","computer","hazard","manager","account","cashier","clerk","clearance",
+      "heavy","brother","zinc","grapes","choke","banker","mobile","retreat","surrender","water","hybrid","since","yourself"
+    ],
+    Intermediate: ["synthesis","resolve","gradient","interaction","parallel","compute","framework","latency","protocol","asynchronous","concurrency","optimization","rendering",
+      "Learning to type with accuracy and speed takes dedication.",
+      "Patience and practice unlock hidden potential in every learner.",
+      "Consistency is the bridge between goals and accomplishments."
+    ],
+    Advanced: ["antidisestablishmentarianism","transubstantiation","quintessentially","epistemological","philosophically","heterogeneous","microarchitecture","electroencephalography","counterintuitively","neurophysiological",
+      "In the symphony of progress, persistence plays the most enduring tune.",
+      "Mastery is not an act but a habit built from countless attempts.",
+      "Complex challenges refine character, shaping resilience and brilliance."
+    ]
+  };
+
+// Quote bank (from user)
       const QUOTES = [
         {"quote": "Be the change that you wish to see in the world.", "author": "Mahatma Gandhi"},
         {"quote": "In the middle of every difficulty lies opportunity.", "author": "Albert Einstein"},
@@ -274,7 +307,7 @@
   {"quote": "You are never too old to set another goal or to dream a new dream.", "author": "C.S. Lewis"},
   {"quote": "Don't cry because it's over, smile because it happened.", "author": "Dr. Seuss"},
   {"quote": "Push yourself, because no one else is going to do it for you.", "author": "Unknown"},
-  {"quote": "Hard times don't create heroes. It is during the hard times when the ‘hero' within us is revealed.", "author": "Bob Riley"},
+  {"quote": "Hard times don't create heroes. It is during the hard times when the 'hero' within us is revealed.", "author": "Bob Riley"},
   {"quote": "Quality is not an act, it is a habit.", "author": "Aristotle"},
   {"quote": "The best way out is always through.", "author": "Robert Frost"},
   {"quote": "Keep going. Be all in.", "author": "Bryan Hutchinson"},
@@ -296,443 +329,523 @@
 
       ];
 
-      // Typing state
-      let currentDifficulty = "Beginner";
-      let duration = 60;
-      let timeLeft = duration;
-      let running = false;
-      let startTime = null;
-      let timerInterval = null;
-      let targetText = "";
-      let typed = "";
-      let currentUser = null;
-      let mode = 'passage'; // 'passage' or 'quote'
-      let currentQuoteIndex = null;
 
-      // ==== Auth tab toggling ====
-      loginTab.addEventListener('click', () => {
-        loginTab.classList.add('active');
-        signupTab.classList.remove('active');
-        loginForm.style.display = 'flex';
-        signupForm.style.display = 'none';
-        authMessage.textContent = '';
-      });
-      signupTab.addEventListener('click', () => {
-        signupTab.classList.add('active');
-        loginTab.classList.remove('active');
-        signupForm.style.display = 'flex';
-        loginForm.style.display = 'none';
-        authMessage.textContent = '';
-      });
-
-      // Login handler
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        authMessage.textContent = 'Logging in...';
-        authMessage.className = 'small';
-        try {
-          const email = document.getElementById('login-email').value.trim();
-          const pass = document.getElementById('login-pass').value;
-          await auth.signInWithEmailAndPassword(email, pass);
-          authMessage.textContent = '';
-        } catch (err) {
-          authMessage.textContent = err.message;
-          authMessage.classList.add('error');
-        }
-      });
-
-      // Signup handler (fixed)
-      signupForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        authMessage.textContent = 'Creating account...';
-        authMessage.className = 'small';
-        try {
-          const email = document.getElementById('signup-email').value.trim();
-          const pass = document.getElementById('signup-pass').value;
-          if (pass.length < 6) {
-            authMessage.textContent = 'Password must be at least 6 characters.';
-            authMessage.classList.add('error');
-            return;
-          }
-          const cred = await auth.createUserWithEmailAndPassword(email, pass);
-          await cred.user.sendEmailVerification();
-          authMessage.textContent = 'Account created. Verification email sent.';
-          authMessage.classList.add('success');
-        } catch (err) {
-          authMessage.textContent = err.message;
-          authMessage.classList.add('error');
-        }
-      });
-
-      // Forgot password
-      forgotBtn.addEventListener('click', async () => {
-        authMessage.className = 'small';
-        const email = document.getElementById('login-email').value.trim();
-        if (!email) {
-          authMessage.textContent = 'Enter email to reset password.';
-          authMessage.classList.add('error');
-          return;
-        }
-        try {
-          await auth.sendPasswordResetEmail(email);
-          authMessage.textContent = 'Password reset email sent.';
-          authMessage.classList.add('success');
-        } catch (err) {
-          authMessage.textContent = err.message;
-          authMessage.classList.add('error');
-        }
-      });
-
-      // Logout
-      logoutBtn.addEventListener('click', () => auth.signOut());
-
-      // Resend verification
-      sendVerifBtn.addEventListener('click', async () => {
-        if (currentUser) {
-          try {
-            await currentUser.sendEmailVerification();
-            alert('Verification email resent.');
-          } catch (e) {
-            console.warn(e);
-          }
-        }
-      });
-
-      // Difficulty / duration controls
-      diffTabs.forEach(t => {
-        t.addEventListener('click', () => {
-          if (mode === 'quote') return; // disabled in quote mode
-          diffTabs.forEach(x => x.classList.remove('active'));
-          t.classList.add('active');
-          currentDifficulty = t.dataset.diff;
-          currentDiffBadge.textContent = currentDifficulty;
-          loadNewPassage();
-          refreshDashboard();
-        });
-      });
-      durationSelect.addEventListener('change', () => {
-        duration = parseInt(durationSelect.value, 10);
-        loadNewPassage();
-        refreshDashboard();
-      });
-
-      // Quote dropdown population
-      function populateQuoteDropdown() {
-        QUOTES.forEach((q, i) => {
-          const opt = document.createElement('option');
-          opt.value = i;
-          opt.textContent = `${q.quote.slice(0, 50)}${q.quote.length > 50 ? '…' : ''} — ${q.author}`;
-          quoteSelect.appendChild(opt);
-        });
-      }
-      populateQuoteDropdown();
-
-      // Mode switching logic
-      function setDiffTabsEnabled(enabled) {
-        diffTabs.forEach(t => {
-          t.style.pointerEvents = enabled ? '' : 'none';
-          t.style.opacity = enabled ? '1' : '0.5';
-        });
-      }
-
-      modeSelect.addEventListener('change', () => {
-        mode = modeSelect.value;
-        if (mode === 'quote') {
-          quoteControls.style.display = 'block';
-          setDiffTabsEnabled(false);
-          loadNewQuote();
-        } else {
-          quoteControls.style.display = 'none';
-          setDiffTabsEnabled(true);
-          loadNewPassage();
-        }
-      });
-
-      quoteSelect.addEventListener('change', () => {
-        if (mode === 'quote') loadNewQuote();
-      });
-
-      // Typing input logic
-      typingInput.addEventListener('input', () => {
-        if (!running) startTimer();
-        typed = typingInput.value;
-        renderPassage();
-        if (typed.length >= targetText.length) {
-          finalizeTest();
-        }
-      });
-      typingInput.addEventListener('paste', e => e.preventDefault());
-      retryBtn.addEventListener('click', loadNewPassage);
-
-      function pickPassage() {
-        const arr = WORDS[currentDifficulty];
-        let text = [];
-        while (text.join(' ').length < 160) {
-          text = text.concat(shuffleArray(arr));
-        }
-        return text.slice(0, 80).join(' ');
-      }
-      function shuffleArray(a) { return [...a].sort(() => Math.random() - 0.5); }
-
-      function resetTestState() {
-        clearInterval(timerInterval);
-        timeLeft = duration;
-        running = false;
-        startTime = null;
-        typed = '';
-        typingInput.value = '';
-        statTime.textContent = timeLeft + 's';
-        statWPM.textContent = 0;
-        statAcc.textContent = '100%';
-        typingInput.disabled = false;
-        renderPassage();
-      }
-
-      function loadNewQuote() {
-        const q = pickQuote();
-        targetText = q.quote;
-        quoteAuthorEl.textContent = `— ${q.author}`;
-        currentDiffBadge.textContent = currentDifficulty;
-        timeLeft = duration;
-        resetTestState();
-        renderPassage();
-      }
-
-      function pickQuote() {
-        if (quoteSelect.value === '__random__') {
-          const idx = Math.floor(Math.random() * QUOTES.length);
-          currentQuoteIndex = idx;
-          return QUOTES[idx];
-        }
-        const idx = parseInt(quoteSelect.value, 10);
-        currentQuoteIndex = isNaN(idx) ? null : idx;
-        return QUOTES[currentQuoteIndex];
-      }
-
-      function loadNewPassage() {
-        if (mode === 'quote') {
-          loadNewQuote();
-          return;
-        }
-        targetText = pickPassage();
-        currentDiffBadge.textContent = currentDifficulty;
-        timeLeft = duration;
-        resetTestState();
-        renderPassage();
-      }
-
-      function startTimer() {
-        if (running) return;
-        running = true;
-        startTime = Date.now();
-        timerInterval = setInterval(() => {
-          timeLeft--;
-          if (timeLeft <= 0) {
-            timeLeft = 0;
-            statTime.textContent = timeLeft + 's';
-            finalizeTest();
-            return;
-          }
-          if (typed.length >= targetText.length) {
-            finalizeTest();
-            return;
-          }
-          statTime.textContent = timeLeft + 's';
-          const elapsed = duration - timeLeft;
-          const stats = computeStats(typed, elapsed);
-          statWPM.textContent = stats.wpm;
-          statAcc.textContent = stats.accuracy + '%';
-        }, 1000);
-      }
-
-      function computeStats(typedStr, elapsedSec) {
-        const target = targetText;
-        const correctChars = [...typedStr].filter((ch,i) => ch === target[i]).length;
-        const accuracy = typedStr.length ? Math.round((correctChars / typedStr.length) * 100) : 100;
-        const wordsTyped = typedStr.trim().split(/\s+/).filter(Boolean).length;
-        const wpm = elapsedSec > 0 ? Math.round((wordsTyped / (elapsedSec / 60))) : 0;
-        return { wpm, accuracy };
-      }
-
-      function renderPassage() {
-        const target = targetText;
-        const position = typed.length;
-        const html = [...target].map((ch,i) => {
-          const typedChar = typed[i];
-          let classes = [];
-          if (i === position) classes.push('current');
-          if (typedChar === undefined) {
-            return `<span${classes.length?` class="${classes.join(' ')}"`:''}>${escapeHtml(ch)}</span>`;
-          }
-          if (typedChar === ch) classes.push('correct');
-          else classes.push('incorrect');
-          return `<span class="${classes.join(' ')}">${escapeHtml(ch)}</span>`;
-        }).join('');
-        passageDisplay.innerHTML = html;
-      }
-    function renderPassage() {
-  const target = targetText;
-  const position = typed.length;
-  const html = [...target].map((ch,i) => {
-    const typedChar = typed[i];
-    let classes = [];
-    if (i === position) classes.push('current');
-    if (typedChar === undefined) {
-      return `<span${classes.length?` class="${classes.join(' ')}"`:''}>${escapeHtml(ch)}</span>`;
+  // ==== STORIES (chaptered, each with two halves) ====
+  // Keep concise but rich, sized for typing; add more chapters as you like.
+  const STORIES = [
+    {
+      title: "Cinders of the Clockwork City",
+      parts: [
+        "The tram sighed through brass-laced fog as Ara pressed a palm to the window. Below, the market ticked like a living watch: awnings fluttered, valves sneezed steam, and coin-bright pigeons hopped along soldered rails. She tasted copper on the air, the city's heartbeat—regular, reliable, relentless—pushing her toward the foundry district where rumors said an unsleeping engine dreamed of rain.",
+        "Inside the foundry, heat bent the air into a watery mirage. Ara followed chalk sigils between anvils until gears the size of houses loomed above. The engine's breath thrummed in her ribs. When she slipped the bone key into the service port, it was like waking a giant: the pistons paused, listening. Then, from somewhere deep, a quiet syllable answered—her name—carried on a draft that smelled like wet stone."
+      ]
+    },
+    {
+      title: "The River That Remembers",
+      parts: [
+        "Dawn unfurled along the river like silk, pale and forgiving. Sefu skimmed a hand across the surface and the water replied with a page of ripples, each ring a sentence his grandmother once taught him to read. Migrating storks stitched white commas into the sky. On the opposite bank, the old shrine leaned, cedar bones creaking with stories it refused to forget.",
+        "He spoke his request and dropped a reed token; the current took it greedily. The answer rose as a chill along his forearms—permission, and a warning. When he waded knee-deep, the silt shaped itself around his ankles, printing his lineage in cold script. By the time he reached the shrine, the river had memorized him—every doubt, every promise—so that if he failed, it would know how to carry him home."
+      ]
+    },
+    {
+      title: "Salt, Star, and Sail",
+      parts: [
+        "Night smelled of tar and oranges. Captain Liora traced constellations with a callused finger while the deck murmured beneath her boots. The new navigator swore the sky had shifted—stars wandering like stray goats—but the sextant, stubborn as an old friend, insisted on familiar truth. Far off, a lighthouse performed its patient punctuation against the horizon.",
+        "At midnight the sea went glass-flat. The crew held its breath as a pale fin cut a sentence across the water. It wasn't a fish but a question, written in phosphor. Liora answered with a turn of the wheel, and the wind obliged, threading itself through the rigging like a silver needle. The ship curved toward an island that had no right to exist, and yet there it was: a comma between two tides."
+      ]
+    },
+    {
+      title: "The Whispering Keys - Chapter 1: The Key That Sang",
+     parts: ["Rain fell in soft needles against the slate rooftops of Graywick, a town that seemed forever caught between dusk and dawn. Its crooked alleys twised like forgotten thoughts, and its lanterns burned low, giving the streets a quiet, watchful glow.Elias Thorn, a boy of sixteen with restless fingers and a heart that beat too quickly for such a slow town, moved through the drizzle with his collar up and his mind elsewhere. He had always been told he was a dreamer, too distracted, too curious. But curiosity, as his late mother used to whisper, was a gift when the world itself kept secrets.And tonight, the world was whispering.He had first noticed it in the marketplace when the crowd had thinned and the vendors were packing away their goods. A faint, trembling sound, like a note of music caught inside a shell, drifted through the rain. Elias followed it, winding between barrels and abandoned carts, until the melody seemed to pulse from beneath a loose cobblestone near the fountain square.With trembling hands, Elias pried the stone loose. Beneath, tucked into a hollow as though the street itself had been keeping it safe, lay a key.It was unlike any key he had ever seen—long and slender, forged of pale metal that shimmered faintly in the gloom. Strange markings curled along its shaft, symbols that seemed almost to rearrange themselves if he looked too long. And the sound—oh, the sound. The key sang softly, a single note that quivered like a voice at the edge of speech.Elias lifted it carefully, the chill of the metal running through his palm. The note swelled, filling his chest until he thought his ribs might crack with the weight of it. He staggered back, clutching the key to his chest, breath coming fast. “Beautiful, isn't it?” The voice came from behind him. Elias turned sharply. An old woman stood under the arch of the fountain, cloaked in rain-dark velvet. Her eyes gleamed like drops of mercury.“You hear it too?” Elias asked, his voice hoarse. The woman's smile was thin, secretive. “Only those the Key chooses will hear its song. Most would see nothing but rust and stone.” Elias swallowed. “What… what does it open?” Her gaze lingered on him, weighing, as though she were deciding whether he was worthy of the answer. At last, she spoke: “Not a door, boy. A destiny.” The rain seemed to hush at her words, and the key's note quivered in his palm, more alive than any object had a right to be.",
+    "The old woman stepped closer, her boots silent on the wet cobblestones. She extended a hand, gnarled and veined, toward the key. Elias felt a strange pull, as if the metal itself was alive and wanted to leap from his grasp. “Keep it,” she said, her voice almost a whisper carried on the rain. “But beware—keys like this are not meant for the faint-hearted.” Elias hesitated. His fingers itched to touch the strange symbols again, to hear that quivering note once more. He had always believed in stories—tales of hidden doors and secret worlds—but never in anything that could hum beneath his palm, singing to him in a language older than the town itself. “Why me?” he asked. “Why now?” The woman's eyes glinted. “Because you listen. Because you follow.” She turned then, stepping away, her cloak billowing like smoke behind her. “Go home, Elias Thorn, and let the Key choose its moment. The rest will come.” Before he could respond, she melted into the mist that clung to the square, leaving only the key and the faint echo of her words. Elias stared after her, chest tight, mind spinning. Rain had slowed to a drizzle, and the lanterns glimmered faintly, reflecting on the puddles like tiny, trembling stars. Elias clenched the key, feeling its pulse under his skin. A note, longer this time, threaded itself into his mind, almost a tune. He didn't know the melody, but it felt urgent, beckoning him toward… somewhere. Home was dull and silent, a narrow room he shared with the flickering shadows of his father's absence. He set the key on his windowsill, and for a moment, it hummed, sending a shiver down his spine. Papers on his desk rattled lightly, as though the song of the key reached into the corners of the room. Elias lay awake that night, the sound of the key thrumming through his dreams. And in those dreams, doors opened that did not exist, corridors stretched into impossibility, and shadows whispered secrets he could almost—but not quite—understand. By dawn, he knew one thing for certain: life in Graywick would never feel ordinary again. The key had chosen him, and whatever lay beyond the doors it opened, he would have to find it. Somewhere, in the spaces between mist and memory, the key sang. And Elias Thorn, boy of restless fingers and endless curiosity, was listening."
+     ]
     }
-    if (typedChar === ch) classes.push('correct');
-    else classes.push('incorrect');
-    return `<span class="${classes.join(' ')}">${escapeHtml(ch)}</span>`;
-  }).join('');
-  passageDisplay.innerHTML = html;
+  ];
 
-  // === AUTO-SCROLL ADDITION ===
-  const currentChar = passageDisplay.querySelector('.current');
-  if (currentChar) {
-    currentChar.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'nearest'
+  // ==== STATE ====
+  let currentDifficulty = "Beginner";
+  let duration = 60;
+  let timeLeft = duration;
+  let running = false;
+  let startTime = null;
+  let timerInterval = null;
+  let targetText = "";
+  let typed = "";
+  let currentUser = null;
+
+  let mode = 'passage';      // 'passage' | 'quote' | 'story'
+  let currentQuoteIndex = null;
+  let currentStoryIndex = 0; // chapter
+  let currentStoryPart = 0;  // 0 or 1
+
+  // ==== Enhance mode-select with Story option if missing ====
+  if (![...modeSelect.options].some(o => o.value === 'story')) {
+    const opt = document.createElement('option');
+    opt.value = 'story';
+    opt.textContent = 'Story';
+    modeSelect.appendChild(opt);
+  }
+
+  // ==== Populate quote dropdown ====
+  function populateQuoteDropdown() {
+    quoteSelect.innerHTML = `<option value="__random__">Random quote</option>`;
+    QUOTES.forEach((q, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${q.quote.slice(0, 50)}${q.quote.length > 50 ? '…' : ''} — ${q.author}`;
+      quoteSelect.appendChild(opt);
     });
   }
-}
+  populateQuoteDropdown();
 
+  // ==== Populate story chapter dropdown ====
+  function populateStoryDropdown() {
+    storyChapterSelect.innerHTML = '';
+    STORIES.forEach((s, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = s.title;
+      storyChapterSelect.appendChild(opt);
+    });
+    storyChapterSelect.value = currentStoryIndex;
+    storyPartSelect.value = String(currentStoryPart);
+    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
+  }
+  populateStoryDropdown();
 
-      function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  // ==== AUTH TABS ====
+  loginTab.addEventListener('click', () => {
+    loginTab.classList.add('active');
+    signupTab.classList.remove('active');
+    loginForm.style.display = 'flex';
+    signupForm.style.display = 'none';
+    authMessage.textContent = '';
+  });
+  signupTab.addEventListener('click', () => {
+    signupTab.classList.add('active');
+    loginTab.classList.remove('active');
+    signupForm.style.display = 'flex';
+    loginForm.style.display = 'none';
+    authMessage.textContent = '';
+  });
 
-      async function finalizeTest() {
-        if (!running) return;
-        running = false;
-        clearInterval(timerInterval);
-        typingInput.disabled = true;
-        statTime.textContent = timeLeft + 's';
-        const elapsed = duration - timeLeft;
-        const stats = computeStats(typed, elapsed);
-        statWPM.textContent = stats.wpm;
-        statAcc.textContent = stats.accuracy + '%';
+  // ==== LOGIN ====
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    authMessage.textContent = 'Logging in...';
+    authMessage.className = 'small';
+    try {
+      const email = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-pass').value;
+      await auth.signInWithEmailAndPassword(email, pass);
+      authMessage.textContent = '';
+    } catch (err) {
+      authMessage.textContent = err.message;
+      authMessage.classList.add('error');
+    }
+  });
 
-        if (currentUser) {
-          try {
-            const payload = {
-              uid: currentUser.uid,
-              difficulty: currentDifficulty,
-              duration,
-              wpm: stats.wpm,
-              accuracy: stats.accuracy,
-              mode,
-              timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            if (mode === 'quote') {
-              payload.quote = targetText;
-              payload.quoteAuthor = QUOTES[currentQuoteIndex]?.author || null;
-            }
-            await db.collection('results').add(payload);
-            await refreshDashboard();
-          } catch (e) {
-            console.warn('save error', e);
-          }
-        }
+  // ==== SIGNUP ====
+  signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    authMessage.textContent = 'Creating account...';
+    authMessage.className = 'small';
+    try {
+      const email = document.getElementById('signup-email').value.trim();
+      const pass = document.getElementById('signup-pass').value;
+      if (pass.length < 6) {
+        authMessage.textContent = 'Password must be at least 6 characters.';
+        authMessage.classList.add('error');
+        return;
       }
+      const cred = await auth.createUserWithEmailAndPassword(email, pass);
+      await cred.user.sendEmailVerification();
+      authMessage.textContent = 'Account created. Verification email sent.';
+      authMessage.classList.add('success');
+    } catch (err) {
+      authMessage.textContent = err.message;
+      authMessage.classList.add('error');
+    }
+  });
 
-      // Dashboard population
-      async function refreshDashboard() {
-        if (!currentUser) return;
-        // best for current diff+duration
-        const bestQuery = db.collection('results')
-          .where('uid','==', currentUser.uid)
-          .where('difficulty','==', currentDifficulty)
-          .where('duration','==', duration)
-          .orderBy('wpm','desc')
-          .limit(1);
-        const bestSnap = await bestQuery.get();
-        if (!bestSnap.empty) {
-          const b = bestSnap.docs[0].data();
-          bestWPMEl.textContent = b.wpm;
-          bestAccEl.textContent = b.accuracy + '%';
-        } else {
-          bestWPMEl.textContent = '0';
-          bestAccEl.textContent = '0%';
-        }
+  // ==== FORGOT PASSWORD ====
+  forgotBtn.addEventListener('click', async () => {
+    authMessage.className = 'small';
+    const email = document.getElementById('login-email').value.trim();
+    if (!email) {
+      authMessage.textContent = 'Enter email to reset password.';
+      authMessage.classList.add('error');
+      return;
+    }
+    try {
+      await auth.sendPasswordResetEmail(email);
+      authMessage.textContent = 'Password reset email sent.';
+      authMessage.classList.add('success');
+    } catch (err) {
+      authMessage.textContent = err.message;
+      authMessage.classList.add('error');
+    }
+  });
 
-        // recent runs (last 10)
-        const recentSnap = await db.collection('results')
-          .where('uid','==', currentUser.uid)
-          .orderBy('timestamp','desc')
-          .limit(10)
-          .get();
-        recentTableBody.innerHTML = '';
-        recentSnap.forEach(d => {
-          const v = d.data();
-          const when = v.timestamp?.toDate ? v.timestamp.toDate().toLocaleString() : '—';
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${when}</td>
-            <td>${v.wpm}</td>
-            <td>${v.accuracy}%</td>
-            <td>${v.duration}s</td>
-            <td>${v.difficulty}</td>
-          `;
-          recentTableBody.appendChild(row);
-        });
-
-        // leaderboard top 10
-        const lbSnap = await db.collection('results')
-          .where('difficulty','==', currentDifficulty)
-          .where('duration','==', duration)
-          .orderBy('wpm','desc')
-          .limit(10)
-          .get();
-        leaderboardBody.innerHTML = '';
-        let rank = 1;
-        lbSnap.forEach(d => {
-          const v = d.data();
-          const when = v.timestamp?.toDate ? v.timestamp.toDate().toLocaleDateString() : '';
-          const shortUser = v.uid.slice(0,6);
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${rank}</td>
-            <td>${shortUser}</td>
-            <td>${v.wpm}</td>
-            <td>${v.accuracy}%</td>
-            <td>${when}</td>
-          `;
-          leaderboardBody.appendChild(tr);
-          rank++;
-        });
+  // ==== LOGOUT & VERIFY ====
+  logoutBtn.addEventListener('click', () => auth.signOut());
+  sendVerifBtn.addEventListener('click', async () => {
+    if (currentUser) {
+      try {
+        await currentUser.sendEmailVerification();
+        alert('Verification email resent.');
+      } catch (e) {
+        console.warn(e);
       }
+    }
+  });
 
-      // Auth observer
-      auth.onAuthStateChanged(async user => {
-        currentUser = user;
-        if (user) {
-          authCard.style.display = 'none';
-          userEmailTag.textContent = user.email;
-          emailVerifStatus.innerHTML = user.emailVerified
-            ? '<span style="color:#6bf58f;">Verified</span>'
-            : '<span style="color:#ffcc33;">Not verified</span>' + (user.emailVerified ? '' : ' <span style="font-size:11px;">(check inbox)</span>');
-          loadNewPassage();
-          await refreshDashboard();
-          authSummary.innerHTML = `
-            <div class="small">Hi, ${user.email}</div>
-            <button class="btn secondary" onclick="firebase.auth().signOut()">Log out</button>
-          `;
-        } else {
-          authCard.style.display = 'block';
-          authSummary.innerHTML = '';
-          userEmailTag.textContent = 'Not signed in';
-          emailVerifStatus.textContent = '';
-          passageDisplay.textContent = 'Please log in to start typing and save results.';
-          typingInput.disabled = true;
-        }
-      });
+  // ==== DIFFICULTY / DURATION ====
+  function setDiffTabsEnabled(enabled) {
+    diffTabs.forEach(t => {
+      t.style.pointerEvents = enabled ? '' : 'none';
+      t.style.opacity = enabled ? '1' : '0.5';
+    });
+  }
 
-      // initial
+  diffTabs.forEach(t => {
+    t.addEventListener('click', () => {
+      if (mode !== 'passage') return; // only applicable for passages
+      diffTabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      currentDifficulty = t.dataset.diff;
+      currentDiffBadge.textContent = currentDifficulty;
       loadNewPassage();
+      refreshDashboard();
+    });
+  });
 
+  durationSelect.addEventListener('change', () => {
+    duration = parseInt(durationSelect.value, 10);
+    // Reload current mode's text to reset timer
+    if (mode === 'passage') loadNewPassage();
+    else if (mode === 'quote') loadNewQuote();
+    else loadNewStory();
+    refreshDashboard();
+  });
+
+  // ==== MODE SWITCHING ====
+modeSelect.addEventListener('change', () => {
+  mode = modeSelect.value;
+
+  if (mode === 'quote') {
+    quoteControls.style.display = 'block';
+    storyControls.style.display = 'none';
+    diffTabs.forEach(t => t.style.display = 'none'); // hide difficulty tabs
+    loadNewQuote();
+  } else if (mode === 'story') {
+    quoteControls.style.display = 'none';
+    storyControls.style.display = 'block';
+    diffTabs.forEach(t => t.style.display = 'none'); // hide difficulty tabs
+    loadNewStory();
+  } else {
+    quoteControls.style.display = 'none';
+    storyControls.style.display = 'none';
+    diffTabs.forEach(t => t.style.display = ''); // show difficulty tabs
+    loadNewPassage();
+  }
+});
+
+  
+
+  quoteSelect.addEventListener('change', () => {
+    if (mode === 'quote') loadNewQuote();
+  });
+
+  storyChapterSelect.addEventListener('change', () => {
+    currentStoryIndex = parseInt(storyChapterSelect.value, 10) || 0;
+    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
+    if (mode === 'story') loadNewStory();
+  });
+
+  storyPartSelect.addEventListener('change', () => {
+    currentStoryPart = parseInt(storyPartSelect.value, 10) || 0;
+    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
+    if (mode === 'story') loadNewStory();
+  });
+
+  // ==== TYPING ====
+  typingInput.addEventListener('input', () => {
+    if (!running) startTimer();
+    typed = typingInput.value;
+    renderPassage();
+    if (typed.length >= targetText.length) finalizeTest();
+  });
+
+  typingInput.addEventListener('paste', e => e.preventDefault());
+  retryBtn.addEventListener('click', () => {
+    if (mode === 'passage') loadNewPassage();
+    else if (mode === 'quote') loadNewQuote();
+    else loadNewStory();
+  });
+
+  // ==== GENERATORS ====
+  function pickPassage() {
+    const arr = WORDS[currentDifficulty];
+    let text = [];
+    while (text.join(' ').length < 160) {
+      text = text.concat(shuffleArray(arr));
+    }
+    return text.slice(0, 80).join(' ');
+  }
+  function shuffleArray(a) { return [...a].sort(() => Math.random() - 0.5); }
+
+  function pickQuote() {
+    if (quoteSelect.value === '__random__') {
+      const idx = Math.floor(Math.random() * QUOTES.length);
+      currentQuoteIndex = idx;
+      return QUOTES[idx];
+    }
+    const idx = parseInt(quoteSelect.value, 10);
+    currentQuoteIndex = isNaN(idx) ? null : idx;
+    return QUOTES[currentQuoteIndex];
+  }
+
+  function pickStoryText() {
+    const chapter = STORIES[currentStoryIndex] || STORIES[0];
+    const part = chapter.parts[currentStoryPart] || chapter.parts[0];
+    return { title: chapter.title, partIndex: currentStoryPart, text: part };
+  }
+
+  // ==== LOADERS ====
+  function resetTestState() {
+    clearInterval(timerInterval);
+    timeLeft = duration;
+    running = false;
+    startTime = null;
+    typed = '';
+    typingInput.value = '';
+    statTime.textContent = timeLeft + 's';
+    statWPM.textContent = 0;
+    statAcc.textContent = '100%';
+    typingInput.disabled = false;
+    renderPassage();
+  }
+
+  function loadNewPassage() {
+    targetText = pickPassage();
+    currentDiffBadge.textContent = currentDifficulty;
+    resetTestState();
+  }
+
+  function loadNewQuote() {
+    const q = pickQuote();
+    targetText = q.quote;
+    quoteAuthorEl.textContent = `— ${q.author}`;
+    currentDiffBadge.textContent = currentDifficulty;
+    resetTestState();
+  }
+
+  function loadNewStory() {
+    const s = pickStoryText();
+    targetText = s.text;
+    storyMetaEl.textContent = `${s.title} — Part ${s.partIndex + 1}`;
+    currentDiffBadge.textContent = currentDifficulty;
+    resetTestState();
+  }
+
+  function startTimer() {
+    if (running) return;
+    running = true;
+    startTime = Date.now();
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      if (timeLeft <= 0) {
+        timeLeft = 0;
+        statTime.textContent = timeLeft + 's';
+        finalizeTest();
+        return;
+      }
+      if (typed.length >= targetText.length) {
+        finalizeTest();
+        return;
+      }
+      statTime.textContent = timeLeft + 's';
+      const elapsed = duration - timeLeft;
+      const stats = computeStats(typed, elapsed);
+      statWPM.textContent = stats.wpm;
+      statAcc.textContent = stats.accuracy + '%';
+    }, 1000);
+  }
+
+  function computeStats(typedStr, elapsedSec) {
+    const target = targetText;
+    const correctChars = [...typedStr].filter((ch, i) => ch === target[i]).length;
+    const accuracy = typedStr.length ? Math.round((correctChars / typedStr.length) * 100) : 100;
+    const wordsTyped = typedStr.trim().split(/\s+/).filter(Boolean).length;
+    const wpm = elapsedSec > 0 ? Math.round((wordsTyped / (elapsedSec / 60))) : 0;
+    return { wpm, accuracy };
+  }
+
+  function renderPassage() {
+    const target = targetText;
+    const position = typed.length;
+    const html = [...target].map((ch, i) => {
+      const typedChar = typed[i];
+      let classes = [];
+      if (i === position) classes.push('current');
+      if (typedChar === undefined) {
+        return `<span${classes.length ? ` class="${classes.join(' ')}"` : ''}>${escapeHtml(ch)}</span>`;
+      }
+      if (typedChar === ch) classes.push('correct');
+      else classes.push('incorrect');
+      return `<span class="${classes.join(' ')}">${escapeHtml(ch)}</span>`;
+    }).join('');
+    passageDisplay.innerHTML = html;
+
+    // Auto-scroll current char into view
+    const currentChar = passageDisplay.querySelector('.current');
+    if (currentChar) {
+      currentChar.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    }
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ==== FINALIZE & SAVE ====
+  async function finalizeTest() {
+    if (!running) return;
+    running = false;
+    clearInterval(timerInterval);
+    typingInput.disabled = true;
+    statTime.textContent = timeLeft + 's';
+    const elapsed = duration - timeLeft;
+    const stats = computeStats(typed, elapsed);
+    statWPM.textContent = stats.wpm;
+    statAcc.textContent = stats.accuracy + '%';
+
+    if (currentUser) {
+      try {
+        const payload = {
+          uid: currentUser.uid,
+          difficulty: currentDifficulty,
+          duration,
+          wpm: stats.wpm,
+          accuracy: stats.accuracy,
+          mode,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        if (mode === 'quote') {
+          payload.quote = targetText;
+          payload.quoteAuthor = QUOTES[currentQuoteIndex]?.author || null;
+        } else if (mode === 'story') {
+          payload.storyTitle = STORIES[currentStoryIndex]?.title || null;
+          payload.storyPart = currentStoryPart + 1;
+        }
+        await db.collection('results').add(payload);
+        await refreshDashboard();
+      } catch (e) {
+        console.warn('save error', e);
+      }
+    }
+  }
+
+  // ==== DASHBOARD ====
+  async function refreshDashboard() {
+    if (!currentUser) return;
+    // Best for current diff+duration (passage focus, but we keep as-is for uniformity)
+    const bestQuery = db.collection('results')
+      .where('uid','==', currentUser.uid)
+      .where('difficulty','==', currentDifficulty)
+      .where('duration','==', duration)
+      .orderBy('wpm','desc')
+      .limit(1);
+    const bestSnap = await bestQuery.get();
+    if (!bestSnap.empty) {
+      const b = bestSnap.docs[0].data();
+      bestWPMEl.textContent = b.wpm;
+      bestAccEl.textContent = b.accuracy + '%';
+    } else {
+      bestWPMEl.textContent = '0';
+      bestAccEl.textContent = '0%';
+    }
+
+    // Recent runs
+    const recentSnap = await db.collection('results')
+      .where('uid','==', currentUser.uid)
+      .orderBy('timestamp','desc')
+      .limit(10)
+      .get();
+    recentTableBody.innerHTML = '';
+    recentSnap.forEach(d => {
+      const v = d.data();
+      const when = v.timestamp?.toDate ? v.timestamp.toDate().toLocaleString() : '—';
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${when}</td>
+        <td>${v.wpm}</td>
+        <td>${v.accuracy}%</td>
+        <td>${v.duration}s</td>
+        <td>${v.difficulty}</td>
+      `;
+      recentTableBody.appendChild(row);
     });
 
+    // Leaderboard top 10 (by current diff+duration)
+    const lbSnap = await db.collection('results')
+      .where('difficulty','==', currentDifficulty)
+      .where('duration','==', duration)
+      .orderBy('wpm','desc')
+      .limit(10)
+      .get();
+    leaderboardBody.innerHTML = '';
+    let rank = 1;
+    lbSnap.forEach(d => {
+      const v = d.data();
+      const when = v.timestamp?.toDate ? v.timestamp.toDate().toLocaleDateString() : '';
+      const shortUser = v.uid.slice(0, 6);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${rank}</td>
+        <td>${shortUser}</td>
+        <td>${v.wpm}</td>
+        <td>${v.accuracy}%</td>
+        <td>${when}</td>
+      `;
+      leaderboardBody.appendChild(tr);
+      rank++;
+    });
+  }
 
+  // ==== AUTH OBSERVER ====
+  auth.onAuthStateChanged(async user => {
+    currentUser = user;
+    if (user) {
+      authCard.style.display = 'none';
+      userEmailTag.textContent = user.email;
+      emailVerifStatus.innerHTML = user.emailVerified
+        ? '<span style="color:#6bf58f;">Verified</span>'
+        : '<span style="color:#ffcc33;">Not verified</span>' + (user.emailVerified ? '' : ' <span style="font-size:11px;">(check inbox)</span>');
+      // start in whatever mode is selected
+      if (modeSelect.value === 'quote') loadNewQuote();
+      else if (modeSelect.value === 'story') loadNewStory();
+      else loadNewPassage();
+      await refreshDashboard();
+      authSummary.innerHTML = `
+        <div class="small">Hi, ${user.email}</div>
+        <button class="btn secondary" onclick="firebase.auth().signOut()">Log out</button>
+      `;
+    } else {
+      authCard.style.display = 'block';
+      authSummary.innerHTML = '';
+      userEmailTag.textContent = 'Not signed in';
+      emailVerifStatus.textContent = '';
+      passageDisplay.textContent = 'Please log in to start typing and save results.';
+      typingInput.disabled = true;
+    }
+  });
 
-
-
-
+  // ==== INITIALIZE ====
+  // Respect current dropdown on load; default to passage if empty
+  mode = modeSelect.value || 'passage';
+  if (mode === 'quote') loadNewQuote();
+  else if (mode === 'story') loadNewStory();
+  else loadNewPassage();
+});
