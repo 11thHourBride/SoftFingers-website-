@@ -849,3 +849,4 @@ modeSelect.addEventListener('change', () => {
   else if (mode === 'story') loadNewStory();
   else loadNewPassage();
 });
+
