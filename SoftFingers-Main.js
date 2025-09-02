@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+
+  document.addEventListener('DOMContentLoaded', () => {
   // ==== FIREBASE CONFIG - your real config ====
   const firebaseConfig = {
     apiKey: "AIzaSyCoQO4vR_lIStx2lMPSy_YhHYPh75gHRSQ",
@@ -69,7 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const storyPartSelect = storyControls.querySelector('#story-part');
   const storyMetaEl = storyControls.querySelector('#story-meta');
 
-  // ==== WORDS / QUOTES (from your version) ====
+
+// Quote bank (from user)
+      
   const WORDS = {
     Beginner: ["during","after","today","between","behind","defend","divine","middle","under","magic","beneath","withdraw",
     "Typing is fun when practiced daily.",
@@ -133,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {"quote": "Believe you can and you're halfway there.", "author": "Theodore Roosevelt"},
         {"quote": "Failure is another stepping stone to greatness.", "author": "Oprah Winfrey"},
         {"quote": "A person who never made a mistake never tried anything new.", "author": "Albert Einstein"},
-        {"quote": "Courage is resistance to fear, mastery of fear—not absence of fear.", "author": "Mark Twain"},
+        {"quote": "Courage is resistance to fear, mastery of fear-not absence of fear.", "author": "Mark Twain"},
         {"quote": "To live is the rarest thing in the world. Most people exist, that is all.", "author": "Oscar Wilde"},
         {"quote": "Happiness is not something ready-made. It comes from your own actions.", "author": "Dalai Lama"},
         {"quote": "Your time is limited, so don't waste it living someone else's life.", "author": "Steve Jobs"},
@@ -195,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
   {"quote": "Perseverance is not a long race; it is many short races one after another.", "author": "Walter Elliot"},
   {"quote": "A room without books is like a body without a soul.", "author": "Marcus Tullius Cicero"},
   {"quote": "Turn your wounds into wisdom.", "author": "Oprah Winfrey"},
-  {"quote": "Keep your face always toward the sunshine—and shadows will fall behind you.", "author": "Walt Whitman"},
+  {"quote": "Keep your face always toward the sunshine-and shadows will fall behind you.", "author": "Walt Whitman"},
   {"quote": "Nothing will work unless you do.", "author": "Maya Angelou"},
   {"quote": "Action is the foundational key to all success.", "author": "Pablo Picasso"},
   {"quote": "Don't count the people you reach; reach the people who count.", "author": "David Ogilvy"},
@@ -303,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
   {"quote": "In the end, we only regret the chances we didn't take.", "author": "Lewis Carroll"},
   {"quote": "Don't wait. The time will never be just right.", "author": "Napoleon Hill"},
   {"quote": "Light tomorrow with today.", "author": "Elizabeth Barrett Browning"},
-  {"quote": "Keep your face always toward the sunshine—and shadows will fall behind you.", "author": "Walt Whitman"},
+  {"quote": "Keep your face always toward the sunshine-and shadows will fall behind you.", "author": "Walt Whitman"},
   {"quote": "You are never too old to set another goal or to dream a new dream.", "author": "C.S. Lewis"},
   {"quote": "Don't cry because it's over, smile because it happened.", "author": "Dr. Seuss"},
   {"quote": "Push yourself, because no one else is going to do it for you.", "author": "Unknown"},
@@ -336,42 +339,42 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       title: "Cinders of the Clockwork City",
       parts: [
-        "The tram sighed through brass-laced fog as Ara pressed a palm to the window. Below, the market ticked like a living watch: awnings fluttered, valves sneezed steam, and coin-bright pigeons hopped along soldered rails. She tasted copper on the air, the city's heartbeat—regular, reliable, relentless—pushing her toward the foundry district where rumors said an unsleeping engine dreamed of rain.",
-        "Inside the foundry, heat bent the air into a watery mirage. Ara followed chalk sigils between anvils until gears the size of houses loomed above. The engine's breath thrummed in her ribs. When she slipped the bone key into the service port, it was like waking a giant: the pistons paused, listening. Then, from somewhere deep, a quiet syllable answered—her name—carried on a draft that smelled like wet stone."
+        "The tram sighed through brass-laced fog as Ara pressed a palm to the window. Below, the market ticked like a living watch: awnings fluttered, valves sneezed steam, and coin-bright pigeons hopped along soldered rails. She tasted copper on the air, the city's heartbeat-regular, reliable, relentless-pushing her toward the foundry district where rumors said an unsleeping engine dreamed of rain.",
+        "Inside the foundry, heat bent the air into a watery mirage. Ara followed chalk sigils between anvils until gears the size of houses loomed above. The engine's breath thrummed in her ribs. When she slipped the bone key into the service port, it was like waking a giant: the pistons paused, listening. Then, from somewhere deep, a quiet syllable answered-her name-carried on a draft that smelled like wet stone."
       ]
     },
     {
       title: "The River That Remembers",
       parts: [
         "Dawn unfurled along the river like silk, pale and forgiving. Sefu skimmed a hand across the surface and the water replied with a page of ripples, each ring a sentence his grandmother once taught him to read. Migrating storks stitched white commas into the sky. On the opposite bank, the old shrine leaned, cedar bones creaking with stories it refused to forget.",
-        "He spoke his request and dropped a reed token; the current took it greedily. The answer rose as a chill along his forearms-permission, and a warning. When he waded knee-deep, the silt shaped itself around his ankles, printing his lineage in cold script. By the time he reached the shrine, the river had memorized him-every doubt, every promise—so that if he failed, it would know how to carry him home."
+        "He spoke his request and dropped a reed token; the current took it greedily. The answer rose as a chill along his forearms-permission, and a warning. When he waded knee-deep, the silt shaped itself around his ankles, printing his lineage in cold script. By the time he reached the shrine, the river had memorized him-every doubt, every promise-so that if he failed, it would know how to carry him home."
       ]
     },
     {
       title: "Salt, Star, and Sail",
       parts: [
-        "Night smelled of tar and oranges. Captain Liora traced constellations with a callused finger while the deck murmured beneath her boots. The new navigator swore the sky had shifted-stars wandering like stray goats—but the sextant, stubborn as an old friend, insisted on familiar truth. Far off, a lighthouse performed its patient punctuation against the horizon.",
+        "Night smelled of tar and oranges. Captain Liora traced constellations with a callused finger while the deck murmured beneath her boots. The new navigator swore the sky had shifted-stars wandering like stray goats-but the sextant, stubborn as an old friend, insisted on familiar truth. Far off, a lighthouse performed its patient punctuation against the horizon.",
         "At midnight the sea went glass-flat. The crew held its breath as a pale fin cut a sentence across the water. It wasn't a fish but a question, written in phosphor. Liora answered with a turn of the wheel, and the wind obliged, threading itself through the rigging like a silver needle. The ship curved toward an island that had no right to exist, and yet there it was: a comma between two tides."
       ]
     },
     {
       title: "The Whispering Keys - Chapter 1: The Key That Sang",
-     parts: ["Rain fell in soft needles against the slate rooftops of Graywick, a town that seemed forever caught between dusk and dawn. Its crooked alleys twised like forgotten thoughts, and its lanterns burned low, giving the streets a quiet, watchful glow. Elias Thorn, a boy of sixteen with restless fingers and a heart that beat too quickly for such a slow town, moved through the drizzle with his collar up and his mind elsewhere. He had always been told he was a dreamer, too distracted, too curious. But curiosity, as his late mother used to whisper, was a gift when the world itself kept secrets. And tonight, the world was whispering. He had first noticed it in the marketplace when the crowd had thinned and the vendors were packing away their goods. A faint, trembling sound, like a note of music caught inside a shell, drifted through the rain. Elias followed it, winding between barrels and abandoned carts, until the melody seemed to pulse from beneath a loose cobblestone near the fountain square. With trembling hands, Elias pried the stone loose. Beneath, tucked into a hollow as though the street itself had been keeping it safe, lay a key. It was unlike any key he had ever seen-long and slender, forged of pale metal that shimmered faintly in the gloom. Strange markings curled along its shaft, symbols that seemed almost to rearrange themselves if he looked too long. And the sound—oh, the sound. The key sang softly, a single note that quivered like a voice at the edge of speech. Elias lifted it carefully, the chill of the metal running through his palm. The note swelled, filling his chest until he thought his ribs might crack with the weight of it. He staggered back, clutching the key to his chest, breath coming fast. “Beautiful, isn't it?” The voice came from behind him. Elias turned sharply. An old woman stood under the arch of the fountain, cloaked in rain-dark velvet. Her eyes gleamed like drops of mercury.“You hear it too?” Elias asked, his voice hoarse. The woman's smile was thin, secretive. “Only those the Key chooses will hear its song. Most would see nothing but rust and stone. Elias swallowed. “What… what does it open?” Her gaze lingered on him, weighing, as though she were deciding whether he was worthy of the answer. At last, she spoke: “Not a door, boy. A destiny.” The rain seemed to hush at her words, and the key's note quivered in his palm, more alive than any object had a right to be.",
-    "The old woman stepped closer, her boots silent on the wet cobblestones. She extended a hand, gnarled and veined, toward the key. Elias felt a strange pull, as if the metal itself was alive and wanted to leap from his grasp. “Keep it,” she said, her voice almost a whisper carried on the rain. “But beware-keys like this are not meant for the faint-hearted.” Elias hesitated. His fingers itched to touch the strange symbols again, to hear that quivering note once more. He had always believed in stories-tales of hidden doors and secret worlds—but never in anything that could hum beneath his palm, singing to him in a language older than the town itself. “Why me?” he asked. “Why now?” The woman's eyes glinted. “Because you listen. Because you follow.” She turned then, stepping away, her cloak billowing like smoke behind her. “Go home, Elias Thorn, and let the Key choose its moment. The rest will come.” Before he could respond, she melted into the mist that clung to the square, leaving only the key and the faint echo of her words. Elias stared after her, chest tight, mind spinning. Rain had slowed to a drizzle, and the lanterns glimmered faintly, reflecting on the puddles like tiny, trembling stars. Elias clenched the key, feeling its pulse under his skin. A note, longer this time, threaded itself into his mind, almost a tune. He didn't know the melody, but it felt urgent, beckoning him toward… somewhere. Home was dull and silent, a narrow room he shared with the flickering shadows of his father's absence. He set the key on his windowsill, and for a moment, it hummed, sending a shiver down his spine. Papers on his desk rattled lightly, as though the song of the key reached into the corners of the room. Elias lay awake that night, the sound of the key thrumming through his dreams. And in those dreams, doors opened that did not exist, corridors stretched into impossibility, and shadows whispered secrets he could almost—but not quite—understand. By dawn, he knew one thing for certain: life in Graywick would never feel ordinary again. The key had chosen him, and whatever lay beyond the doors it opened, he would have to find it. Somewhere, in the spaces between mist and memory, the key sang. And Elias Thorn, boy of restless fingers and endless curiosity, was listening."
+     parts: ["Rain fell in soft needles against the slate rooftops of Graywick, a town that seemed forever caught between dusk and dawn. Its crooked alleys twised like forgotten thoughts, and its lanterns burned low, giving the streets a quiet, watchful glow. Elias Thorn, a boy of sixteen with restless fingers and a heart that beat too quickly for such a slow town, moved through the drizzle with his collar up and his mind elsewhere. He had always been told he was a dreamer, too distracted, too curious. But curiosity, as his late mother used to whisper, was a gift when the world itself kept secrets. And tonight, the world was whispering. He had first noticed it in the marketplace when the crowd had thinned and the vendors were packing away their goods. A faint, trembling sound, like a note of music caught inside a shell, drifted through the rain. Elias followed it, winding between barrels and abandoned carts, until the melody seemed to pulse from beneath a loose cobblestone near the fountain square. With trembling hands, Elias pried the stone loose. Beneath, tucked into a hollow as though the street itself had been keeping it safe, lay a key. It was unlike any key he had ever seen-long and slender, forged of pale metal that shimmered faintly in the gloom. Strange markings curled along its shaft, symbols that seemed almost to rearrange themselves if he looked too long. And the sound-oh, the sound. The key sang softly, a single note that quivered like a voice at the edge of speech. Elias lifted it carefully, the chill of the metal running through his palm. The note swelled, filling his chest until he thought his ribs might crack with the weight of it. He staggered back, clutching the key to his chest, breath coming fast. “Beautiful, isn't it?” The voice came from behind him. Elias turned sharply. An old woman stood under the arch of the fountain, cloaked in rain-dark velvet. Her eyes gleamed like drops of mercury.“You hear it too?” Elias asked, his voice hoarse. The woman's smile was thin, secretive. “Only those the Key chooses will hear its song. Most would see nothing but rust and stone. Elias swallowed. “What… what does it open?” Her gaze lingered on him, weighing, as though she were deciding whether he was worthy of the answer. At last, she spoke: “Not a door, boy. A destiny.” The rain seemed to hush at her words, and the key's note quivered in his palm, more alive than any object had a right to be.",
+    "The old woman stepped closer, her boots silent on the wet cobblestones. She extended a hand, gnarled and veined, toward the key. Elias felt a strange pull, as if the metal itself was alive and wanted to leap from his grasp. “Keep it,” she said, her voice almost a whisper carried on the rain. “But beware-keys like this are not meant for the faint-hearted.” Elias hesitated. His fingers itched to touch the strange symbols again, to hear that quivering note once more. He had always believed in stories-tales of hidden doors and secret worlds-but never in anything that could hum beneath his palm, singing to him in a language older than the town itself. “Why me?” he asked. “Why now?” The woman's eyes glinted. “Because you listen. Because you follow.” She turned then, stepping away, her cloak billowing like smoke behind her. “Go home, Elias Thorn, and let the Key choose its moment. The rest will come.” Before he could respond, she melted into the mist that clung to the square, leaving only the key and the faint echo of her words. Elias stared after her, chest tight, mind spinning. Rain had slowed to a drizzle, and the lanterns glimmered faintly, reflecting on the puddles like tiny, trembling stars. Elias clenched the key, feeling its pulse under his skin. A note, longer this time, threaded itself into his mind, almost a tune. He didn't know the melody, but it felt urgent, beckoning him toward… somewhere. Home was dull and silent, a narrow room he shared with the flickering shadows of his father's absence. He set the key on his windowsill, and for a moment, it hummed, sending a shiver down his spine. Papers on his desk rattled lightly, as though the song of the key reached into the corners of the room. Elias lay awake that night, the sound of the key thrumming through his dreams. And in those dreams, doors opened that did not exist, corridors stretched into impossibility, and shadows whispered secrets he could almost-but not quite-understand. By dawn, he knew one thing for certain: life in Graywick would never feel ordinary again. The key had chosen him, and whatever lay beyond the doors it opened, he would have to find it. Somewhere, in the spaces between mist and memory, the key sang. And Elias Thorn, boy of restless fingers and endless curiosity, was listening."
      ]
     },
     {
   title: "Ashes in the Orchard - Chapter 1",
   parts: [
-    "The orchard had always been beautiful in the spring. Rows of apple trees stood in neat lines, their blossoms pale as morning light, swaying softly with the breeze. For most in the village, it was a place of comfort—a reminder of renewal, of harvests yet to come. But for Elias, the orchard was a scar. He hated it. As a boy, he had worked under his father’s command, carrying baskets heavier than his small frame could manage. Every time he stumbled, his father’s cane would meet his back. Every apple that fell before its time was a sin he had to pay for. The smell of blossoms, to Elias, was not sweetness, but suffocation. When his father died, the orchard passed to him. Neighbors congratulated him. 'You’ll do well,' they said. 'You were trained by the strictest hand.' They didn’t see the rage smoldering behind his eyes. Elias did not want to tend the trees, to prune, to water, to coax life from soil. He wanted to watch them wither. He let weeds grow wild and branches rot. When pests came, he welcomed them. When the drought arrived, he prayed it would never end. And still—the orchard resisted him. Roots dug deep, blossoms returned each spring, and fruit pushed stubbornly from the branches. It was as if the trees themselves refused to die.",
-    "Hatred became Elias’s only companion. He woke with it and slept with it, carrying it like a coal pressed to his chest. He began to see his father’s face in every tree—stern, unyielding, silent in judgment. And in the nights, when the wind passed through the branches, he swore he heard the cane whistling through the air once more. Finally, Elias took fire to the orchard. The flames roared eagerly, devouring bark and leaf, filling the night sky with sparks. He stood watching, arms folded, the glow painting his face in shades of fury and triumph. The air smelled of smoke and applewood, and for the first time in his life, he smiled. But as dawn broke, the ground was blackened and gray, a graveyard of ash. And Elias found that his hatred had nowhere left to go. The orchard was gone, yet the weight remained, heavier than ever, pressing down on him until his knees buckled in the soot. He had killed the thing he hated most. And now he had nothing left but hate itself."
+    "The orchard had always been beautiful in the spring. Rows of apple trees stood in neat lines, their blossoms pale as morning light, swaying softly with the breeze. For most in the village, it was a place of comfort-a reminder of renewal, of harvests yet to come. But for Elias, the orchard was a scar. He hated it. As a boy, he had worked under his father's command, carrying baskets heavier than his small frame could manage. Every time he stumbled, his father's cane would meet his back. Every apple that fell before its time was a sin he had to pay for. The smell of blossoms, to Elias, was not sweetness, but suffocation. When his father died, the orchard passed to him. Neighbors congratulated him. 'You'll do well,' they said. 'You were trained by the strictest hand.' They didn't see the rage smoldering behind his eyes. Elias did not want to tend the trees, to prune, to water, to coax life from soil. He wanted to watch them wither. He let weeds grow wild and branches rot. When pests came, he welcomed them. When the drought arrived, he prayed it would never end. And still-the orchard resisted him. Roots dug deep, blossoms returned each spring, and fruit pushed stubbornly from the branches. It was as if the trees themselves refused to die.",
+    "Hatred became Elias's only companion. He woke with it and slept with it, carrying it like a coal pressed to his chest. He began to see his father's face in every tree-stern, unyielding, silent in judgment. And in the nights, when the wind passed through the branches, he swore he heard the cane whistling through the air once more. Finally, Elias took fire to the orchard. The flames roared eagerly, devouring bark and leaf, filling the night sky with sparks. He stood watching, arms folded, the glow painting his face in shades of fury and triumph. The air smelled of smoke and applewood, and for the first time in his life, he smiled. But as dawn broke, the ground was blackened and gray, a graveyard of ash. And Elias found that his hatred had nowhere left to go. The orchard was gone, yet the weight remained, heavier than ever, pressing down on him until his knees buckled in the soot. He had killed the thing he hated most. And now he had nothing left but hate itself."
   ]
 },
     {
   title: "Ashes in the Orchard - Chapter 2",
   parts: [
-    "Elias wandered through the ruins for days, his boots sinking into the soft ash. The silence was unbearable. Once, the orchard had been alive with sound—the rustle of leaves, the chirp of birds, the hum of bees. Now it was dead quiet, broken only by the creak of scorched wood and the crunch of cinders beneath his steps. The villagers came, at first with questions, then with accusations. 'Why would you do this?' they demanded, their faces twisted with disbelief. Elias gave no answer. What could he say—that he had burned his inheritance because it reminded him of pain? That he had hoped fire would free him from the ghost of his father? They would never understand. They saw only a man who had destroyed what could have fed them all.",
-    "Soon, they stopped coming. Whispers replaced questions, and Elias became a shadow in his own village, a name spoken with contempt. But the orchard did not let him go. Even in its ruin, it clung to him. At night, he dreamed of blossoms pushing through blackened earth, of roots still twisting in the soil beneath the ash. He dreamed of his father’s cane, not striking him this time, but pointing toward the horizon as if demanding he keep working, keep tending, keep carrying the burden. And then, one morning, as Elias stumbled from his hut with a thirst that wine could not quench, he saw it: a sprout. A single thread of green, fragile yet defiant, piercing through the blanket of ash. He froze, staring as though he had seen a ghost. Hatred surged again—violent, hot, and familiar. He could crush it now, grind it into the earth beneath his heel, and at last prove himself master over what refused to die. His foot hovered above the tender thing, trembling with rage. But he hesitated. The sprout was small, yes, but it was also alive. Where he had tried to kill, life had answered him. He lowered his foot, slowly, until it rested back on the ground. The coal inside his chest pulsed painfully, confused by the flicker of something it had long been starved of. For the first time, Elias wondered: was it the orchard he had hated all along—or himself?"
+    "Elias wandered through the ruins for days, his boots sinking into the soft ash. The silence was unbearable. Once, the orchard had been alive with sound-the rustle of leaves, the chirp of birds, the hum of bees. Now it was dead quiet, broken only by the creak of scorched wood and the crunch of cinders beneath his steps. The villagers came, at first with questions, then with accusations. 'Why would you do this?' they demanded, their faces twisted with disbelief. Elias gave no answer. What could he say-that he had burned his inheritance because it reminded him of pain? That he had hoped fire would free him from the ghost of his father? They would never understand. They saw only a man who had destroyed what could have fed them all.",
+    "Soon, they stopped coming. Whispers replaced questions, and Elias became a shadow in his own village, a name spoken with contempt. But the orchard did not let him go. Even in its ruin, it clung to him. At night, he dreamed of blossoms pushing through blackened earth, of roots still twisting in the soil beneath the ash. He dreamed of his father's cane, not striking him this time, but pointing toward the horizon as if demanding he keep working, keep tending, keep carrying the burden. And then, one morning, as Elias stumbled from his hut with a thirst that wine could not quench, he saw it: a sprout. A single thread of green, fragile yet defiant, piercing through the blanket of ash. He froze, staring as though he had seen a ghost. Hatred surged again-violent, hot, and familiar. He could crush it now, grind it into the earth beneath his heel, and at last prove himself master over what refused to die. His foot hovered above the tender thing, trembling with rage. But he hesitated. The sprout was small, yes, but it was also alive. Where he had tried to kill, life had answered him. He lowered his foot, slowly, until it rested back on the ground. The coal inside his chest pulsed painfully, confused by the flicker of something it had long been starved of. For the first time, Elias wondered: was it the orchard he had hated all along-or himself?"
   ]
 }
 
@@ -408,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
     QUOTES.forEach((q, i) => {
       const opt = document.createElement('option');
       opt.value = i;
-      opt.textContent = `${q.quote.slice(0, 50)}${q.quote.length > 50 ? '…' : ''} — ${q.author}`;
+      opt.textContent = `${q.quote.slice(0, 50)}${q.quote.length > 50 ? '…' : ''} - ${q.author}`;
       quoteSelect.appendChild(opt);
     });
   }
@@ -425,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     storyChapterSelect.value = currentStoryIndex;
     storyPartSelect.value = String(currentStoryPart);
-    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
+    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} - Part ${Number(currentStoryPart)+1}`;
   }
   populateStoryDropdown();
 
@@ -575,22 +578,51 @@ modeSelect.addEventListener('change', () => {
 
   storyChapterSelect.addEventListener('change', () => {
     currentStoryIndex = parseInt(storyChapterSelect.value, 10) || 0;
-    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
+    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} - Part ${Number(currentStoryPart)+1}`;
     if (mode === 'story') loadNewStory();
   });
 
   storyPartSelect.addEventListener('change', () => {
     currentStoryPart = parseInt(storyPartSelect.value, 10) || 0;
-    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
+    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} - Part ${Number(currentStoryPart)+1}`;
     if (mode === 'story') loadNewStory();
   });
 
-  // ==== TYPING ====
-  typingInput.addEventListener('input', () => {
+  // ==== FIXED TYPING EVENT LISTENERS ====
+  typingInput.addEventListener('input', (e) => {
     if (!running) startTimer();
-    typed = typingInput.value;
+    
+    const newTyped = typingInput.value;
+    
+    // FIXED: Prevent typing beyond target text length
+    if (newTyped.length > targetText.length) {
+      typingInput.value = newTyped.slice(0, targetText.length);
+      return;
+    }
+    
+    typed = newTyped;
     renderPassage();
-    if (typed.length >= targetText.length) finalizeTest();
+    
+    if (typed.length >= targetText.length) {
+      finalizeTest();
+    }
+  });
+
+  // FIXED: Enhanced keydown event to handle special cases
+  typingInput.addEventListener('keydown', (e) => {
+    // Don't interfere with special keys (backspace, arrow keys, etc.)
+    if (e.key.length > 1 && e.key !== ' ') return;
+    
+    const currentPos = typingInput.selectionStart;
+    
+    // If they're trying to type beyond the text, prevent it
+    if (currentPos >= targetText.length && e.key !== 'Backspace' && e.key !== 'Delete') {
+      e.preventDefault();
+      return;
+    }
+    
+    // Allow backspace and delete
+    if (e.key === 'Backspace' || e.key === 'Delete') return;
   });
 
   typingInput.addEventListener('paste', e => e.preventDefault());
@@ -652,7 +684,7 @@ modeSelect.addEventListener('change', () => {
   function loadNewQuote() {
     const q = pickQuote();
     targetText = q.quote;
-    quoteAuthorEl.textContent = `— ${q.author}`;
+    quoteAuthorEl.textContent = `- ${q.author}`;
     currentDiffBadge.textContent = currentDifficulty;
     resetTestState();
   }
@@ -660,7 +692,7 @@ modeSelect.addEventListener('change', () => {
   function loadNewStory() {
     const s = pickStoryText();
     targetText = s.text;
-    storyMetaEl.textContent = `${s.title} — Part ${s.partIndex + 1}`;
+    storyMetaEl.textContent = `${s.title} - Part ${s.partIndex + 1}`;
     currentDiffBadge.textContent = currentDifficulty;
     resetTestState();
   }
@@ -689,37 +721,105 @@ modeSelect.addEventListener('change', () => {
     }, 1000);
   }
 
+  // ==== FIXED: Proper WPM calculation using characters/5 and accounting for errors ====
   function computeStats(typedStr, elapsedSec) {
     const target = targetText;
+    
+    // Count correct characters
     const correctChars = [...typedStr].filter((ch, i) => ch === target[i]).length;
+    
+    // Calculate accuracy
     const accuracy = typedStr.length ? Math.round((correctChars / typedStr.length) * 100) : 100;
-    const wordsTyped = typedStr.trim().split(/\s+/).filter(Boolean).length;
-    const wpm = elapsedSec > 0 ? Math.round((wordsTyped / (elapsedSec / 60))) : 0;
+    
+    // FIXED: Use standard WPM calculation (characters/5) and account for errors
+    const totalCharsTyped = typedStr.length;
+    const incorrectChars = totalCharsTyped - correctChars;
+    
+    // Net WPM = (Total characters typed / 5 - Errors) / (Time in minutes)
+    const grossWPM = elapsedSec > 0 ? (totalCharsTyped / 5) / (elapsedSec / 60) : 0;
+    const netWPM = elapsedSec > 0 ? Math.max(0, (totalCharsTyped / 5 - incorrectChars) / (elapsedSec / 60)) : 0;
+    
+    // Use Net WPM (which accounts for errors) - this is more accurate
+    const wpm = Math.round(netWPM);
+    
     return { wpm, accuracy };
   }
 
-  function renderPassage() {
-    const target = targetText;
-    const position = typed.length;
-    const html = [...target].map((ch, i) => {
-      const typedChar = typed[i];
-      let classes = [];
-      if (i === position) classes.push('current');
-      if (typedChar === undefined) {
-        return `<span${classes.length ? ` class="${classes.join(' ')}"` : ''}>${escapeHtml(ch)}</span>`;
-      }
-      if (typedChar === ch) classes.push('correct');
-      else classes.push('incorrect');
-      return `<span class="${classes.join(' ')}">${escapeHtml(ch)}</span>`;
-    }).join('');
-    passageDisplay.innerHTML = html;
+  // ==== FIXED: Enhanced render function with better current word positioning ====
+function renderPassage() {
+  const target = targetText;
+  const position = typed.length;
 
-    // Auto-scroll current char into view
-    const currentChar = passageDisplay.querySelector('.current');
-    if (currentChar) {
-      currentChar.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-    }
+  const words = target.split(" ");
+  const typedWords = typed.trimEnd().split(" ");
+
+  // Determine current word index
+  let currentWordIndex = typedWords.length - 1;
+  if (typed.endsWith(" ")) currentWordIndex++;
+
+  // AUTO-DETECT WORDS PER ROW
+  const style = window.getComputedStyle(passageDisplay);
+  const containerWidth = passageDisplay.clientWidth;
+  const fontSize = parseInt(style.fontSize, 10);
+  const charWidth = fontSize * 0.6;
+  const avgWordLength = 5 + 1;
+
+  const WORDS_PER_ROW = Math.max(
+    1,
+    Math.floor(containerWidth / (avgWordLength * charWidth))
+  );
+
+  // Determine current row start
+  let rowStartIndex = 0;
+  while (
+    rowStartIndex + WORDS_PER_ROW <= currentWordIndex &&
+    rowStartIndex + WORDS_PER_ROW < words.length
+  ) {
+    rowStartIndex += WORDS_PER_ROW;
   }
+
+  // Slice visible words from current row onward
+  const visibleWords = words.slice(rowStartIndex);
+
+  // Build HTML
+  const html = visibleWords
+    .map((word, wi) => {
+      const absoluteIndex = rowStartIndex + wi;
+      const typedWord = typedWords[absoluteIndex] || "";
+      let chars = "";
+
+      for (let i = 0; i < word.length; i++) {
+        const typedChar = typedWord[i];
+        let classes = ["letter"];
+
+        // Highlight current word
+        if (absoluteIndex === currentWordIndex && i === typedWord.length && !typed.endsWith(" ")) {
+          classes.push("current");
+        }
+
+        if (typedChar === undefined) {
+          chars += `<span class="${classes.join(" ")}">${escapeHtml(word[i])}</span>`;
+        } else if (typedChar === word[i]) {
+          chars += `<span class="letter correct">${escapeHtml(word[i])}</span>`;
+        } else {
+          chars += `<span class="letter incorrect">${escapeHtml(word[i])}</span>`;
+        }
+      }
+
+      chars += " "; // trailing space
+      const wordClasses = absoluteIndex === currentWordIndex ? "word current" : "word";
+      return `<span class="${wordClasses}">${chars}</span>`;
+    })
+    .join("");
+
+  passageDisplay.innerHTML = html;
+}
+
+
+
+
+
+
 
   function escapeHtml(s) {
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -792,7 +892,7 @@ modeSelect.addEventListener('change', () => {
     recentTableBody.innerHTML = '';
     recentSnap.forEach(d => {
       const v = d.data();
-      const when = v.timestamp?.toDate ? v.timestamp.toDate().toLocaleString() : '—';
+      const when = v.timestamp?.toDate ? v.timestamp.toDate().toLocaleString() : '-';
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${when}</td>
@@ -865,6 +965,5 @@ modeSelect.addEventListener('change', () => {
   else if (mode === 'story') loadNewStory();
   else loadNewPassage();
 });
-
 
 
