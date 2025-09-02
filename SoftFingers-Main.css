@@ -109,18 +109,37 @@
       border-radius:6px;
       padding:10px 14px;
     }
-    .passage{
-      background: rgba(255,255,255,.04);
-      border-radius:6px;
-      padding:14px;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 30.8px;
-      line-height:1.35;
-      max-height:100px;
-      overflow:hidden;
-      white-space:pre-wrap;
-      word-break:break-word;
-    }
+    #passage-display {
+  line-height: 1.6;
+  font-size: 27px;
+  padding-top: 20px;
+  padding-bottom: 90px;
+  scroll-behavior: smooth;
+  max-height: 100px;
+  overflow-y: hidden;
+}
+
+#passage-display .current {
+  background: #555;
+  animation: pulse 1s infinite;
+  border-radius: 2px;
+
+}
+
+@keyframes pulse {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.7; }
+}
+
+#passage-display .incorrect {
+ 
+  color: red;
+  border-radius: 2px;
+}
+
+#passage-display .correct {
+  color: #51cf66;
+}
     textarea{
       width:100%;
       min-height:100px;
@@ -146,9 +165,7 @@
     }
     .score-table tr:nth-child(odd){ background: rgba(255,255,255,.02); }
     .badge{ padding:4px 10px; border-radius:999px; font-size:10px; display:inline-block; }
-    .correct { color:#4ade80; }
-    .incorrect { color:#f87171; }
-    .current { background-color: #555; }
+   
     .pill{ background: rgba(255,255,255,.08); padding:4px 12px; border-radius:999px; font-size:11px; }
     .leaderboard{
       max-height:320px;
@@ -166,8 +183,3 @@
     .form-wrapper { max-width:480px; width:100%; }
 
     #auth-message { margin-top:4px; }
-
-
-
-
-
