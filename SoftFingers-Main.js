@@ -1,5 +1,4 @@
-
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   // ==== FIREBASE CONFIG - your real config ====
   const firebaseConfig = {
     apiKey: "AIzaSyCoQO4vR_lIStx2lMPSy_YhHYPh75gHRSQ",
@@ -70,9 +69,7 @@
   const storyPartSelect = storyControls.querySelector('#story-part');
   const storyMetaEl = storyControls.querySelector('#story-meta');
 
-
-// Quote bank (from user)
-      
+  // ==== WORDS / QUOTES (from your version) ====
   const WORDS = {
     Beginner: ["during","after","today","between","behind","defend","divine","middle","under","magic","beneath","withdraw",
     "Typing is fun when practiced daily.",
@@ -397,6 +394,10 @@
   let currentStoryIndex = 0; // chapter
   let currentStoryPart = 0;  // 0 or 1
 
+  // NEW: Enhanced tracking for accuracy calculation
+  let totalKeysPressed = 0;  // Track ALL keystrokes including corrections
+  let totalCorrectChars = 0; // Track correct characters including those later corrected
+
   // ==== Enhance mode-select with Story option if missing ====
   if (![...modeSelect.options].some(o => o.value === 'story')) {
     const opt = document.createElement('option');
@@ -411,7 +412,7 @@
     QUOTES.forEach((q, i) => {
       const opt = document.createElement('option');
       opt.value = i;
-      opt.textContent = `${q.quote.slice(0, 50)}${q.quote.length > 50 ? '…' : ''} - ${q.author}`;
+      opt.textContent = `${q.quote.slice(0, 50)}${q.quote.length > 50 ? '…' : ''} — ${q.author}`;
       quoteSelect.appendChild(opt);
     });
   }
@@ -428,7 +429,7 @@
     });
     storyChapterSelect.value = currentStoryIndex;
     storyPartSelect.value = String(currentStoryPart);
-    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} - Part ${Number(currentStoryPart)+1}`;
+    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
   }
   populateStoryDropdown();
 
@@ -578,13 +579,13 @@ modeSelect.addEventListener('change', () => {
 
   storyChapterSelect.addEventListener('change', () => {
     currentStoryIndex = parseInt(storyChapterSelect.value, 10) || 0;
-    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} - Part ${Number(currentStoryPart)+1}`;
+    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
     if (mode === 'story') loadNewStory();
   });
 
   storyPartSelect.addEventListener('change', () => {
     currentStoryPart = parseInt(storyPartSelect.value, 10) || 0;
-    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} - Part ${Number(currentStoryPart)+1}`;
+    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
     if (mode === 'story') loadNewStory();
   });
 
@@ -608,9 +609,9 @@ modeSelect.addEventListener('change', () => {
     }
   });
 
-  // FIXED: Enhanced keydown event to handle special cases
+  // ENHANCED: Track all keystrokes for accurate accuracy calculation
   typingInput.addEventListener('keydown', (e) => {
-    // Don't interfere with special keys (backspace, arrow keys, etc.)
+    // Don't count special keys in keystroke total
     if (e.key.length > 1 && e.key !== ' ') return;
     
     const currentPos = typingInput.selectionStart;
@@ -621,8 +622,10 @@ modeSelect.addEventListener('change', () => {
       return;
     }
     
-    // Allow backspace and delete
-    if (e.key === 'Backspace' || e.key === 'Delete') return;
+    // Count all typing keystrokes (not backspace/delete)
+    if (e.key !== 'Backspace' && e.key !== 'Delete') {
+      totalKeysPressed++;
+    }
   });
 
   typingInput.addEventListener('paste', e => e.preventDefault());
@@ -668,6 +671,9 @@ modeSelect.addEventListener('change', () => {
     startTime = null;
     typed = '';
     typingInput.value = '';
+    // RESET: Clear keystroke tracking
+    totalKeysPressed = 0;
+    totalCorrectChars = 0;
     statTime.textContent = timeLeft + 's';
     statWPM.textContent = 0;
     statAcc.textContent = '100%';
@@ -684,7 +690,7 @@ modeSelect.addEventListener('change', () => {
   function loadNewQuote() {
     const q = pickQuote();
     targetText = q.quote;
-    quoteAuthorEl.textContent = `- ${q.author}`;
+    quoteAuthorEl.textContent = `— ${q.author}`;
     currentDiffBadge.textContent = currentDifficulty;
     resetTestState();
   }
@@ -692,7 +698,7 @@ modeSelect.addEventListener('change', () => {
   function loadNewStory() {
     const s = pickStoryText();
     targetText = s.text;
-    storyMetaEl.textContent = `${s.title} - Part ${s.partIndex + 1}`;
+    storyMetaEl.textContent = `${s.title} — Part ${s.partIndex + 1}`;
     currentDiffBadge.textContent = currentDifficulty;
     resetTestState();
   }
@@ -721,55 +727,84 @@ modeSelect.addEventListener('change', () => {
     }, 1000);
   }
 
-  // ==== FIXED: Proper WPM calculation using characters/5 and accounting for errors ====
+  // ==== FIXED: Improved WPM and Accuracy calculation ====
   function computeStats(typedStr, elapsedSec) {
+    if (elapsedSec <= 0) return { wpm: 0, accuracy: 100 };
+    
     const target = targetText;
     
-    // Count correct characters
-    const correctChars = [...typedStr].filter((ch, i) => ch === target[i]).length;
+    // Count currently correct characters in the typed text
+    const currentCorrectChars = [...typedStr].filter((ch, i) => ch === target[i]).length;
     
-    // Calculate accuracy
-    const accuracy = typedStr.length ? Math.round((correctChars / typedStr.length) * 100) : 100;
+    // FIXED ACCURACY: Use total keystrokes pressed vs correct characters
+    // This ensures corrections are counted against accuracy
+    const accuracy = totalKeysPressed > 0 ? Math.round((currentCorrectChars / totalKeysPressed) * 100) : 100;
     
-    // FIXED: Use standard WPM calculation (characters/5) and account for errors
+    // FIXED WPM: Use Gross WPM instead of Net WPM to prevent zero issues
+    // Gross WPM = (Total characters typed / 5) / (Time in minutes)
     const totalCharsTyped = typedStr.length;
-    const incorrectChars = totalCharsTyped - correctChars;
+    const grossWPM = (totalCharsTyped / 5) / (elapsedSec / 60);
     
-    // Net WPM = (Total characters typed / 5 - Errors) / (Time in minutes)
-    const grossWPM = elapsedSec > 0 ? (totalCharsTyped / 5) / (elapsedSec / 60) : 0;
-    const netWPM = elapsedSec > 0 ? Math.max(0, (totalCharsTyped / 5 - incorrectChars) / (elapsedSec / 60)) : 0;
+    // Use Gross WPM but ensure it's never negative
+    const wpm = Math.max(0, Math.round(grossWPM));
     
-    // Use Net WPM (which accounts for errors) - this is more accurate
-    const wpm = Math.round(netWPM);
-    
-    return { wpm, accuracy };
+    return { wpm, accuracy: Math.max(0, accuracy) };
   }
 
   // ==== FIXED: Enhanced render function with better current word positioning ====
-function renderPassage() {
-  const target = targetText;
-  const position = typed.length;
+  function renderPassage() {
+    const target = targetText;
+    const position = typed.length;
+    
+    // Build the HTML with proper classes
+    const html = [...target].map((ch, i) => {
+      const typedChar = typed[i];
+      let classes = [];
+      
+      if (i === position) classes.push('current');
+      
+      if (typedChar === undefined) {
+        return `<span${classes.length ? ` class="${classes.join(' ')}"` : ''}>${escapeHtml(ch)}</span>`;
+      }
+      
+      // FIXED: Proper incorrect marking for ALL characters including spaces
+      if (typedChar === ch) {
+        classes.push('correct');
+      } else {
+        classes.push('incorrect');
+      }
+      
+      return `<span class="${classes.join(' ')}">${escapeHtml(ch)}</span>`;
+    }).join('');
+    
+    passageDisplay.innerHTML = html;
 
-  const words = target.split(" ");
+    // FIXED: Enhanced scrolling to keep current word at top (like 10fastfingers)
+    scrollToCurrentWord();
+  }
+
+  // ==== NEW: Function to scroll current word to top like 10fastfingers.com ====
+// ================== RENDER PASSAGE ==================
+function renderPassage() {
+  const words = targetText.split(" ");
   const typedWords = typed.trimEnd().split(" ");
 
-  // Determine current word index
+  // Find current word index
   let currentWordIndex = typedWords.length - 1;
   if (typed.endsWith(" ")) currentWordIndex++;
 
-  // AUTO-DETECT WORDS PER ROW
+  // AUTO-DETECT words per row
   const style = window.getComputedStyle(passageDisplay);
   const containerWidth = passageDisplay.clientWidth;
   const fontSize = parseInt(style.fontSize, 10);
   const charWidth = fontSize * 0.6;
-  const avgWordLength = 5 + 1;
-
+  const avgWordLength = 6; // ~5 letters + space
   const WORDS_PER_ROW = Math.max(
     1,
     Math.floor(containerWidth / (avgWordLength * charWidth))
   );
 
-  // Determine current row start
+  // Only scroll when row fully typed
   let rowStartIndex = 0;
   while (
     rowStartIndex + WORDS_PER_ROW <= currentWordIndex &&
@@ -778,10 +813,8 @@ function renderPassage() {
     rowStartIndex += WORDS_PER_ROW;
   }
 
-  // Slice visible words from current row onward
   const visibleWords = words.slice(rowStartIndex);
 
-  // Build HTML
   const html = visibleWords
     .map((word, wi) => {
       const absoluteIndex = rowStartIndex + wi;
@@ -792,13 +825,19 @@ function renderPassage() {
         const typedChar = typedWord[i];
         let classes = ["letter"];
 
-        // Highlight current word
-        if (absoluteIndex === currentWordIndex && i === typedWord.length && !typed.endsWith(" ")) {
+        // highlight cursor in current word
+        if (
+          absoluteIndex === currentWordIndex &&
+          i === typedWord.length &&
+          !typed.endsWith(" ")
+        ) {
           classes.push("current");
         }
 
         if (typedChar === undefined) {
-          chars += `<span class="${classes.join(" ")}">${escapeHtml(word[i])}</span>`;
+          chars += `<span class="${classes.join(" ")}">${escapeHtml(
+            word[i]
+          )}</span>`;
         } else if (typedChar === word[i]) {
           chars += `<span class="letter correct">${escapeHtml(word[i])}</span>`;
         } else {
@@ -806,8 +845,9 @@ function renderPassage() {
         }
       }
 
-      chars += " "; // trailing space
-      const wordClasses = absoluteIndex === currentWordIndex ? "word current" : "word";
+      chars += " "; // space after word
+      const wordClasses =
+        absoluteIndex === currentWordIndex ? "word current" : "word";
       return `<span class="${wordClasses}">${chars}</span>`;
     })
     .join("");
@@ -815,11 +855,41 @@ function renderPassage() {
   passageDisplay.innerHTML = html;
 }
 
+// ================== STATS ==================
+function calculateWPM() {
+  if (!startTime) return 0;
+  const elapsed = (Date.now() - startTime) / 1000 / 60; // minutes
+  const wordsTyped = typed.trim().split(/\s+/).filter(Boolean).length;
 
+  if (elapsed <= 0) return 0;
+  return Math.round(wordsTyped / Math.max(elapsed, 1 / 60));
+}
 
+function calculateAccuracy() {
+  if (totalKeystrokes === 0) return 100;
+  return ((correctKeystrokes / totalKeystrokes) * 100).toFixed(1);
+}
 
+function updateStats() {
+  const wpm = calculateWPM();
+  const acc = calculateAccuracy();
 
+  document.getElementById("wpm").textContent = wpm;
+  document.getElementById("accuracy").textContent = acc + "%";
+}
 
+// ================== UTILS ==================
+function escapeHtml(ch) {
+  return ch.replace(/[&<>"']/g, (m) => {
+    switch (m) {
+      case "&": return "&amp;";
+      case "<": return "&lt;";
+      case ">": return "&gt;";
+      case '"': return "&quot;";
+      case "'": return "&#039;";
+    }
+  });
+}
 
   function escapeHtml(s) {
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -892,7 +962,7 @@ function renderPassage() {
     recentTableBody.innerHTML = '';
     recentSnap.forEach(d => {
       const v = d.data();
-      const when = v.timestamp?.toDate ? v.timestamp.toDate().toLocaleString() : '-';
+      const when = v.timestamp?.toDate ? v.timestamp.toDate().toLocaleString() : '—';
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${when}</td>
@@ -965,5 +1035,3 @@ function renderPassage() {
   else if (mode === 'story') loadNewStory();
   else loadNewPassage();
 });
-
-
