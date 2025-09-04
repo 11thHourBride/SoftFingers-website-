@@ -789,71 +789,74 @@ function renderPassage() {
   const words = targetText.split(" ");
   const typedWords = typed.trimEnd().split(" ");
 
-  // Find current word index
+  // === Detect current word ===
   let currentWordIndex = typedWords.length - 1;
-  if (typed.endsWith(" ")) currentWordIndex++;
+  if (typed.endsWith(" ") && currentWordIndex < words.length - 1) {
+    currentWordIndex++;
+  }
 
-  // AUTO-DETECT words per row
+  // === Auto-detect words per row ===
   const style = window.getComputedStyle(passageDisplay);
   const containerWidth = passageDisplay.clientWidth;
   const fontSize = parseInt(style.fontSize, 10);
   const charWidth = fontSize * 0.6;
-  const avgWordLength = 6; // ~5 letters + space
+  const avgWordLength = 6;
   const WORDS_PER_ROW = Math.max(
     1,
     Math.floor(containerWidth / (avgWordLength * charWidth))
   );
 
-  // Only scroll when row fully typed
-  let rowStartIndex = 0;
+  // === Group two rows per "page" ===
+  const ROW_SIZE = WORDS_PER_ROW * 2;
+  let pageStartIndex = 0;
   while (
-    rowStartIndex + WORDS_PER_ROW <= currentWordIndex &&
-    rowStartIndex + WORDS_PER_ROW < words.length
+    pageStartIndex + ROW_SIZE <= currentWordIndex &&
+    pageStartIndex + ROW_SIZE < words.length
   ) {
-    rowStartIndex += WORDS_PER_ROW;
+    pageStartIndex += ROW_SIZE;
   }
 
-  const visibleWords = words.slice(rowStartIndex);
+  const visibleWords = words.slice(pageStartIndex, pageStartIndex + ROW_SIZE * 2);
 
-  const html = visibleWords
-    .map((word, wi) => {
-      const absoluteIndex = rowStartIndex + wi;
-      const typedWord = typedWords[absoluteIndex] || "";
-      let chars = "";
+  // === Build row-by-row ===
+  let html = "";
+  for (let r = 0; r < visibleWords.length; r += WORDS_PER_ROW) {
+    const rowWords = visibleWords.slice(r, r + WORDS_PER_ROW);
 
-      for (let i = 0; i < word.length; i++) {
-        const typedChar = typedWord[i];
-        let classes = ["letter"];
+    const rowHtml = rowWords
+      .map((word, wi) => {
+        const absoluteIndex = pageStartIndex + r + wi;
+        const typedWord = typedWords[absoluteIndex] || "";
+        let chars = "";
 
-        // highlight cursor in current word
-        if (
-          absoluteIndex === currentWordIndex &&
-          i === typedWord.length &&
-          !typed.endsWith(" ")
-        ) {
-          classes.push("current");
+        for (let i = 0; i < word.length; i++) {
+          const typedChar = typedWord[i];
+
+          if (typedChar === undefined) {
+            chars += `<span>${escapeHtml(word[i])}</span>`;
+          } else if (typedChar === word[i]) {
+            chars += `<span class="correct">${escapeHtml(word[i])}</span>`;
+          } else {
+            chars += `<span class="incorrect">${escapeHtml(word[i])}</span>`;
+          }
         }
 
-        if (typedChar === undefined) {
-          chars += `<span class="${classes.join(" ")}">${escapeHtml(
-            word[i]
-          )}</span>`;
-        } else if (typedChar === word[i]) {
-          chars += `<span class="letter correct">${escapeHtml(word[i])}</span>`;
-        } else {
-          chars += `<span class="letter incorrect">${escapeHtml(word[i])}</span>`;
+        // === Highlight active word with background box ===
+        let wordClass = "word";
+        if (absoluteIndex === currentWordIndex) {
+          wordClass += " active-word";
         }
-      }
 
-      chars += " "; // space after word
-      const wordClasses =
-        absoluteIndex === currentWordIndex ? "word current" : "word";
-      return `<span class="${wordClasses}">${chars}</span>`;
-    })
-    .join("");
+        return `<span class="${wordClass}">${chars} </span>`;
+      })
+      .join("");
+
+    html += `<div class="row">${rowHtml}</div>`;
+  }
 
   passageDisplay.innerHTML = html;
 }
+
 
 // ================== STATS ==================
 function calculateWPM() {
