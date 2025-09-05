@@ -808,3 +808,4 @@ function startTimer() {
   else if (mode === 'story') loadNewStory();
   else loadNewPassage();
 });
+
