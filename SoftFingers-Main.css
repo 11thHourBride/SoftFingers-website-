@@ -1,4 +1,4 @@
-:root {
+    :root {
       --bg:#2e0a4a;
       --card:#1f1f2b;
       --radius:10px;
@@ -110,40 +110,40 @@
       padding:10px 14px;
     }
     #passage-display {
-  line-height: 2;
-  font-size: 27px;
-  font-weight: 500;
-  padding-top: 20px;
-  padding-bottom: 100px;
-  max-height: 100px; /* two rows high */
-  overflow: hidden;
-  position: relative;
-}
+      line-height: 1.4;
+      font-size: 30px;
+      font-weight: 500px;
+      padding-top: 20px;
+      padding-bottom: 100px;
+      max-height: 100px; /* two rows high */
+      overflow: hidden;
+      position: relative;
+    }
 
-.row {
-  display: inline-block;
-  width: 100%;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-}
+    .row {
+      display: inline-block;
+      width: 100%;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
 
-.row.fade-out {
-  transform: translateY(-50%);
-  opacity: 0;
-}
-#passage-display .active-word {
-  background: rgba(159, 124, 255, 0.25); /* purple glow */
-  border-radius: 4px;
-  padding: 2px 4px;
-}
+    .row.fade-out {
+      transform: translateY(-50%);
+      opacity: 0;
+    }
 
-#passage-display .correct {
-  color: #51cf66;
-}
+    #passage-display .active-word {
+      background: rgba(159, 124, 255, 0.25); /* purple glow */
+      border-radius: 4px;
+      padding: 2px 4px;
+    }
 
-#passage-display .incorrect {
-  color: red;
-}
+    #passage-display .correct {
+      color: #51cf66;
+    }
 
+    #passage-display .incorrect {
+      color: red;
+    }
 
     textarea{
       width:100%;
