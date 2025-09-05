@@ -111,8 +111,8 @@
     }
     #passage-display {
       line-height: 1.6;
-      font-size: 30px;
-      font-weight: 500px;
+      font-size: 27px;
+      font-weight: 500;
       padding-top: 20px;
       padding-bottom: 100px;
       max-height: 100px; /* two rows high */
@@ -190,4 +190,5 @@
     .form-wrapper { max-width:480px; width:100%; }
 
     #auth-message { margin-top:4px; }
+
 
