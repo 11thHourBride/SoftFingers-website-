@@ -93,17 +93,167 @@ document.addEventListener('DOMContentLoaded', () => {
       "severe","several","plate","shadow","slain","three","eleven","computer","hazard","manager","account","cashier","clerk","clearance",
       "heavy","brother","zinc","grapes","choke","banker","mobile","retreat","surrender","water","hybrid","since","yourself"
     ],
-    Intermediate: ["synthesis","resolve","gradient","interaction","parallel","compute","framework","latency","protocol","asynchronous","concurrency","optimization","rendering",
-      "Learning to type with accuracy and speed takes dedication.",
+    Intermediate: [
+"abstraction","algorithm","allocate","annotation","approximation","array","ascent","assertion","attribute",
+"bandwidth","baseline","benchmark","binary","boolean","buffer","cache","cascade","cipher","cluster",
+"coefficient","compile","compression","computation","conditional","configuration","container","contextual","converge",
+"correlation","credential","cumulative","cursor",
+"dataset","decompose","deduction","default","dependency","derivative","descriptor","deterministic","diffusion",
+"dimension","discrete","dispatch","distributed",
+"dynamic","eigenvalue","elasticity","embedding","encryption","enumeration","ephemeral","equality","evaluation",
+"exception","exponential","expression","extraction",
+"fidelity","finite","firewall","flexibility","formalism","fragment","functionality","gateway","generalization","granularity",
+"graphical","handshake","hashing","heuristic","homogeneous","hyperlink","hypothesis",
+"identifier","immutable","implementation","inference","inheritance","initializer","input","instance","integration","interface",
+"iteration","kernel","latitudinal","lexicon","linear","linkage","liveness","locality","lookup","looping",
+"macro","magnitude","manifold","mapping","matrix","metadata","migration","modality","modular","monitoring",
+"namespace","narrative","negotiate","networking","nominal","normalization","notation","nullify","numerical","objectify",
+"ontological","operational","orchestration","overflow","packet","parameter","parsing","partition","pathway","payload",
+"perceptron","peripheral","pipeline","polymorphism","positional","predictive","preemption","prefix","primitive","probability",
+"procedural","processing","progression","projection","propagation","prototype","provision","pseudocode","query","queueing",
+"randomize","rational","reallocate","rebuild","recursion","redundancy","reference","refinement","register","relational",
+"replication","repository","residual","resolution","restriction","retrieval","reusability","robustness","routing","runtime",
+"sandbox","scalability","schema","scripting","semaphore","serialization","serverless","sharding","similarity","singleton",
+"snapshot","specification","stacking","statistical","storage","streaming","structural","subclass","subroutine","synchronization",
+"syntax","systematic","tableau","temporal","tensor","termination","theorem","throughput","tokenization","topology",
+"transaction","transmission","traversal","trigger","tuple","unary","unification","universal","update","upgrade",
+"usability","validation","variability","vectorization","versioning","virtualization","visibility","volatile","workflow","wrapper",
+"abductive","accelerate","acoustic","adapter","adhesion","adjacency","admissible","adoption","affinity","aggregate",
+"alignment","allocation","amplification","ancestral","annotate","anomaly","antivirus","approximate","arbitrary","artifact",
+"assemble","assignment","association","attenuation","authentic","auxiliary","backpropagation","baseline","batching","biasing",
+"bitrate","blending","bootstrapping","boundary","branching","broadcast","calculus","canonical","capture","cardinality",
+"categorical","checkpoint","ciphertext","clarity","clustering","coalescence","coherence","combinatorial","command","compact",
+"complement","compliance","composability","comprehension","compression","concatenation","concurrency","conditionality","conduction","configuration",
+"connectivity","consensus","consolidation","constellation","constraint","constructive","consumption","containment","contingent","continuity",
+"convergence","convexity","coordination","coroutine","crossing","cryptographic","cumulative","cyclic","daemon","dashboard",
+"datagram","dedicated","defragmentation","delegation","delta","denormalization","descriptor","determinism","diagnostic","differentiation",
+"dimensionless","disassembler","disjoint","dispatcher","dissemination","dissipation","distributedness","divergence","documenting","domain",
+"duplication","elastic","elevate","emission","encapsulation","encoder","enrichment","enumerator","environmental","epoch",
+"equality","equilibrium","equivalence","ergonomic","escalation","estimator","ethereal","evaluation","eventual","evolutionary",
+"executable","expansion","exploration","expressivity","extensible","factorization","fallacy","fasttrack","feasibility","feedback",
+"federation","finite-state","firmware","flowchart","forensic","formulation","fragmentation","frequency","functionally","fuzzy",
+"gatewaying","generalizable","geometric","governance","granular","gridlock","grounding","guarded","handshaking","harmonic",
+"hashmap","heuristics","hierarchy","homogenize","hubness","hybridization","hypergraph","hyperparameter","identity","illuminate",
+"immutability","imperative","implementation-specific","implicit","incremental","inductive","inference-based","inflection","information","initializer-list",
+"innovation","instructional","integral","introspection","invariant","iteration-based","jitter","journal","justification","keyframe",
+"knowledgebase","lambda","latency-sensitive","lexical","lifespan","linearize","linking","listener","localization","logical",
+"logistic","loopback","macrostate","mainframe","manipulation","marker","matching","mechanism","megabyte","middleware",
+"minimization","misclassification","modelling","momentum","monadic","monetization","multicast","multithreading","mutability","narration",
+"namespace-driven","navigation","negation","neural","nonlinear","notation-based","nullability","numerator","objectification","observation",
+"offset","ontogeny","opcode","operability","optimality","orthogonal","oscillation","outlier","overfitting","ownership",
+"packetize","parallelism","parametric","parity","parsing-tree","persistence","platform","plugin","pointer","polyglot",
+"polynomial","pooling","postcondition","postprocessing","precision","predicate","prefetching","preprocessing","preservation","priority",
+"probabilistic","processing-unit","progressive","projectional","propagation-delay","propositional","prototyping","provenance","quantization","queuing-system",
+"randomness","ranked","reactive","readability","reallocation","rebalance","reciprocal","reconstruction","rectification","redeemable",
+"redundant","referential","reinforcement","relativity","remediation","renormalization","reordering","replicable","rescheduling","resettable",
+"resilience","resourceful","restoration","retrievable","retrofit","reusability-metric","reversibility","routable","runtime-error","sampling",
+"schedulable","schema-driven","scriptable","searchable","segmentation","semantic","sensorial","serializable","serviceable","sharded",
+"signal","simulation","slackness","snapshotting","sociotechnical","software","solver","specialization","speculative","stability",
+"stacktrace","stochastic","storage-unit","streamline","structuring","subgraph","subprotocol","supervised","swapping","symbolic",
+"synergy","synthetic","system-call","tangible","tasking","templatization","termination-condition","theoretical","throughput-delay","tokenizer",
+"topological","traceability","transactional","transformer","transition","transport","tree-structured","triggered","tunable","unattended",
+"uncertainty","underflow","underpinning","unidirectional","uniformity","univariate","updateable","uplink","usability-metric","utilization",
+"validation-check","variational","vector-space","verification","version-control","viewpoint","virtual-machine","volatility","vulnerability","weighted",
+"wireless","workflow-engine","wrapper-class","zero-day","zoning",
+"Learning to type with accuracy and speed takes dedication.",
       "Patience and practice unlock hidden potential in every learner.",
       "Consistency is the bridge between goals and accomplishments."
-    ],
-    Advanced: ["antidisestablishmentarianism","transubstantiation","quintessentially","epistemological","philosophically","heterogeneous","microarchitecture","electroencephalography","counterintuitively","neurophysiological",
-      "In the symphony of progress, persistence plays the most enduring tune.",
+],
+
+      
+  
+    Advanced: [
+"axiomatization","bioluminescence","characterization","conceptualization","cryptographically","differentiability","electromagnetism","fundamentalism","geostrategically","historiographical",
+"hyperintensionality","ideologically","immunohistochemistry","indistinguishability","instrumentalization","interdisciplinarity","intertextuality","irreversibility","jurisprudentially","lexicographical",
+"magnetohydrodynamics","metamathematics","metaphilosophy","methodologically","micropaleontology","morphophonemics","multidimensionality","nanofabrication","neurocognitive","nonrepresentational",
+"ontologically","overdetermination","paralinguistic","phenomenological","philosophization","phylogenetics","pluripotentiality","poststructuralism","prestidigitation","probabilistically",
+"psychopathology","quantificational","recontextualization","reproducibility","retrospectively","sociolinguistics","spectrographically","standardization","subterraneanly","superconductivity",
+"synchronization","syntactically","telecommunication","thermodynamically","transcendentalism","transdisciplinary","ultramicroscopy","uncharacteristically","undecidability","universalization",
+"verisimilitude","xenotransplantation","zoologically","abstractionism","accelerometer","acclimatization","acoustoelectric","actuarially","adaptational","adjudicative",
+"administratively","adventitiousness","aerobiological","aerodynamically","aerospacecraft","agglomeration","agglutination","algorithmically","alkaloidology","allosterically",
+"amelioratively","anaerobically","analytically","anemometrical","anesthesiology","angiographically","anisotropically","anthropocentric","anthropogenically","anthropometrically",
+"anticonstitutional","antihistaminergic","antimicrobial","antiparallelism","antiquarianism","antireductionism","apocalyptically","apocryphalness","aposematically","appropriational",
+"archaeoastronomy","archaeologically","architectonically","arithmetization","arteriosclerosis","artificiality","assemblagist","asymptotically","atherosclerosis","atmospherically",
+"attitudinally","autoantibodies","autocorrelation","autonomousness","axiologically","bacteriological","behavioristically","bibliographical","bioaccumulation","biodegradation",
+"biogeochemistry","biogeographical","biomechanical","biophysicality","biosystematics","bipartisanism","biotechnological","boustrophedonic","calcification","calorimetrical",
+"cancellational","carcinogenicity","cartographically","catastrophically","categorization","causationality","centrifugality","characterological","chemotactically","chromatographic",
+"chronologically","cinematographical","civilizational","climatological","codifiability","coextensively","cognitively","cohomological","colloquialism","combinatorially",
+"commemorational","communicational","comparativistic","compartmentalization","complementarity","computationally","conceptualistic","conciliatorily","concomitantly","condensational",
+"configurational","conglomeration","conscientization","consequentialism","consequentiality","considerational","consolidational","constitutionalism","constructivism","contextualism",
+"contradictorily","contransubstantiational","convectionally","cooperativeness","cosmochemistry","cosmologically","counterargument","counterbalancing","countercultural","counterintelligence",
+"counterrevolutionary","craniofacial","crystallographic","cryptanalysis","cryptographically","cybernetically","cytogenetically","cytophotometrically","decentralization","decisionality",
+"declaratively","decolonialization","deconstructivism","deductivism","defibrillation","degenerescence","dehumanization","deindustrialization","dematerialization","democratically",
+"demographically","demonstrational","denaturalization","denominational","denotationally","depersonalization","depolarization","depoliticization","dermatoglyphics","desalinization",
+"descriptivism","desynchronization","detraditionalization","deuterostomian","developmentalism","diagnostically","differentially","diffractional","digitalization","diplomatically",
+"disaggregated","disambiguation","disarticulation","disciplinarity","disenfranchisement","disestablishment","disincentivization","disintermediation","disproportionally","dissimilatory",
+"distinguishably","documentational","domestication","dramaturgically","dynamometrical","ecclesiastical","echocardiography","ecophysiological","electrodynamics","electrokinetics",
+"electroluminescence","electromechanical","electromyography","electrophilic","electrostatics","elementalization","elucidationist","emblematization","emulsification","encyclopaedism",
+"endocrinological","energetically","enfranchisement","entomologically","entrepreneurialism","environmentalism","enzymological","epidemiological","epistemically","epistolaryness",
+"equilibrational","equipotentiality","erythropoiesis","ethnomusicology","ethnophilosophy","ethnozoological","evolutionarily","exemplification","existentialism","exoplanetary",
+"experimentalism","exterritoriality","extrajudicially","extraordinariness","extraterrestrial","fabricational","factorizability","fallaciousness","familiarization","fascistically",
+"federalization","ferroelectricity","fertilization","fictionalization","floriculturally","fluorochemically","formidableness","functionalism","galvanometrical","gastroenterology",
+"genealogically","generalizability","geochronological","geohydrological","geomechanical","geopolitically","geostatistical","glaciologically","gnosiological","grammaticalization",
+"graphitization","gravitationally","habitualization","haematopoiesis","haplologically","harmonization","helicoptering","heliophysical","hematopoietically","hermeneutically",
+"hierarchization","histomorphometry","histopathology","histophysiology","holographically","homoiconicity","horizontality","humanistically","hydrodynamical","hydrogeological",
+"hydrological","hydrometeorology","hydrothermally","hyperautomation","hypercapitalism","hyperconscious","hyperdimensional","hyperinflationary","hypersensitization","hypertrophically",
+"hypnotizability","hypothetically","iconoclastically","ideationally","ideologization","idiosyncratically","illogicalness","illustrational","imaginationally","immaterialism",
+"immortalization","immunochemically","immunogenetically","impermeability","implementational","impossibilism","impressionistic","inaccessibility","inapplicability","inarticulateness",
+"incommensurability","incompatibility","incompressibility","inconsequential","inconsideration","incontrollability","incorporeality","indefatigability","indeterminability","indivisibility",
+"industrialization","ineffableness","inevitability","inexpressibility","infallibility","infinitesimally","infralapsarian","informationally","inharmoniousness","injudiciousness",
+"inoperability","inseparability","instrumentality","insubordination","insubstantiality","intellectualism","intensionality","intentionalism","intercalibration","interculturality",
+"interfaciality","intergenerational","intergovernmental","interjurisdictional","interpenetration","interplanetary","interrelational","interrogational","intersubjectivity","interventionism",
+"intransigently","intrinsicalness","introgression","involutionary","irreconcilability","irreplaceability","irrepressibility","irreproducibility","irreversibility","isomorphically",
+"judicialization","jurisdictional","justificational","kaleidoscopically","kinematographically","kleptocratically","knowledgeability","labyrinthical","lateralization","legislatorial",
+"lexicalization","liberalization","linguistically","liquidification","lithographically","logarithmically","logicalization","longitudinally","macroeconomically","macroevolutionary",
+"magnetochemistry","magnetostrictive","maldistribution","manipulativeness","materialization","mathematization","mechanochemical","mechanoluminescence","mediatization","melodramatization",
+"mercantilistically","metacognitively","metalinguistically","metallurgically","metaphoricity","metastructural","meteorologically","methodization","microbiological","microchemistry",
+"microclimatology","microcontroller","microelectronic","microevolutionary","micrometeorology","micronutritional","microphysically","microprocessor","microscopically","microstructural",
+"microsystematic","militarization","mineralogically","mischaracterization","misinterpretation","mobilizational","modernization","molecularization","morphogenetically","morphophonology",
+"multiculturalism","multifactorial","multilaterality","multinucleated","multiorganizational","multispectral","multitudinousness","municipalization","mutationally","mythologization",
+"nanolithography","nanomedicine","nanoparticulate","nanoplasmonics","nanostructuring","naturalistically","navigationally","nebulization","necromantically","neocolonialism",
+"neoconservatism","neoliberalization","neonatological","neophilosophical","neuroanatomical","neurobiological","neurochemical","neurodevelopmental","neurogenetically","neuroinformatics",
+"neuropharmacological","neuropsychiatric","neuroscientific","neutralization","nominalization","noncommutativity","noncontemporaneous","noncontributory","noncorrelational","nondegeneracy",
+"nondeterministic","nonhierarchical","nonintervention","nonlinearization","nonparametric","nonrepresentationally","nonstandardization","nonsubstantive","nontemporal","nontranslatability",
+"normalizability","notationally","nutritionalism","objectification","objectionability","observationally","occasionalism","octahedrally","onomasiologically","ontogenetically",
+"operationalization","oppositionality","optimizationist","organizationally","orthogonalization","oscilloscopically","outmaneuvering","overgeneralization","overintellectualization","overrationalization",
+"oxidizability","paleoclimatology","paleogeographically","paleoichthyology","paleomagnetism","paleontological","palynological","paradigmatically","paralinguistically","paranormality",
+"parapsychological","paratactically","parenchymatous","parenthetically","particularization","pathophysiology","pedagogically","penetrationism","perceptibility","perceptualization",
+"perdurability","perfunctoriness","periodization","permeabilization","perpetualization","personalization","perspectivism","perturbational","pharmacogenetics","pharmacological",
+"pharmacotherapeutics","philanthropically","philosophically-minded","phonologically","photoautotrophic","photobiological","photocatalytically","photoemissive","photogrammetrically","photolithography",
+"photoluminescence","photomechanical","photomorphogenesis","phytochemistry","phytopathological","physicochemical","physiopathology","phytohormonal","planetological","plasmonically",
+"plurilingualism","pneumatically","pneumonoconiosis","polarizability","politicization","polymerization","polyphenolic","polytheoretically","popularization","positionality",
+"postcolonialism","postdeconstructive","posthumanism","postindustrialism","postmodernism","postnationalism","postpositivism","postrevolutionary","poststructuralist","pragmatization",
+"precautionarity","predictability","prefiguratively","preprofessional","preservationist","presuppositional","probabilism","problematization","proclitically","professionalization",
+"programmability","proliferationist","pronounceability","propagational","propositionality","prosopographical","protonotarial","provincialization","pseudoautonomous","pseudomorphically",
+"psychoanalytical","psychodiagnostic","psycholinguistic","psychometrician","psychopathologicalness","psychopharmacology","psychosomatically","pyroelectricity","quantificationally","quasiperiodicity",
+"quaternization","questionability","radicalization","rationalistically","reactualization","reaffirmationist","realizationally","reapportionment","rearticulation","recalcitrance",
+"recanalization","recategorization","recentralization","reciprocation","reclassification","recognizability","recolonization","reconceptualization","reconsecration","reconstitution",
+"recontextualize","reconventionalize","reculturation","redemocratization","redescriptivism","redefinition","redifferentiation","reestablishment","referentiality","reformulation",
+"regionalization","regularizability","rehumanization","reinstrumentation","reinterrogation","reinterpretability","reintroduction","relativistically","rematerialization","remobilization",
+"renationalization","reorganization","repoliticization","reprivatization","reproducibility","reproletarianization","resocialization","respecialization","responsibilization","restabilization",
+"restrictionism","resymbolization","rethematization","retrotransposon","revalorization","revisualization","revolutionization","rhetoricianism","rigidification","ritualization",
+"sacramentalism","sanctification","scholasticism","scientifically","scripturalism","securitization","segregationism","semantically","semiotically","sensationalism",
+"sequentialization","serendipitously","serviceability","sexualization","shortsightedness","significational","silicification","simultaneity","situationalism","sociohistorical",
+"sociometrically","sociopolitically","sociotechnical","solarization","soteriological","specializability","spectrofluorometry","spheroidization","spiritualization","stabilizability",
+"statistically","stereoisomerism","stochastically","stratigraphically","structuralism","structuralization","subcategorization","subdisciplinary","subinstitutional","subliminality",
+"suboptimization","subspecialization","substantivization","subterraneanness","subvocalization","supererogation","superfluidity","superimposition","superintendency","supersonically",
+"supranationalism","surrealistically","syllogistically","symbolization","symmetrization","sympathetically","synchronizability","synecdochically","syntacticization","systematization",
+"tangentialness","taxonomically","technocratically","technologization","teleologically","telepathically","telescopically","temporization","teratogenicity","territorialism",
+"theatricalization","thematization","theologization","theoreticalness","therapeutically","thermoregulatory","thesaurization","theosophically","topographically","topologically",
+"totalitarianism","toxicologically","traditionalism","transcendentalist","transculturally","transductional","transgenerational","transhistorical","translatability","transnationalism",
+"transvaluation","transversality","triangulational","tridimensionality","trigonometrician","trilateralism","trinitarianism","triumphalistically","tropological","typological",
+"ultracentrifugation","ultrafiltration","ultramicroanalysis","ultramontanism","ultranationalism","ultrasonography","unacceptability","unassimilability","unavailability","uncategorizability",
+"unchangeability","unclassifiability","uncommunicability","uncontrollability","undemonstrability","underappreciated","underdevelopedness","undistinguishability","unequivocalness","unidentifiability",
+"universalizability","unobjectionability","unpredictability","unquestionability","unsustainability","utilitarianism","vaccinological","variationally","verifiability","verisimilitudinous",
+"verticalization","vexillologically","vicissitudinal","vindictiveness","virtualizability","viticulturalism","voluntaristically","voluptuousness","vulnerabilization","xenobiotically",
+"xenogenetically","xenolinguistics","xenonucleonics","xenophobically","xylophonically","youthification","zincification","zoologization","zootechnically","zygotically",
+  "In the symphony of progress, persistence plays the most enduring tune.",
       "Mastery is not an act but a habit built from countless attempts.",
       "Complex challenges refine character, shaping resilience and brilliance."
-    ]
-  };
+]
+
+   
+   };
 
 // Quote bank (from user)
       const QUOTES = [
@@ -587,27 +737,30 @@ function startTimer() {
   }, 1000);
 }
   // ==== FIXED ACCURACY CALCULATION ====
-  function computeStats(typedStr, elapsedSec) {
-    if (elapsedSec <= 0) return { wpm: 0, accuracy: 100 };
-    
-    // Calculate current correct characters in the typed string
-    const currentCorrectChars = [...typedStr].filter((ch, i) => ch === targetText[i]).length;
-    
-    // Use a hybrid approach: consider both total keystrokes and current correctness
-    // This gives more weight to current accuracy while still penalizing corrections
+function computeStats(typedStr, elapsedSec) {
+  if (elapsedSec <= 0) return { wpm: 0, accuracy: 100 };
+  
+  const currentCorrectChars = [...typedStr].filter((ch, i) => ch === targetText[i]).length;
+  
+  let accuracy;
+  
+  // If total keys pressed equals typed length, no corrections were made
+  if (totalKeysPressed === typedStr.length) {
+    // Use simple accuracy: correct chars / total chars
+    accuracy = typedStr.length > 0 ? Math.round((currentCorrectChars / typedStr.length) * 100) : 100;
+  } else {
+    // User made corrections, use the weighted approach
     const baseAccuracy = totalKeysPressed > 0 ? (totalCorrectChars / totalKeysPressed) * 100 : 100;
     const currentAccuracy = typedStr.length > 0 ? (currentCorrectChars / typedStr.length) * 100 : 100;
-    
-    // Weighted average: 60% current accuracy, 40% historical accuracy
-    // This allows accuracy to recover as users type correctly after corrections
-    const accuracy = Math.round((currentAccuracy * 0.6) + (baseAccuracy * 0.4));
-    
-    const totalCharsTyped = typedStr.length;
-    const grossWPM = (totalCharsTyped / 5) / (elapsedSec / 60);
-    const wpm = Math.max(0, Math.round(grossWPM));
-    
-    return { wpm, accuracy: Math.max(0, Math.min(100, accuracy)) };
+    accuracy = Math.round((currentAccuracy * 0.6) + (baseAccuracy * 0.4));
   }
+  
+  const totalCharsTyped = typedStr.length;
+  const grossWPM = (totalCharsTyped / 5) / (elapsedSec / 60);
+  const wpm = Math.max(0, Math.round(grossWPM));
+  
+  return { wpm, accuracy: Math.max(0, Math.min(100, accuracy)) };
+}
 
   function renderPassage() {
     const words = targetText.split(" ");
@@ -808,4 +961,3 @@ function startTimer() {
   else if (mode === 'story') loadNewStory();
   else loadNewPassage();
 });
-
