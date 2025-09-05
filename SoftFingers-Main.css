@@ -110,7 +110,7 @@
       padding:10px 14px;
     }
     #passage-display {
-      line-height: 1.4;
+      line-height: 1.6;
       font-size: 30px;
       font-weight: 500px;
       padding-top: 20px;
@@ -190,3 +190,4 @@
     .form-wrapper { max-width:480px; width:100%; }
 
     #auth-message { margin-top:4px; }
+
