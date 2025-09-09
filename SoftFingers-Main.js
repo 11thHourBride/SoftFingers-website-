@@ -118,50 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
 "syntax","systematic","tableau","temporal","tensor","termination","theorem","throughput","tokenization","topology",
 "transaction","transmission","traversal","trigger","tuple","unary","unification","universal","update","upgrade",
 "usability","validation","variability","vectorization","versioning","virtualization","visibility","volatile","workflow","wrapper",
-"abductive","accelerate","acoustic","adapter","adhesion","adjacency","admissible","adoption","affinity","aggregate",
-"alignment","allocation","amplification","ancestral","annotate","anomaly","antivirus","approximate","arbitrary","artifact",
-"assemble","assignment","association","attenuation","authentic","auxiliary","backpropagation","baseline","batching","biasing",
-"bitrate","blending","bootstrapping","boundary","branching","broadcast","calculus","canonical","capture","cardinality",
-"categorical","checkpoint","ciphertext","clarity","clustering","coalescence","coherence","combinatorial","command","compact",
-"complement","compliance","composability","comprehension","compression","concatenation","concurrency","conditionality","conduction","configuration",
-"connectivity","consensus","consolidation","constellation","constraint","constructive","consumption","containment","contingent","continuity",
-"convergence","convexity","coordination","coroutine","crossing","cryptographic","cumulative","cyclic","daemon","dashboard",
-"datagram","dedicated","defragmentation","delegation","delta","denormalization","descriptor","determinism","diagnostic","differentiation",
-"dimensionless","disassembler","disjoint","dispatcher","dissemination","dissipation","distributedness","divergence","documenting","domain",
-"duplication","elastic","elevate","emission","encapsulation","encoder","enrichment","enumerator","environmental","epoch",
-"equality","equilibrium","equivalence","ergonomic","escalation","estimator","ethereal","evaluation","eventual","evolutionary",
-"executable","expansion","exploration","expressivity","extensible","factorization","fallacy","fasttrack","feasibility","feedback",
-"federation","finite-state","firmware","flowchart","forensic","formulation","fragmentation","frequency","functionally","fuzzy",
-"gatewaying","generalizable","geometric","governance","granular","gridlock","grounding","guarded","handshaking","harmonic",
-"hashmap","heuristics","hierarchy","homogenize","hubness","hybridization","hypergraph","hyperparameter","identity","illuminate",
-"immutability","imperative","implementation-specific","implicit","incremental","inductive","inference-based","inflection","information","initializer-list",
-"innovation","instructional","integral","introspection","invariant","iteration-based","jitter","journal","justification","keyframe",
-"knowledgebase","lambda","latency-sensitive","lexical","lifespan","linearize","linking","listener","localization","logical",
-"logistic","loopback","macrostate","mainframe","manipulation","marker","matching","mechanism","megabyte","middleware",
-"minimization","misclassification","modelling","momentum","monadic","monetization","multicast","multithreading","mutability","narration",
-"namespace-driven","navigation","negation","neural","nonlinear","notation-based","nullability","numerator","objectification","observation",
-"offset","ontogeny","opcode","operability","optimality","orthogonal","oscillation","outlier","overfitting","ownership",
-"packetize","parallelism","parametric","parity","parsing-tree","persistence","platform","plugin","pointer","polyglot",
-"polynomial","pooling","postcondition","postprocessing","precision","predicate","prefetching","preprocessing","preservation","priority",
-"probabilistic","processing-unit","progressive","projectional","propagation-delay","propositional","prototyping","provenance","quantization","queuing-system",
-"randomness","ranked","reactive","readability","reallocation","rebalance","reciprocal","reconstruction","rectification","redeemable",
-"redundant","referential","reinforcement","relativity","remediation","renormalization","reordering","replicable","rescheduling","resettable",
-"resilience","resourceful","restoration","retrievable","retrofit","reusability-metric","reversibility","routable","runtime-error","sampling",
-"schedulable","schema-driven","scriptable","searchable","segmentation","semantic","sensorial","serializable","serviceable","sharded",
-"signal","simulation","slackness","snapshotting","sociotechnical","software","solver","specialization","speculative","stability",
-"stacktrace","stochastic","storage-unit","streamline","structuring","subgraph","subprotocol","supervised","swapping","symbolic",
-"synergy","synthetic","system-call","tangible","tasking","templatization","termination-condition","theoretical","throughput-delay","tokenizer",
-"topological","traceability","transactional","transformer","transition","transport","tree-structured","triggered","tunable","unattended",
-"uncertainty","underflow","underpinning","unidirectional","uniformity","univariate","updateable","uplink","usability-metric","utilization",
-"validation-check","variational","vector-space","verification","version-control","viewpoint","virtual-machine","volatility","vulnerability","weighted",
-"wireless","workflow-engine","wrapper-class","zero-day","zoning",
 "Learning to type with accuracy and speed takes dedication.",
       "Patience and practice unlock hidden potential in every learner.",
       "Consistency is the bridge between goals and accomplishments."
 ],
-
-      
-  
     Advanced: [
 "axiomatization","bioluminescence","characterization","conceptualization","cryptographically","differentiability","electromagnetism","fundamentalism","geostrategically","historiographical",
 "hyperintensionality","ideologically","immunohistochemistry","indistinguishability","instrumentalization","interdisciplinarity","intertextuality","irreversibility","jurisprudentially","lexicographical",
@@ -169,90 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
 "ontologically","overdetermination","paralinguistic","phenomenological","philosophization","phylogenetics","pluripotentiality","poststructuralism","prestidigitation","probabilistically",
 "psychopathology","quantificational","recontextualization","reproducibility","retrospectively","sociolinguistics","spectrographically","standardization","subterraneanly","superconductivity",
 "synchronization","syntactically","telecommunication","thermodynamically","transcendentalism","transdisciplinary","ultramicroscopy","uncharacteristically","undecidability","universalization",
-"verisimilitude","xenotransplantation","zoologically","abstractionism","accelerometer","acclimatization","acoustoelectric","actuarially","adaptational","adjudicative",
-"administratively","adventitiousness","aerobiological","aerodynamically","aerospacecraft","agglomeration","agglutination","algorithmically","alkaloidology","allosterically",
-"amelioratively","anaerobically","analytically","anemometrical","anesthesiology","angiographically","anisotropically","anthropocentric","anthropogenically","anthropometrically",
-"anticonstitutional","antihistaminergic","antimicrobial","antiparallelism","antiquarianism","antireductionism","apocalyptically","apocryphalness","aposematically","appropriational",
-"archaeoastronomy","archaeologically","architectonically","arithmetization","arteriosclerosis","artificiality","assemblagist","asymptotically","atherosclerosis","atmospherically",
-"attitudinally","autoantibodies","autocorrelation","autonomousness","axiologically","bacteriological","behavioristically","bibliographical","bioaccumulation","biodegradation",
-"biogeochemistry","biogeographical","biomechanical","biophysicality","biosystematics","bipartisanism","biotechnological","boustrophedonic","calcification","calorimetrical",
-"cancellational","carcinogenicity","cartographically","catastrophically","categorization","causationality","centrifugality","characterological","chemotactically","chromatographic",
-"chronologically","cinematographical","civilizational","climatological","codifiability","coextensively","cognitively","cohomological","colloquialism","combinatorially",
-"commemorational","communicational","comparativistic","compartmentalization","complementarity","computationally","conceptualistic","conciliatorily","concomitantly","condensational",
-"configurational","conglomeration","conscientization","consequentialism","consequentiality","considerational","consolidational","constitutionalism","constructivism","contextualism",
-"contradictorily","contransubstantiational","convectionally","cooperativeness","cosmochemistry","cosmologically","counterargument","counterbalancing","countercultural","counterintelligence",
-"counterrevolutionary","craniofacial","crystallographic","cryptanalysis","cryptographically","cybernetically","cytogenetically","cytophotometrically","decentralization","decisionality",
-"declaratively","decolonialization","deconstructivism","deductivism","defibrillation","degenerescence","dehumanization","deindustrialization","dematerialization","democratically",
-"demographically","demonstrational","denaturalization","denominational","denotationally","depersonalization","depolarization","depoliticization","dermatoglyphics","desalinization",
-"descriptivism","desynchronization","detraditionalization","deuterostomian","developmentalism","diagnostically","differentially","diffractional","digitalization","diplomatically",
-"disaggregated","disambiguation","disarticulation","disciplinarity","disenfranchisement","disestablishment","disincentivization","disintermediation","disproportionally","dissimilatory",
-"distinguishably","documentational","domestication","dramaturgically","dynamometrical","ecclesiastical","echocardiography","ecophysiological","electrodynamics","electrokinetics",
-"electroluminescence","electromechanical","electromyography","electrophilic","electrostatics","elementalization","elucidationist","emblematization","emulsification","encyclopaedism",
-"endocrinological","energetically","enfranchisement","entomologically","entrepreneurialism","environmentalism","enzymological","epidemiological","epistemically","epistolaryness",
-"equilibrational","equipotentiality","erythropoiesis","ethnomusicology","ethnophilosophy","ethnozoological","evolutionarily","exemplification","existentialism","exoplanetary",
-"experimentalism","exterritoriality","extrajudicially","extraordinariness","extraterrestrial","fabricational","factorizability","fallaciousness","familiarization","fascistically",
-"federalization","ferroelectricity","fertilization","fictionalization","floriculturally","fluorochemically","formidableness","functionalism","galvanometrical","gastroenterology",
-"genealogically","generalizability","geochronological","geohydrological","geomechanical","geopolitically","geostatistical","glaciologically","gnosiological","grammaticalization",
-"graphitization","gravitationally","habitualization","haematopoiesis","haplologically","harmonization","helicoptering","heliophysical","hematopoietically","hermeneutically",
-"hierarchization","histomorphometry","histopathology","histophysiology","holographically","homoiconicity","horizontality","humanistically","hydrodynamical","hydrogeological",
-"hydrological","hydrometeorology","hydrothermally","hyperautomation","hypercapitalism","hyperconscious","hyperdimensional","hyperinflationary","hypersensitization","hypertrophically",
-"hypnotizability","hypothetically","iconoclastically","ideationally","ideologization","idiosyncratically","illogicalness","illustrational","imaginationally","immaterialism",
-"immortalization","immunochemically","immunogenetically","impermeability","implementational","impossibilism","impressionistic","inaccessibility","inapplicability","inarticulateness",
-"incommensurability","incompatibility","incompressibility","inconsequential","inconsideration","incontrollability","incorporeality","indefatigability","indeterminability","indivisibility",
-"industrialization","ineffableness","inevitability","inexpressibility","infallibility","infinitesimally","infralapsarian","informationally","inharmoniousness","injudiciousness",
-"inoperability","inseparability","instrumentality","insubordination","insubstantiality","intellectualism","intensionality","intentionalism","intercalibration","interculturality",
-"interfaciality","intergenerational","intergovernmental","interjurisdictional","interpenetration","interplanetary","interrelational","interrogational","intersubjectivity","interventionism",
-"intransigently","intrinsicalness","introgression","involutionary","irreconcilability","irreplaceability","irrepressibility","irreproducibility","irreversibility","isomorphically",
-"judicialization","jurisdictional","justificational","kaleidoscopically","kinematographically","kleptocratically","knowledgeability","labyrinthical","lateralization","legislatorial",
-"lexicalization","liberalization","linguistically","liquidification","lithographically","logarithmically","logicalization","longitudinally","macroeconomically","macroevolutionary",
-"magnetochemistry","magnetostrictive","maldistribution","manipulativeness","materialization","mathematization","mechanochemical","mechanoluminescence","mediatization","melodramatization",
-"mercantilistically","metacognitively","metalinguistically","metallurgically","metaphoricity","metastructural","meteorologically","methodization","microbiological","microchemistry",
-"microclimatology","microcontroller","microelectronic","microevolutionary","micrometeorology","micronutritional","microphysically","microprocessor","microscopically","microstructural",
-"microsystematic","militarization","mineralogically","mischaracterization","misinterpretation","mobilizational","modernization","molecularization","morphogenetically","morphophonology",
-"multiculturalism","multifactorial","multilaterality","multinucleated","multiorganizational","multispectral","multitudinousness","municipalization","mutationally","mythologization",
-"nanolithography","nanomedicine","nanoparticulate","nanoplasmonics","nanostructuring","naturalistically","navigationally","nebulization","necromantically","neocolonialism",
-"neoconservatism","neoliberalization","neonatological","neophilosophical","neuroanatomical","neurobiological","neurochemical","neurodevelopmental","neurogenetically","neuroinformatics",
-"neuropharmacological","neuropsychiatric","neuroscientific","neutralization","nominalization","noncommutativity","noncontemporaneous","noncontributory","noncorrelational","nondegeneracy",
-"nondeterministic","nonhierarchical","nonintervention","nonlinearization","nonparametric","nonrepresentationally","nonstandardization","nonsubstantive","nontemporal","nontranslatability",
-"normalizability","notationally","nutritionalism","objectification","objectionability","observationally","occasionalism","octahedrally","onomasiologically","ontogenetically",
-"operationalization","oppositionality","optimizationist","organizationally","orthogonalization","oscilloscopically","outmaneuvering","overgeneralization","overintellectualization","overrationalization",
-"oxidizability","paleoclimatology","paleogeographically","paleoichthyology","paleomagnetism","paleontological","palynological","paradigmatically","paralinguistically","paranormality",
-"parapsychological","paratactically","parenchymatous","parenthetically","particularization","pathophysiology","pedagogically","penetrationism","perceptibility","perceptualization",
-"perdurability","perfunctoriness","periodization","permeabilization","perpetualization","personalization","perspectivism","perturbational","pharmacogenetics","pharmacological",
-"pharmacotherapeutics","philanthropically","philosophically-minded","phonologically","photoautotrophic","photobiological","photocatalytically","photoemissive","photogrammetrically","photolithography",
-"photoluminescence","photomechanical","photomorphogenesis","phytochemistry","phytopathological","physicochemical","physiopathology","phytohormonal","planetological","plasmonically",
-"plurilingualism","pneumatically","pneumonoconiosis","polarizability","politicization","polymerization","polyphenolic","polytheoretically","popularization","positionality",
-"postcolonialism","postdeconstructive","posthumanism","postindustrialism","postmodernism","postnationalism","postpositivism","postrevolutionary","poststructuralist","pragmatization",
-"precautionarity","predictability","prefiguratively","preprofessional","preservationist","presuppositional","probabilism","problematization","proclitically","professionalization",
-"programmability","proliferationist","pronounceability","propagational","propositionality","prosopographical","protonotarial","provincialization","pseudoautonomous","pseudomorphically",
-"psychoanalytical","psychodiagnostic","psycholinguistic","psychometrician","psychopathologicalness","psychopharmacology","psychosomatically","pyroelectricity","quantificationally","quasiperiodicity",
-"quaternization","questionability","radicalization","rationalistically","reactualization","reaffirmationist","realizationally","reapportionment","rearticulation","recalcitrance",
-"recanalization","recategorization","recentralization","reciprocation","reclassification","recognizability","recolonization","reconceptualization","reconsecration","reconstitution",
-"recontextualize","reconventionalize","reculturation","redemocratization","redescriptivism","redefinition","redifferentiation","reestablishment","referentiality","reformulation",
-"regionalization","regularizability","rehumanization","reinstrumentation","reinterrogation","reinterpretability","reintroduction","relativistically","rematerialization","remobilization",
-"renationalization","reorganization","repoliticization","reprivatization","reproducibility","reproletarianization","resocialization","respecialization","responsibilization","restabilization",
-"restrictionism","resymbolization","rethematization","retrotransposon","revalorization","revisualization","revolutionization","rhetoricianism","rigidification","ritualization",
-"sacramentalism","sanctification","scholasticism","scientifically","scripturalism","securitization","segregationism","semantically","semiotically","sensationalism",
-"sequentialization","serendipitously","serviceability","sexualization","shortsightedness","significational","silicification","simultaneity","situationalism","sociohistorical",
-"sociometrically","sociopolitically","sociotechnical","solarization","soteriological","specializability","spectrofluorometry","spheroidization","spiritualization","stabilizability",
-"statistically","stereoisomerism","stochastically","stratigraphically","structuralism","structuralization","subcategorization","subdisciplinary","subinstitutional","subliminality",
-"suboptimization","subspecialization","substantivization","subterraneanness","subvocalization","supererogation","superfluidity","superimposition","superintendency","supersonically",
-"supranationalism","surrealistically","syllogistically","symbolization","symmetrization","sympathetically","synchronizability","synecdochically","syntacticization","systematization",
-"tangentialness","taxonomically","technocratically","technologization","teleologically","telepathically","telescopically","temporization","teratogenicity","territorialism",
-"theatricalization","thematization","theologization","theoreticalness","therapeutically","thermoregulatory","thesaurization","theosophically","topographically","topologically",
-"totalitarianism","toxicologically","traditionalism","transcendentalist","transculturally","transductional","transgenerational","transhistorical","translatability","transnationalism",
-"transvaluation","transversality","triangulational","tridimensionality","trigonometrician","trilateralism","trinitarianism","triumphalistically","tropological","typological",
-"ultracentrifugation","ultrafiltration","ultramicroanalysis","ultramontanism","ultranationalism","ultrasonography","unacceptability","unassimilability","unavailability","uncategorizability",
-"unchangeability","unclassifiability","uncommunicability","uncontrollability","undemonstrability","underappreciated","underdevelopedness","undistinguishability","unequivocalness","unidentifiability",
-"universalizability","unobjectionability","unpredictability","unquestionability","unsustainability","utilitarianism","vaccinological","variationally","verifiability","verisimilitudinous",
-"verticalization","vexillologically","vicissitudinal","vindictiveness","virtualizability","viticulturalism","voluntaristically","voluptuousness","vulnerabilization","xenobiotically",
-"xenogenetically","xenolinguistics","xenonucleonics","xenophobically","xylophonically","youthification","zincification","zoologization","zootechnically","zygotically",
+"verisimilitude","xenotransplantation","zoologically",
   "In the symphony of progress, persistence plays the most enduring tune.",
       "Mastery is not an act but a habit built from countless attempts.",
       "Complex challenges refine character, shaping resilience and brilliance."
 ]
-
-   
    };
 
 // Quote bank (from user)
@@ -308,21 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {"quote": "The mind is everything. What you think you become.", "author": "Buddha"},
         {"quote": "I am not a product of my circumstances. I am a product of my decisions.", "author": "Stephen R. Covey"},
         {"quote": "Learning never exhausts the mind.", "author": "Leonardo da Vinci"},
-        {"quote": "But, listen, many times, education leads to the demon of education. And that demon of education leads you to a know-all. And when you get there, then you become an infidel, and deny Christ. So you can't build upon the foundation of education.", "author": "Rev. William Marrion Branham - 64-0604 - To Whom Shall We Go?"},
-        {"quote": "Don't fear, stay right there at the Word, watch what God does; just be sure that you're right with God. Stay with that Word, and watch what happens.", "author": "Rev. William Marrion Branham - 61-0211 - Abraham"},
-        {"quote": "It's the way out of all troubles. It's the way to peace. It's the way to success. It's the way to Life, itself, is to follow this Star, the Lord Jesus. And now, if you are tied to that Star, the Holy Spirit is the Compass that'll only point to the Star.", "author": "Rev. William Marrion Branham - 63-0304 - A Absolute"},
-        {"quote": "We are saved by grace, that through faith, not by works. Works shows that you have been saved. But what saves you is the grace of God. Grace saves you. Grace is what God does for you. Works is what you do for God, to show appreciation of what God did for you. But by grace are you saved!", "author": "Rev. William Marrion Branham - 61-0827 - The Message Of Grace"},
-        {"quote": "Now, when God makes His ways, just wonder why He feels when He makes a way for us, for our healing, for our salvation, for our comfort, for our peace, and all these things, and we just walk away and leave them. Must make Him feel terribly bad.", "author": "Rev. William Marrion Branham - 61-0125 - Why?"},
-        {"quote": "And faith always admits the Word is right. Amen. If your faith don't punctuate every Word of God's Word, with an amen, there is something wrong with your experience. The Bible said, 'He is the same yesterday, today, and forever. If it don't say amen to that, then there is something wrong. Jesus said, 'The works that I do shall you do also.' If it don't say amen to that, then there is something wrong. If it don't punctuate every Word of God's promise, with an amen, there is something wrong.", "author": "Rev. William Marrion Branham - 64-0305 - Perseverant"},
-        {"quote": "The true evidence of being baptized with the Holy Ghost is for the believer to receive the Word for the age in which he lives.", "author": "Rev. William Marrion Branham - An Exposition Of The Seven Church Ages(4-The Smyrnaean Church Age)"},
-        {"quote": "Just keep away...You just be a real, sweet, humble, Christian, live the life, and then God will take of the rest of it.", "author": "Rev. William Marrion Branham - 64-0830E - Questions And Answers #4"},
-        {"quote": "Greatness is humility. Don't forget that, Church. Greatness is expressed in humility, not how fine you can be.", "author": "Rev. William Marrion Branham - 63-0825M - How Can I Overcome?"},
-        {"quote": "Not always prosperity is a sign of a spiritual blessings, but sometimes on the contrary. People think maybe you have to own a lot of worldly goods, and shows that God is a blessing you. That's not true. Sometimes it's the other way.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": "This little, unknown fellow was Amos the prophet. And now we don't know very much about him. We don't know where he come from. Prophets usually come on the scene, unknown, leave the same way. We don't know where they come from, where they go, don't know about their backgrounds. God just raises them up. He wasn't much to look at, but he had THUS SAITH THE LORD. That's the main thing I see.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": "There is no excuse. It's just what's in the heart. That's what shows out. It identifies itself.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
         {"quote": "Determination kills all difficulties.", "author": "Godfred Mensah"},
-        {"quote": "We deem everyone that come closer to us as friend, because we don't know the one who becomes happy when we succeed and who becomes happy when we fail. But God knows the genuine and the hypocrite friends.", "author": "Godfred Mensah"},
-        {"quote": "Your ability to lift heavy objects doesn't guarantee your victory in a battle.", "author": "Godfred Mensah"},
         {"quote": "Opportunities don't happen, you create them.", "author": "Chris Grosser"},
         {"quote": "Don't watch the clock; do what it does. Keep going.", "author": "Sam Levenson"},
         {"quote": "Diligence is the mother of good luck.", "author": "Benjamin Franklin"},
@@ -360,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  // ==== STATE WITH FIXED ACCURACY TRACKING ====
+  // ==== FIXED STATE VARIABLES ====
   let currentDifficulty = "Beginner";
   let duration = 60;
   let timeLeft = duration;
@@ -376,9 +243,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentStoryIndex = 0;
   let currentStoryPart = 0;
 
+  // Fixed accuracy tracking variables
   let totalKeysPressed = 0;
-  let totalCorrectChars = 0;
-  let lastTypedLength = 0;   // Track previous typed length to detect corrections
+  let lastTypedLength = 0;
 
   // ==== POPULATE DROPDOWNS ====
   function populateQuoteDropdown() {
@@ -552,28 +419,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mode === 'story') loadNewStory();
   });
 
-  // ==== TYPING EVENT LISTENERS WITH FIXED ACCURACY ====
+  // ==== FIXED TYPING EVENT LISTENERS ====
   typingInput.addEventListener('input', (e) => {
     if (!running) startTimer();
     
     const newTyped = typingInput.value;
     
+    // Prevent typing beyond target text
     if (newTyped.length > targetText.length) {
       typingInput.value = newTyped.slice(0, targetText.length);
       return;
     }
     
-    // If user added characters (typed forward)
+    // Only count forward typing (additions), not corrections
     if (newTyped.length > lastTypedLength) {
       const addedChars = newTyped.length - lastTypedLength;
       totalKeysPressed += addedChars;
-      
-      // Count how many of the newly added characters are correct
-      for (let i = lastTypedLength; i < newTyped.length; i++) {
-        if (i < targetText.length && newTyped[i] === targetText[i]) {
-          totalCorrectChars++;
-        }
-      }
     }
     
     lastTypedLength = newTyped.length;
@@ -586,20 +447,22 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   typingInput.addEventListener('keydown', (e) => {
-    if (e.key.length > 1 && e.key !== ' ' && e.key !== 'Backspace' && e.key !== 'Delete') return;
+    // Allow normal navigation and editing keys without counting them
+    if (e.key.length > 1 && !['Backspace', 'Delete', ' '].includes(e.key)) {
+      return;
+    }
     
     const currentPos = typingInput.selectionStart;
     
-    if (currentPos >= targetText.length && e.key !== 'Backspace' && e.key !== 'Delete') {
+    // Prevent typing beyond target text length
+    if (currentPos >= targetText.length && !['Backspace', 'Delete'].includes(e.key)) {
       e.preventDefault();
       return;
     }
     
-    // Count backspace and delete as keystrokes (corrections)
-    if (e.key === 'Backspace' || e.key === 'Delete') {
-      if (typingInput.value.length > 0) {
-        totalKeysPressed++;
-      }
+    // Count backspace/delete as keystrokes (corrections)
+    if ((e.key === 'Backspace' || e.key === 'Delete') && typingInput.value.length > 0) {
+      totalKeysPressed++;
     }
   });
 
@@ -638,7 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return { title: chapter.title, partIndex: currentStoryPart, text: part };
   }
 
-  // ==== LOADERS ====
+  // ==== RESET TEST STATE (FIXED) ====
   function resetTestState() {
     clearInterval(timerInterval);
     timerInterval = null;
@@ -647,7 +510,11 @@ document.addEventListener('DOMContentLoaded', () => {
     startTime = null;
     typed = '';
     typingInput.value = '';
-    totalCharsAttempted = 0;
+    
+    // Reset accuracy tracking variables
+    totalKeysPressed = 0;
+    lastTypedLength = 0;
+    
     statTime.textContent = timeLeft + 's';
     statWPM.textContent = '-';
     statAcc.textContent = '-%';
@@ -677,90 +544,55 @@ document.addEventListener('DOMContentLoaded', () => {
     resetTestState();
   }
 
-// ==== PROBLEMATIC CODE - Live accuracy updates ====
-function startTimer() {
-function startTimer() {
-  if (running) return;
-  running = true;
-  startTime = Date.now();
-  timerInterval = setInterval(() => {
-    if (!running) {
-      clearInterval(timerInterval);
-      return;
-    }
-    
-    timeLeft--;
-    if (timeLeft <= 0) {
-      timeLeft = 0;
+  // ==== FIXED TIMER FUNCTION ====
+  function startTimer() {
+    if (running) return;
+    running = true;
+    startTime = Date.now();
+    timerInterval = setInterval(() => {
+      if (!running) {
+        clearInterval(timerInterval);
+        return;
+      }
+      
+      timeLeft--;
+      if (timeLeft <= 0) {
+        timeLeft = 0;
+        statTime.textContent = timeLeft + 's';
+        finalizeTest();
+        return;
+      }
+      if (typed.length >= targetText.length) {
+        finalizeTest();
+        return;
+      }
       statTime.textContent = timeLeft + 's';
-      finalizeTest();
-      return;
-    }
-    if (typed.length >= targetText.length) {
-      finalizeTest();
-      return;
-    }
-    statTime.textContent = timeLeft + 's';
-
-  }, 1000);
-}}
-
-// ==== FIXED VERSION - No live accuracy ====
-function startTimer() {
-  if (running) return;
-  running = true;
-  startTime = Date.now();
-  timerInterval = setInterval(() => {
-    // Stop updating if test is no longer running
-    if (!running) {
-      clearInterval(timerInterval);
-      return;
-    }
-    
-    timeLeft--;
-    if (timeLeft <= 0) {
-      timeLeft = 0;
-      statTime.textContent = timeLeft + 's';
-      finalizeTest();
-      return;
-    }
-    if (typed.length >= targetText.length) {
-      finalizeTest();
-      return;
-    }
-    statTime.textContent = timeLeft + 's';
-    const elapsed = duration - timeLeft;
-
-    statWPM.textContent = stats.wpm;
-   
-    // Accuracy will only be shown when test completes in finalizeTest()
-  }, 1000);
-}
-  // ==== FIXED ACCURACY CALCULATION ====
-function computeStats(typedStr, elapsedSec) {
-  if (elapsedSec <= 0) return { wpm: 0, accuracy: 100 };
-  
-  const currentCorrectChars = [...typedStr].filter((ch, i) => ch === targetText[i]).length;
-  
-  let accuracy;
-  
-  // If total keys pressed equals typed length, no corrections were made
-  if (totalKeysPressed === typedStr.length) {
-    // Use simple accuracy: correct chars / total chars
-    accuracy = typedStr.length > 0 ? Math.round((currentCorrectChars / typedStr.length) * 100) : 100;
-  } else {
-    // User made corrections, use the weighted approach
-    const baseAccuracy = totalKeysPressed > 0 ? (totalCorrectChars / totalKeysPressed) * 100 : 100;
-    const currentAccuracy = typedStr.length > 0 ? (currentCorrectChars / typedStr.length) * 100 : 100;
-    accuracy = Math.round((currentAccuracy * 0.6) + (baseAccuracy * 0.4));
+      
+      // No live WPM or accuracy updates - only show final results
+    }, 1000);
   }
-  
-  const totalCharsTyped = typedStr.length;
-  const grossWPM = (totalCharsTyped / 5) / (elapsedSec / 60);
-  const wpm = Math.max(0, Math.round(grossWPM));
-  
-  return { wpm, accuracy: Math.max(0, Math.min(100, accuracy)) };
-}
+
+  // ==== SIMPLE AND ACCURATE COMPUTATION ====
+  function computeStats(typedStr, elapsedSec) {
+    if (elapsedSec <= 0) return { wpm: 0, accuracy: 100 };
+    
+    // Count correct characters in current typed string
+    let correctChars = 0;
+    for (let i = 0; i < typedStr.length; i++) {
+      if (i < targetText.length && typedStr[i] === targetText[i]) {
+        correctChars++;
+      }
+    }
+    
+    // Simple accuracy: correct chars / total chars typed
+    const accuracy = typedStr.length > 0 ? Math.round((correctChars / typedStr.length) * 100) : 100;
+    
+    // Standard WPM calculation
+    const grossWPM = (typedStr.length / 5) / (elapsedSec / 60);
+    const wpm = Math.max(0, Math.round(grossWPM));
+    
+    return { wpm, accuracy };
+  }
 
   function renderPassage() {
     const words = targetText.split(" ");
@@ -778,7 +610,7 @@ function computeStats(typedStr, elapsedSec) {
     const avgWordLength = 6;
     const WORDS_PER_ROW = Math.max(1, Math.floor(containerWidth / (avgWordLength * charWidth)));
 
-    const ROW_SIZE = WORDS_PER_ROW ;
+    const ROW_SIZE = WORDS_PER_ROW;
     let pageStartIndex = 0;
     while (pageStartIndex + ROW_SIZE <= currentWordIndex && pageStartIndex + ROW_SIZE < words.length) {
       pageStartIndex += ROW_SIZE;
@@ -832,11 +664,10 @@ function computeStats(typedStr, elapsedSec) {
     timerInterval = null;
     typingInput.disabled = true;
     statTime.textContent = timeLeft + 's';
+    
     const elapsed = duration - timeLeft;
     const stats = computeStats(typed, elapsed);
     statWPM.textContent = stats.wpm;
-    
-    // Show final accuracy only when test is complete
     statAcc.textContent = stats.accuracy + '%';
 
     if (currentUser) {
@@ -950,7 +781,7 @@ function computeStats(typedStr, elapsedSec) {
       authSummary.innerHTML = '';
       userEmailTag.textContent = 'Not signed in';
       emailVerifStatus.textContent = '';
-      passageDisplay.textContent = 'Please log in to start typing and save results.';
+      passageDisplay.textContent = 'Please click on any of the buttons to start typing.';
       typingInput.disabled = true;
     }
   });
