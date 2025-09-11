@@ -34,9 +34,7 @@
       transition:left .25s ease, width .25s ease;
       z-index:1200;
     }
-    .sidebar.closed {
-      left:-260px; /* hide on desktop */
-    }
+    .sidebar.closed { left:-260px; }
     .logo{font-weight:700;color:var(--accent);margin-bottom:18px}
     .nav{list-style:none;padding:0;margin:0}
     .nav li{padding:10px 8px;border-radius:8px;cursor:pointer;color:var(--muted);margin-bottom:6px}
@@ -53,23 +51,15 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
-      background:transparent;
-      z-index:100;
+      background:var(--card);
+      box-shadow:0 2px 6px rgba(0,0,0,0.05);
+      z-index:1500; /* ensures above text */
       transition:left .25s ease;
     }
-    .topbar.full {
-      left:0; /* when sidebar hidden */
-    }
-    .hamburger{cursor:pointer;padding:8px;border-radius:8px}
-    .content {
-      margin-left:260px;
-      padding:90px 24px 24px;
-      min-height:100vh;
-      transition:margin-left .25s ease;
-    }
-    .content.full {
-      margin-left:0; /* when sidebar hidden */
-    }
+    .topbar.full { left:0; }
+    .hamburger{cursor:pointer;padding:8px;border-radius:8px;font-size:20px;z-index:1600;}
+    .content { margin-left:260px; padding:90px 24px 24px; min-height:100vh; transition:margin-left .25s ease; }
+    .content.full { margin-left:0; }
 
     /* cards */
     .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
@@ -84,25 +74,13 @@
 
     /* mobile */
     @media (max-width:900px){
-      .sidebar {
-        left:-300px;
-      }
-      .sidebar.open {
-        left:0;
-      }
-      .topbar {
-        left:0;
-      }
-      .content {
-        margin-left:0;
-        padding-top:78px;
-      }
-      /* overlay when sidebar open */
+      .sidebar { left:-300px; }
+      .sidebar.open { left:0; }
+      .topbar { left:0; }
+      .content { margin-left:0; padding-top:78px; }
       .overlay {
-        position:fixed;
-        top:0; left:0; right:0; bottom:0;
-        background:rgba(0,0,0,0.5);
-        z-index:1100;
+        position:fixed; top:0; left:0; right:0; bottom:0;
+        background:rgba(0,0,0,0.5); z-index:1100;
       }
     }
   </style>
@@ -475,3 +453,4 @@
 </script>
 </body>
 </html>
+
