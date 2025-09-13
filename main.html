@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>SoftFingers-Typing</title>
+  <title>SoftFingers Pro - Professional Typing Platform</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
   <!-- Firebase compat SDKs -->
@@ -13,234 +13,257 @@
   
 </head>
 <body>
-    <a link="Admin-login page" href="SoftFingers Admin-login.html"><button class="btn">Admin-login</button></a> 
-  <!-- Dashboard Section (default visible) -->
-  <div id="section-dashboard">
-    <div class="layout">
-      <!-- Header -->
-      <div class="card full" aria-label="App header">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-          <div>
-            <h1>Welcome To SoftFingers-Typing</h1>
-            <div class="small">Speed &amp; accuracy, saved per user. Protected behind login.</div>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <h1>SoftFingers Pro</h1>
+          <span class="logo-subtitle">Professional Typing Platform</span>
+        </div>
+        
+        <div class="user-info">
+          <div id="auth-summary">
+            <div class="user-badge" id="user-email-tag">Not signed in</div>
+            <div id="email-verif-status"></div>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn btn-secondary btn-small" id="logout-btn">Log out</button>
+            <button class="btn btn-secondary btn-small" id="send-verif-btn">Verify Email</button>
+            <a href="SoftFingers Admin-login.html">
+              <button class="btn btn-small">Admin</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
-            <!-- Feature Navigation (Sticky Navbar) -->
-            <div class="card full" style="position:sticky; top:0; z-index:1000; margin-bottom:12px;">
-              <div class="tabs" id="feature-tabs">
-                <div class="tab active" data-feature="dashboard">Dashboard</div>
-                <div class="tab" data-feature="lessons" onclick="window.location.href='lessons.html'">Lessons</div>
-                <div class="tab" data-feature="achievements">Achievements</div>
-                <div class="tab" data-feature="competition">Competition</div>
-                <div class="tab" data-feature="darkroom">Darkroom</div>
-                <div class="tab" data-feature="import-text">Import Text</div>
-                <div class="tab" data-feature="audio">Audio Challenge</div>
-                <div class="tab" data-feature="bible">Bible Practice</div>
-                <div class="tab" data-feature="hymns">Hymns Practice</div>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-tabs" id="feature-tabs">
+        <div class="nav-tab active" data-feature="dashboard">Dashboard</div>
+        <div class="nav-tab" data-feature="lessons" onclick="window.location.href='lessons.html'">Lessons</div>
+        <div class="nav-tab" data-feature="achievements">Achievements</div>
+        <div class="nav-tab" data-feature="competition">Competition</div>
+        <div class="nav-tab" data-feature="darkroom">Darkroom</div>
+        <div class="nav-tab" data-feature="import-text">Import Text</div>
+        <div class="nav-tab" data-feature="audio">Audio Challenge</div>
+        <div class="nav-tab" data-feature="bible">Bible Practice</div>
+        <div class="nav-tab" data-feature="hymns">Hymns Practice</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="container">
+      <!-- Dashboard Section -->
+      <div id="section-dashboard">
+        <div class="grid">
+          <!-- Typing Interface -->
+          <div class="card typing-card card-no-header">
+            <div class="card-content">
+              <!-- Controls -->
+              <div class="typing-controls">
+                <div class="control-group">
+                  <div class="difficulty-tabs">
+                    <div class="difficulty-tab active" data-diff="Beginner">Beginner</div>
+                    <div class="difficulty-tab" data-diff="Intermediate">Intermediate</div>
+                    <div class="difficulty-tab" data-diff="Advanced">Advanced</div>
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <div class="select-group">
+                    <label class="select-label">Mode</label>
+                    <select id="mode-select">
+                      <option value="passage" selected>Random Words</option>
+                      <option value="quote">Quotes</option>
+                      <option value="story">Stories</option>
+                    </select>
+                  </div>
+
+                  <div class="select-group" id="quote-controls" style="display:none;">
+                    <label class="select-label">Quote</label>
+                    <select id="quote-select">
+                      <option value="__random__">Random quote</option>
+                    </select>
+                  </div>
+
+                  <div class="select-group">
+                    <label class="select-label">Duration</label>
+                    <select id="duration-select">
+                      <option value="15">15s</option>
+                      <option value="30">30s</option>
+                      <option value="60" selected>60s</option>
+                      <option value="90">90s</option>
+                      <option value="120">120s</option>
+                      <option value="180">3min</option>
+                      <option value="300">5min</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stats -->
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-label">Time Left</div>
+                  <div class="stat-value" id="stat-time">60s</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">WPM</div>
+                  <div class="stat-value" id="stat-wpm">0</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">Accuracy</div>
+                  <div class="stat-value" id="stat-acc">100%</div>
+                </div>
+              </div>
+
+              <!-- Passage Display -->
+              <div class="passage-container">
+                <div id="passage-display"></div>
+              </div>
+
+              <!-- Typing Input -->
+              <textarea 
+                id="typing-input" 
+                class="typing-input"
+                placeholder="Click here and start typing when ready..."
+                autocomplete="off" 
+                spellcheck="false" 
+                disabled
+              ></textarea>
+
+              <!-- Action Buttons -->
+              <div class="flex flex-between flex-center mt-4">
+                <button class="btn" id="retry-btn">New Test</button>
+                <div class="text-small text-muted">
+                  Start typing to begin • Test ends when time expires or passage is complete
+                </div>
               </div>
             </div>
           </div>
-          <div id="auth-summary" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"></div>
-        </div>
-      </div>
 
-      <!-- Typing test area -->
-      <div class="card" id="typing-section">
-        <div class="flex" style="justify-content:space-between;align-items:center;flex-wrap:wrap;">
-          <div class="tabs" role="tablist" style="flex:1;min-width:220px;">
-            <div class="tab active" data-diff="Beginner">Beginner</div>
-            <div class="tab" data-diff="Intermediate">Intermediate</div>
-            <div class="tab" data-diff="Advanced">Advanced</div>
-          </div>
-
-          <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-            <!-- Mode toggle -->
-            <div>
-              <div class="small">Mode</div>
-              <select id="mode-select" aria-label="Typing mode">
-                <option value="passage" selected>Random Words (by difficulty)</option>
-                <option value="quote">Quotes</option>
-                <option value="story">Stories</option>
-              </select>
+          <!-- Sidebar -->
+          <aside class="sidebar">
+            <!-- Personal Best -->
+            <div class="card sidebar-section">
+              <div class="card-header">
+                <h3 class="card-title">Personal Best</h3>
+                <p class="card-subtitle">Current difficulty & duration</p>
+              </div>
+              <div class="card-content">
+                <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+                  <div class="stat-card">
+                    <div class="stat-label">Best WPM</div>
+                    <div class="stat-value" id="best-wpm">0</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-label">Best Accuracy</div>
+                    <div class="stat-value" id="best-acc">0%</div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <!-- Quote selector -->
-            <div id="quote-controls" style="display:none; min-width:220px;">
-              <div class="small">Quote</div>
-              <select id="quote-select" aria-label="Choose quote">
-                <option value="__random__">Random quote</option>
-              </select>
-              <div class="small" id="quote-author" style="margin-top:4px;"></div>
+            <!-- Feature Sections (Hidden by default) -->
+            <div class="card hidden sidebar-section" id="section-lessons">
+              <div class="card-header">
+                <h3 class="card-title">Lessons</h3>
+              </div>
+              <div class="card-content">
+                <p class="text-muted">Structured typing lessons will appear here.</p>
+              </div>
             </div>
 
-            <!-- Story controls are injected by JS after quote-controls -->
-
-            <!-- Timer selector -->
-            <div>
-              <div class="small">Timer</div>
-              <select id="duration-select" aria-label="Timer duration">
-                <option value="15">15s</option>
-                <option value="30">30s</option>
-                <option value="60" selected>60s</option>
-                <option value="90">90s</option>
-                <option value="120">120s</option>
-                <option value="150">150s</option>
-                <option value="180">180s</option>
-                <option value="210">210s</option>
-                <option value="240">240s</option>
-                <option value="270">270s</option>
-                <option value="300">300s</option>
-                <option value="330">330s</option>
-                <option value="360">360s</option>
-              </select>
+            <div class="card hidden sidebar-section" id="section-achievements">
+              <div class="card-header">
+                <h3 class="card-title">Achievements</h3>
+              </div>
+              <div class="card-content">
+                <p class="text-muted">Your badges and milestones will appear here.</p>
+              </div>
             </div>
 
-            <!-- Difficulty indicator -->
-            <div>
-              <div class="small">Difficulty</div>
-              <div id="current-diff" class="pill">Beginner</div>
+            <div class="card hidden sidebar-section" id="section-competition">
+              <div class="card-header">
+                <h3 class="card-title">Competition</h3>
+              </div>
+              <div class="card-content">
+                <p class="text-muted">Join real-time typing competitions.</p>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Stats -->
-        <div class="stat-row" style="margin-top:10px;">
-          <div class="stat">
-            <div class="small">Time Left</div>
-            <div id="stat-time" style="font-weight:700;">60s</div>
-          </div>
-          <div class="stat">
-            <div class="small">WPM</div>
-            <div id="stat-wpm" style="font-weight:700;">0</div>
-          </div>
-          <div class="stat">
-            <div class="small">Accuracy</div>
-            <div id="stat-acc" style="font-weight:700;">100%</div>
-          </div>
-        </div>
-
-        <!-- Passage display -->
-        <div style="margin-top:12px;">
-          <div class="passage" id="passage-display" aria-label="Target passage"></div>
-        </div>
-
-        <!-- Typing input -->
-        <div style="margin-top:8px;">
-          <textarea id="typing-input" placeholder="Start typing..." aria-label="Typing input" autocomplete="off" spellcheck="false" disabled></textarea>
-        </div>
-
-        <!-- Controls -->
-        <div class="flex" style="margin-top:12px;gap:14px;">
-     
-          <button class="btn" id="retry-btn">Retry</button>
-    
-          <div class="small" id="typing-hint">Typing starts on first keystroke; finishes when passage complete or timer ends.</div>
-        </div>
-      </div>
-
-      <!-- Sidebar / dashboard -->
-      <div class="card" style="position:sticky;top:16px;">
-        <div>
-          <div class="inline">
-            <div class="tag" id="user-email-tag">Not signed in</div>
-            <div id="email-verif-status"></div>
-          </div>
-          <div style="margin-top:6px;">
-            <button class="btn secondary" id="logout-btn" style="margin-right:6px;">Log out</button>
-            <button class="btn secondary" id="send-verif-btn">Resend verification</button>
-          </div>
-        </div>
-
-        <!-- Sections -->
-        <div class="card hidden" id="section-lessons">
-          <h2>Lessons</h2>
-          <p>Structured typing lessons will appear here.</p>
-        </div>
-
-        <div class="card hidden" id="section-achievements">
-          <h2>Achievements</h2>
-          <p>Your badges and milestones will appear here.</p>
-        </div>
-
-        <div class="card hidden" id="section-competition">
-          <h2>Competition</h2>
-          <p>Join real-time typing competitions.</p>
-        </div>
-
-        <div class="card hidden" id="section-darkroom">
-          <h2>Darkroom Challenge</h2>
-          <p>Type in hardcore mode with blurred/hidden text.</p>
-        </div>
-
-        <div class="card hidden" id="section-import-text">
-          <h2>Import Your Own Text</h2>
-          <textarea id="custom-text" placeholder="Paste or type your own text here..."></textarea>
-          <button class="btn" id="start-custom">Start Typing</button>
-        </div>
-
-        <div class="card hidden" id="section-audio">
-          <h2>Audio Challenge</h2>
-          <audio controls id="challenge-audio"></audio>
-          <textarea id="audio-input" placeholder="Type what you hear..." disabled></textarea>
-          <button class="btn" id="start-audio">Start Challenge</button>
-        </div>
-
-        <div class="card hidden" id="section-bible">
-          <h2>Bible Practice</h2>
-          <p>Coming soon.</p>
-        </div>
-
-        <div class="card hidden" id="section-hymns">
-          <h2>Hymns Practice</h2>
-          <p>Coming soon.</p>
-        </div>
-
-        <div class="divider"></div>
-
-        <div>
-          <div class="small">Your Best (this diff &amp; duration)</div>
-          <div class="flex" style="gap:12px;margin-top:6px;">
-            <div class="stat" style="flex:1;">
-              <div class="small">Best WPM</div>
-              <div id="best-wpm" style="font-weight:700;">0</div>
+            <div class="card hidden sidebar-section" id="section-darkroom">
+              <div class="card-header">
+                <h3 class="card-title">Darkroom Challenge</h3>
+              </div>
+              <div class="card-content">
+                <p class="text-muted">Type with hidden text for ultimate challenge.</p>
+              </div>
             </div>
-            <div class="stat" style="flex:1;">
-              <div class="small">Best Accuracy</div>
-              <div id="best-acc" style="font-weight:700;">0%</div>
+
+            <div class="card hidden sidebar-section" id="section-import-text">
+              <div class="card-header">
+                <h3 class="card-title">Import Text</h3>
+              </div>
+              <div class="card-content">
+                <textarea id="custom-text" class="typing-input" style="min-height: 100px;" placeholder="Paste your own text here..."></textarea>
+                <button class="btn mt-4" id="start-custom" style="width: 100%;">Start Custom Test</button>
+              </div>
             </div>
+
+            <div class="card hidden sidebar-section" id="section-audio">
+              <div class="card-header">
+                <h3 class="card-title">Audio Challenge</h3>
+              </div>
+              <div class="card-content">
+                <audio controls id="challenge-audio" style="width: 100%; margin-bottom: 16px;"></audio>
+                <textarea id="audio-input" class="typing-input" style="min-height: 80px;" placeholder="Type what you hear..." disabled></textarea>
+                <button class="btn mt-4" id="start-audio" style="width: 100%;">Start Audio Challenge</button>
+              </div>
+            </div>
+
+            <div class="card hidden sidebar-section" id="section-bible">
+              <div class="card-header">
+                <h3 class="card-title">Bible Practice</h3>
+              </div>
+              <div class="card-content">
+                <p class="text-muted">Biblical passages for typing practice. Coming soon.</p>
+              </div>
+            </div>
+
+            <div class="card hidden sidebar-section" id="section-hymns">
+              <div class="card-header">
+                <h3 class="card-title">Hymns Practice</h3>
+              </div>
+              <div class="card-content">
+                <p class="text-muted">Classic hymn lyrics for typing practice. Coming soon.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Recent Runs -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h2 class="card-title">Recent Tests</h2>
+            <p class="card-subtitle">Your latest typing performance</p>
           </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div>
-          <div class="small">Your recent runs</div>
-          <table class="score-table" aria-label="Recent runs" id="recent-table">
-            <thead>
-              <tr>
-                <th>When</th>
-                <th>WPM</th>
-                <th>Acc</th>
-                <th>Dur</th>
-                <th>Diff</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-
-        <div class="divider"></div>
-
-        <div>
-          <div class="small">Leaderboard (top 100WPM)</div>
-          <div class="leaderboard">
-            <table class="score-table" aria-label="Leaderboard" id="leaderboard-table">
+          <div class="table-container">
+            <table class="data-table" id="recent-table">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>User</th>
+                  <th>Date</th>
                   <th>WPM</th>
-                  <th>Acc</th>
-                  <th>When</th>
+                  <th>Accuracy</th>
+                  <th>Duration</th>
+                  <th>Difficulty</th>
+                  <th>Mode</th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -248,60 +271,115 @@
           </div>
         </div>
 
-        <!-- Authentication section (moved OUT of table body to fix invalid HTML) -->
-        <div class="card full" id="auth-card" aria-label="Authentication card">
-          <div class="auth-box">
-            <div class="form-wrapper">
-              <h1 style="margin-bottom:4px;">Log in / Sign up</h1>
-              <div class="small">You must be signed in to save scores and view your dashboard.</div>
-              <div class="tabs" style="margin-top:12px;">
-                <div class="tab active" data-mode="login" id="tab-login">Login</div>
-                <div class="tab" data-mode="signup" id="tab-signup">Sign up</div>
-              </div>
-
-              <div id="form-wrapper">
-                <!-- login -->
-                <form id="login-form">
-                  <div>
-                    <label class="small" for="login-email">Email</label>
-                    <input id="login-email" type="email" required placeholder="you@example.com" autocomplete="username" />
-                  </div>
-                  <div>
-                    <label class="small" for="login-pass">Password</label>
-                    <input id="login-pass" type="password" required placeholder="••••••••" autocomplete="current-password" />
-                  </div>
-                  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-                    <div class="link" id="forgot-btn">Forgot password?</div>
-                    <button class="btn" type="submit" id="login-submit">Log In</button>
-                  </div>
-                </form>
-                <!-- signup -->
-                <form id="signup-form" style="display:none;">
-                  <div>
-                    <label class="small" for="signup-email">Email</label>
-                    <input id="signup-email" type="email" required placeholder="you@example.com" autocomplete="username" />
-                  </div>
-                  <div>
-                    <label class="small" for="signup-pass">Password</label>
-                    <input id="signup-pass" type="password" required placeholder="At least 6 chars" autocomplete="new-password" />
-                  </div>
-                  <button class="btn" type="submit" id="signup-submit">Sign Up</button>
-                </form>
-              </div>
-              <div id="auth-message" class="small"></div>
-            </div>
+        <!-- Leaderboard -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Global Leaderboard</h2>
+            <p class="card-subtitle">Top 100 fastest typists</p>
+          </div>
+          <div class="table-container">
+            <table class="data-table" id="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>User</th>
+                  <th>WPM</th>
+                  <th>Accuracy</th>
+                  <th>Date</th>
+                  <th>Mode</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
-        <!-- /Authentication section -->
+      </div>
+
+      <!-- Authentication Card -->
+      <div class="card" id="auth-card" style="margin: 64px auto; max-width: 500px;">
+        <div class="card-content">
+          <div class="auth-form">
+            <div class="text-center mb-6">
+              <h1 class="mb-2">Welcome to SoftFingers Pro</h1>
+              <p class="text-muted">Sign in to save your progress and compete on the leaderboard</p>
+            </div>
+
+            <div class="form-tabs mb-6">
+              <div class="form-tab active" data-mode="login" id="tab-login">Sign In</div>
+              <div class="form-tab" data-mode="signup" id="tab-signup">Sign Up</div>
+            </div>
+
+            <div id="form-wrapper">
+              <!-- Login Form -->
+              <form id="login-form">
+                <div class="form-group">
+                  <label class="form-label" for="login-email">Email Address</label>
+                  <input 
+                    id="login-email" 
+                    type="email" 
+                    class="form-input"
+                    required 
+                    placeholder="Enter your email" 
+                    autocomplete="username"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="login-pass">Password</label>
+                  <input 
+                    id="login-pass" 
+                    type="password" 
+                    class="form-input"
+                    required 
+                    placeholder="Enter your password" 
+                    autocomplete="current-password"
+                  />
+                </div>
+                <div class="flex flex-between flex-center mb-4">
+                  <span class="text-small text-muted link" id="forgot-btn" style="cursor: pointer;">Forgot password?</span>
+                  <button class="btn" type="submit" id="login-submit">Sign In</button>
+                </div>
+              </form>
+
+              <!-- Signup Form -->
+              <form id="signup-form" style="display:none;">
+                <div class="form-group">
+                  <label class="form-label" for="signup-email">Email Address</label>
+                  <input 
+                    id="signup-email" 
+                    type="email" 
+                    class="form-input"
+                    required 
+                    placeholder="Enter your email" 
+                    autocomplete="username"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="signup-pass">Password</label>
+                  <input 
+                    id="signup-pass" 
+                    type="password" 
+                    class="form-input"
+                    required 
+                    placeholder="Minimum 6 characters" 
+                    autocomplete="new-password"
+                  />
+                </div>
+                <div class="form-group">
+                  <button class="btn" type="submit" id="signup-submit" style="width: 100%;">Create Account</button>
+                </div>
+              </form>
+            </div>
+
+            <div id="auth-message" class="text-center mt-4"></div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 
-  <script src="SoftFingers-Main.js">
-
-</script>
+  <!-- Include the integrated JavaScript -->
+  <script src="SoftFingers-Main.js"></script>
 </body>
 </html>
-
-
-
+</body>
+</html>
