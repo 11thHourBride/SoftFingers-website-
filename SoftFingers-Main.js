@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const auth = firebase.auth();
   const db = firebase.firestore();
 
-  // ==== ELEMENTS (existing IDs from your HTML) ====
+  // ==== ELEMENTS (updated for new HTML structure) ====
   const loginTab = document.getElementById('tab-login');
   const signupTab = document.getElementById('tab-signup');
   const loginForm = document.getElementById('login-form');
@@ -33,34 +33,65 @@ document.addEventListener('DOMContentLoaded', () => {
   const recentTableBody = document.querySelector('#recent-table tbody');
   const leaderboardBody = document.querySelector('#leaderboard-table tbody');
 
+  // Dashboard sections to hide/show based on auth state (ONLY these two sections)
+  const recentSection = document.querySelector('#recent-table').closest('.card');
+  const leaderboardSection = document.querySelector('#leaderboard-table').closest('.card');
+
   const statTime = document.getElementById('stat-time');
   const statWPM = document.getElementById('stat-wpm');
   const statAcc = document.getElementById('stat-acc');
   const passageDisplay = document.getElementById('passage-display');
   const typingInput = document.getElementById('typing-input');
   const retryBtn = document.getElementById('retry-btn');
-  const currentDiffBadge = document.getElementById('current-diff');
   const durationSelect = document.getElementById('duration-select');
 
-  const diffTabs = document.querySelectorAll('.tab[data-diff]');
+  // Updated selectors for new structure
+  const diffTabs = document.querySelectorAll('.difficulty-tab');
   const modeSelect = document.getElementById('mode-select');
   const quoteControls = document.getElementById('quote-controls');
   const quoteSelect = document.getElementById('quote-select');
   const quoteAuthorEl = document.getElementById('quote-author');
 
-  // ==== DYNAMIC Story controls (auto-injected; no HTML change needed) ====
+  // Navigation tab switching
+  const navTabs = document.querySelectorAll('.nav-tab');
+  const sections = document.querySelectorAll('[id^="section-"]');
+  
+  navTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      if (this.onclick) return; // Skip if has onclick handler
+      
+      const feature = this.dataset.feature;
+      
+      // Update active nav tab
+      navTabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Show/hide sections
+      sections.forEach(section => {
+        if (section.id === `section-${feature}`) {
+          section.classList.remove('hidden');
+        } else {
+          section.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // ==== DYNAMIC Story controls  ====
   const storyControls = document.createElement('div');
   storyControls.id = 'story-controls';
   storyControls.style.display = 'none';
-  storyControls.style.minWidth = '260px';
+  storyControls.className = 'select-group';
   storyControls.innerHTML = `
-    <div class="small">Story</div>
-    <select id="story-chapter"></select>
-    <select id="story-part" style="margin-left:8px; min-width:120px;">
-      <option value="0">Part 1</option>
-      <option value="1">Part 2</option>
-    </select>
-    <div class="small" id="story-meta" style="margin-top:4px;"></div>
+    <label class="select-label">Story</label>
+    <div style="display: flex; gap: 8px;">
+      <select id="story-chapter"></select>
+      <select id="story-part" style="min-width:100px;">
+        <option value="0">Part 1</option>
+        <option value="1">Part 2</option>
+      </select>
+    </div>
+    <div class="text-xs text-muted" id="story-meta" style="margin-top:4px;"></div>
   `;
   // insert after quote-controls
   quoteControls.parentNode.insertBefore(storyControls, quoteControls.nextSibling);
@@ -69,8 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const storyPartSelect = storyControls.querySelector('#story-part');
   const storyMetaEl = storyControls.querySelector('#story-meta');
 
-  // ==== WORDS / QUOTES (from your version) ====
-  const WORDS = {
+  // ==== WORDS / QUOTES  ====
+    const WORDS = {
     Beginner: ["during","after","today","between","behind","defend","divine","middle","under","magic","beneath","withdraw",
     "Typing is fun when practiced daily.",
       "The sun sets and rises with a new day.",
@@ -478,9 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       ];
 
-
   // ==== STORIES (chaptered, each with two halves) ====
-
   const STORIES = [
     {
       title: "Cinders of the Clockwork City",
@@ -505,8 +534,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       title: "The Whispering Keys - Chapter 1: The Key That Sang",
-     parts: ["Rain fell in soft needles against the slate rooftops of Graywick, a town that seemed forever caught between dusk and dawn. Its crooked alleys twised like forgotten thoughts, and its lanterns burned low, giving the streets a quiet, watchful glow. Elias Thorn, a boy of sixteen with restless fingers and a heart that beat too quickly for such a slow town, moved through the drizzle with his collar up and his mind elsewhere. He had always been told he was a dreamer, too distracted, too curious. But curiosity, as his late mother used to whisper, was a gift when the world itself kept secrets. And tonight, the world was whispering. He had first noticed it in the marketplace when the crowd had thinned and the vendors were packing away their goods. A faint, trembling sound, like a note of music caught inside a shell, drifted through the rain. Elias followed it, winding between barrels and abandoned carts, until the melody seemed to pulse from beneath a loose cobblestone near the fountain square. With trembling hands, Elias pried the stone loose. Beneath, tucked into a hollow as though the street itself had been keeping it safe, lay a key. It was unlike any key he had ever seen-long and slender, forged of pale metal that shimmered faintly in the gloom. Strange markings curled along its shaft, symbols that seemed almost to rearrange themselves if he looked too long. And the sound-oh, the sound. The key sang softly, a single note that quivered like a voice at the edge of speech. Elias lifted it carefully, the chill of the metal running through his palm. The note swelled, filling his chest until he thought his ribs might crack with the weight of it. He staggered back, clutching the key to his chest, breath coming fast. “Beautiful, isn't it?” The voice came from behind him. Elias turned sharply. An old woman stood under the arch of the fountain, cloaked in rain-dark velvet. Her eyes gleamed like drops of mercury.“You hear it too?” Elias asked, his voice hoarse. The woman's smile was thin, secretive. “Only those the Key chooses will hear its song. Most would see nothing but rust and stone. Elias swallowed. “What… what does it open?” Her gaze lingered on him, weighing, as though she were deciding whether he was worthy of the answer. At last, she spoke: “Not a door, boy. A destiny.” The rain seemed to hush at her words, and the key's note quivered in his palm, more alive than any object had a right to be.",
-    "The old woman stepped closer, her boots silent on the wet cobblestones. She extended a hand, gnarled and veined, toward the key. Elias felt a strange pull, as if the metal itself was alive and wanted to leap from his grasp. “Keep it,” she said, her voice almost a whisper carried on the rain. “But beware-keys like this are not meant for the faint-hearted.” Elias hesitated. His fingers itched to touch the strange symbols again, to hear that quivering note once more. He had always believed in stories-tales of hidden doors and secret worlds-but never in anything that could hum beneath his palm, singing to him in a language older than the town itself. “Why me?” he asked. “Why now?” The woman's eyes glinted. “Because you listen. Because you follow.” She turned then, stepping away, her cloak billowing like smoke behind her. “Go home, Elias Thorn, and let the Key choose its moment. The rest will come.” Before he could respond, she melted into the mist that clung to the square, leaving only the key and the faint echo of her words. Elias stared after her, chest tight, mind spinning. Rain had slowed to a drizzle, and the lanterns glimmered faintly, reflecting on the puddles like tiny, trembling stars. Elias clenched the key, feeling its pulse under his skin. A note, longer this time, threaded itself into his mind, almost a tune. He didn't know the melody, but it felt urgent, beckoning him toward… somewhere. Home was dull and silent, a narrow room he shared with the flickering shadows of his father's absence. He set the key on his windowsill, and for a moment, it hummed, sending a shiver down his spine. Papers on his desk rattled lightly, as though the song of the key reached into the corners of the room. Elias lay awake that night, the sound of the key thrumming through his dreams. And in those dreams, doors opened that did not exist, corridors stretched into impossibility, and shadows whispered secrets he could almost-but not quite-understand. By dawn, he knew one thing for certain: life in Graywick would never feel ordinary again. The key had chosen him, and whatever lay beyond the doors it opened, he would have to find it. Somewhere, in the spaces between mist and memory, the key sang. And Elias Thorn, boy of restless fingers and endless curiosity, was listening."
+     parts: ["Rain fell in soft needles against the slate rooftops of Graywick, a town that seemed forever caught between dusk and dawn. Its crooked alleys twised like forgotten thoughts, and its lanterns burned low, giving the streets a quiet, watchful glow. Elias Thorn, a boy of sixteen with restless fingers and a heart that beat too quickly for such a slow town, moved through the drizzle with his collar up and his mind elsewhere. He had always been told he was a dreamer, too distracted, too curious. But curiosity, as his late mother used to whisper, was a gift when the world itself kept secrets. And tonight, the world was whispering. He had first noticed it in the marketplace when the crowd had thinned and the vendors were packing away their goods. A faint, trembling sound, like a note of music caught inside a shell, drifted through the rain. Elias followed it, winding between barrels and abandoned carts, until the melody seemed to pulse from beneath a loose cobblestone near the fountain square. With trembling hands, Elias pried the stone loose. Beneath, tucked into a hollow as though the street itself had been keeping it safe, lay a key. It was unlike any key he had ever seen-long and slender, forged of pale metal that shimmered faintly in the gloom. Strange markings curled along its shaft, symbols that seemed almost to rearrange themselves if he looked too long. And the sound-oh, the sound. The key sang softly, a single note that quivered like a voice at the edge of speech. Elias lifted it carefully, the chill of the metal running through his palm. The note swelled, filling his chest until he thought his ribs might crack with the weight of it. He staggered back, clutching the key to his chest, breath coming fast. 'Beautiful, isn't it?' The voice came from behind him. Elias turned sharply. An old woman stood under the arch of the fountain, cloaked in rain-dark velvet. Her eyes gleamed like drops of mercury.'You hear it too?' Elias asked, his voice hoarse. The woman's smile was thin, secretive. 'Only those the Key chooses will hear its song. Most would see nothing but rust and stone. Elias swallowed. 'What… what does it open?' Her gaze lingered on him, weighing, as though she were deciding whether he was worthy of the answer. At last, she spoke: 'Not a door, boy. A destiny.' The rain seemed to hush at her words, and the key's note quivered in his palm, more alive than any object had a right to be.",
+    "The old woman stepped closer, her boots silent on the wet cobblestones. She extended a hand, gnarled and veined, toward the key. Elias felt a strange pull, as if the metal itself was alive and wanted to leap from his grasp. 'Keep it,' she said, her voice almost a whisper carried on the rain. 'But beware-keys like this are not meant for the faint-hearted.' Elias hesitated. His fingers itched to touch the strange symbols again, to hear that quivering note once more. He had always believed in stories-tales of hidden doors and secret worlds-but never in anything that could hum beneath his palm, singing to him in a language older than the town itself. 'Why me?' he asked. 'Why now?' The woman's eyes glinted. 'Because you listen. Because you follow.' She turned then, stepping away, her cloak billowing like smoke behind her. 'Go home, Elias Thorn, and let the Key choose its moment. The rest will come.' Before he could respond, she melted into the mist that clung to the square, leaving only the key and the faint echo of her words. Elias stared after her, chest tight, mind spinning. Rain had slowed to a drizzle, and the lanterns glimmered faintly, reflecting on the puddles like tiny, trembling stars. Elias clenched the key, feeling its pulse under his skin. A note, longer this time, threaded itself into his mind, almost a tune. He didn't know the melody, but it felt urgent, beckoning him toward… somewhere. Home was dull and silent, a narrow room he shared with the flickering shadows of his father's absence. He set the key on his windowsill, and for a moment, it hummed, sending a shiver down his spine. Papers on his desk rattled lightly, as though the song of the key reached into the corners of the room. Elias lay awake that night, the sound of the key thrumming through his dreams. And in those dreams, doors opened that did not exist, corridors stretched into impossibility, and shadows whispered secrets he could almost-but not quite-understand. By dawn, he knew one thing for certain: life in Graywick would never feel ordinary again. The key had chosen him, and whatever lay beyond the doors it opened, he would have to find it. Somewhere, in the spaces between mist and memory, the key sang. And Elias Thorn, boy of restless fingers and endless curiosity, was listening."
      ]
     },
     {
@@ -523,8 +552,6 @@ document.addEventListener('DOMContentLoaded', () => {
     "Soon, they stopped coming. Whispers replaced questions, and Elias became a shadow in his own village, a name spoken with contempt. But the orchard did not let him go. Even in its ruin, it clung to him. At night, he dreamed of blossoms pushing through blackened earth, of roots still twisting in the soil beneath the ash. He dreamed of his father's cane, not striking him this time, but pointing toward the horizon as if demanding he keep working, keep tending, keep carrying the burden. And then, one morning, as Elias stumbled from his hut with a thirst that wine could not quench, he saw it: a sprout. A single thread of green, fragile yet defiant, piercing through the blanket of ash. He froze, staring as though he had seen a ghost. Hatred surged again-violent, hot, and familiar. He could crush it now, grind it into the earth beneath his heel, and at last prove himself master over what refused to die. His foot hovered above the tender thing, trembling with rage. But he hesitated. The sprout was small, yes, but it was also alive. Where he had tried to kill, life had answered him. He lowered his foot, slowly, until it rested back on the ground. The coal inside his chest pulsed painfully, confused by the flicker of something it had long been starved of. For the first time, Elias wondered: was it the orchard he had hated all along-or himself?"
   ]
 }
-
-
   ];
 
   // ==== STATE WITH FIXED ACCURACY TRACKING ====
@@ -546,6 +573,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let totalKeysPressed = 0;
   let totalCorrectChars = 0;
   let lastTypedLength = 0;   // Track previous typed length to detect corrections
+
+  // ==== FUNCTION TO SHOW/HIDE ONLY LEADERBOARD AND RECENT RUNS ====
+  function toggleDashboardSections(show) {
+    if (recentSection) {
+      recentSection.style.display = show ? 'block' : 'none';
+    }
+    if (leaderboardSection) {
+      leaderboardSection.style.display = show ? 'block' : 'none';
+    }
+  }
 
   // ==== POPULATE DROPDOWNS ====
   function populateQuoteDropdown() {
@@ -573,27 +610,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   populateStoryDropdown();
 
-  // ==== AUTH TABS ====
-  loginTab.addEventListener('click', () => {
-    loginTab.classList.add('active');
-    signupTab.classList.remove('active');
-    loginForm.style.display = 'flex';
-    signupForm.style.display = 'none';
-    authMessage.textContent = '';
-  });
-  signupTab.addEventListener('click', () => {
-    signupTab.classList.add('active');
-    loginTab.classList.remove('active');
-    signupForm.style.display = 'flex';
-    loginForm.style.display = 'none';
-    authMessage.textContent = '';
+  // ==== AUTH FORM TABS ====
+  const formTabs = document.querySelectorAll('.form-tab');
+  
+  formTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const mode = this.dataset.mode;
+      
+      formTabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      
+      if (mode === 'login') {
+        loginForm.style.display = 'block';
+        signupForm.style.display = 'none';
+      } else {
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'block';
+      }
+    });
   });
 
   // ==== LOGIN ====
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     authMessage.textContent = 'Logging in...';
-    authMessage.className = 'small';
+    authMessage.className = 'text-center mt-4';
     try {
       const email = document.getElementById('login-email').value.trim();
       const pass = document.getElementById('login-pass').value;
@@ -601,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
       authMessage.textContent = '';
     } catch (err) {
       authMessage.textContent = err.message;
-      authMessage.classList.add('error');
+      authMessage.className = 'text-center mt-4 status-error';
     }
   });
 
@@ -609,41 +650,41 @@ document.addEventListener('DOMContentLoaded', () => {
   signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     authMessage.textContent = 'Creating account...';
-    authMessage.className = 'small';
+    authMessage.className = 'text-center mt-4';
     try {
       const email = document.getElementById('signup-email').value.trim();
       const pass = document.getElementById('signup-pass').value;
       if (pass.length < 6) {
         authMessage.textContent = 'Password must be at least 6 characters.';
-        authMessage.classList.add('error');
+        authMessage.className = 'text-center mt-4 status-error';
         return;
       }
       const cred = await auth.createUserWithEmailAndPassword(email, pass);
       await cred.user.sendEmailVerification();
       authMessage.textContent = 'Account created. Verification email sent.';
-      authMessage.classList.add('success');
+      authMessage.className = 'text-center mt-4 status-success';
     } catch (err) {
       authMessage.textContent = err.message;
-      authMessage.classList.add('error');
+      authMessage.className = 'text-center mt-4 status-error';
     }
   });
 
   // ==== FORGOT PASSWORD ====
   forgotBtn.addEventListener('click', async () => {
-    authMessage.className = 'small';
+    authMessage.className = 'text-center mt-4';
     const email = document.getElementById('login-email').value.trim();
     if (!email) {
       authMessage.textContent = 'Enter email to reset password.';
-      authMessage.classList.add('error');
+      authMessage.className = 'text-center mt-4 status-error';
       return;
     }
     try {
       await auth.sendPasswordResetEmail(email);
       authMessage.textContent = 'Password reset email sent.';
-      authMessage.classList.add('success');
+      authMessage.className = 'text-center mt-4 status-success';
     } catch (err) {
       authMessage.textContent = err.message;
-      authMessage.classList.add('error');
+      authMessage.className = 'text-center mt-4 status-error';
     }
   });
 
@@ -667,9 +708,8 @@ document.addEventListener('DOMContentLoaded', () => {
       diffTabs.forEach(x => x.classList.remove('active'));
       t.classList.add('active');
       currentDifficulty = t.dataset.diff;
-      currentDiffBadge.textContent = currentDifficulty;
       loadNewPassage();
-      refreshDashboard();
+      if (currentUser) refreshDashboard();
     });
   });
 
@@ -678,7 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mode === 'passage') loadNewPassage();
     else if (mode === 'quote') loadNewQuote();
     else loadNewStory();
-    refreshDashboard();
+    if (currentUser) refreshDashboard();
   });
 
   // ==== MODE SWITCHING ====
@@ -814,25 +854,28 @@ document.addEventListener('DOMContentLoaded', () => {
     startTime = null;
     typed = '';
     typingInput.value = '';
-    totalCharsAttempted = 0;
+    totalKeysPressed = 0;
+    totalCorrectChars = 0;
+    lastTypedLength = 0;
     statTime.textContent = timeLeft + 's';
-    statWPM.textContent = '-';
-    statAcc.textContent = '-%';
+    statWPM.textContent = '0';
+    statAcc.textContent = '100%';
     typingInput.disabled = false;
     renderPassage();
   }
 
   function loadNewPassage() {
     targetText = pickPassage();
-    currentDiffBadge.textContent = currentDifficulty;
     resetTestState();
   }
 
   function loadNewQuote() {
     const q = pickQuote();
     targetText = q.quote;
-    quoteAuthorEl.textContent = `— ${q.author}`;
-    currentDiffBadge.textContent = currentDifficulty;
+    // Show author info (will be hidden when user is not authenticated)
+    if (quoteAuthorEl) {
+      quoteAuthorEl.textContent = `— ${q.author}`;
+    }
     resetTestState();
   }
 
@@ -840,94 +883,59 @@ document.addEventListener('DOMContentLoaded', () => {
     const s = pickStoryText();
     targetText = s.text;
     storyMetaEl.textContent = `${s.title} — Part ${s.partIndex + 1}`;
-    currentDiffBadge.textContent = currentDifficulty;
     resetTestState();
   }
 
-// ==== PROBLEMATIC CODE - Live accuracy updates ====
-function startTimer() {
-function startTimer() {
-  if (running) return;
-  running = true;
-  startTime = Date.now();
-  timerInterval = setInterval(() => {
-    if (!running) {
-      clearInterval(timerInterval);
-      return;
-    }
-    
-    timeLeft--;
-    if (timeLeft <= 0) {
-      timeLeft = 0;
+  // ==== TIMER AND STATS ====
+  function startTimer() {
+    if (running) return;
+    running = true;
+    startTime = Date.now();
+    timerInterval = setInterval(() => {
+      if (!running) {
+        clearInterval(timerInterval);
+        return;
+      }
+      
+      timeLeft--;
+      if (timeLeft <= 0) {
+        timeLeft = 0;
+        statTime.textContent = timeLeft + 's';
+        finalizeTest();
+        return;
+      }
+      if (typed.length >= targetText.length) {
+        finalizeTest();
+        return;
+      }
       statTime.textContent = timeLeft + 's';
-      finalizeTest();
-      return;
-    }
-    if (typed.length >= targetText.length) {
-      finalizeTest();
-      return;
-    }
-    statTime.textContent = timeLeft + 's';
-
-  }, 1000);
-}}
-
-// ==== FIXED VERSION - No live accuracy ====
-function startTimer() {
-  if (running) return;
-  running = true;
-  startTime = Date.now();
-  timerInterval = setInterval(() => {
-    // Stop updating if test is no longer running
-    if (!running) {
-      clearInterval(timerInterval);
-      return;
-    }
-    
-    timeLeft--;
-    if (timeLeft <= 0) {
-      timeLeft = 0;
-      statTime.textContent = timeLeft + 's';
-      finalizeTest();
-      return;
-    }
-    if (typed.length >= targetText.length) {
-      finalizeTest();
-      return;
-    }
-    statTime.textContent = timeLeft + 's';
-    const elapsed = duration - timeLeft;
-
-    statWPM.textContent = stats.wpm;
-   
-    // Accuracy will only be shown when test completes in finalizeTest()
-  }, 1000);
-}
-  // ==== FIXED ACCURACY CALCULATION ====
-function computeStats(typedStr, elapsedSec) {
-  if (elapsedSec <= 0) return { wpm: 0, accuracy: 100 };
-  
-  const currentCorrectChars = [...typedStr].filter((ch, i) => ch === targetText[i]).length;
-  
-  let accuracy;
-  
-  // If total keys pressed equals typed length, no corrections were made
-  if (totalKeysPressed === typedStr.length) {
-    // Use simple accuracy: correct chars / total chars
-    accuracy = typedStr.length > 0 ? Math.round((currentCorrectChars / typedStr.length) * 100) : 100;
-  } else {
-    // User made corrections, use the weighted approach
-    const baseAccuracy = totalKeysPressed > 0 ? (totalCorrectChars / totalKeysPressed) * 100 : 100;
-    const currentAccuracy = typedStr.length > 0 ? (currentCorrectChars / typedStr.length) * 100 : 100;
-    accuracy = Math.round((currentAccuracy * 0.6) + (baseAccuracy * 0.4));
+    }, 1000);
   }
-  
-  const totalCharsTyped = typedStr.length;
-  const grossWPM = (totalCharsTyped / 5) / (elapsedSec / 60);
-  const wpm = Math.max(0, Math.round(grossWPM));
-  
-  return { wpm, accuracy: Math.max(0, Math.min(100, accuracy)) };
-}
+
+  function computeStats(typedStr, elapsedSec) {
+    if (elapsedSec <= 0) return { wpm: 0, accuracy: 100 };
+    
+    const currentCorrectChars = [...typedStr].filter((ch, i) => ch === targetText[i]).length;
+    
+    let accuracy;
+    
+    // If total keys pressed equals typed length, no corrections were made
+    if (totalKeysPressed === typedStr.length) {
+      // Use simple accuracy: correct chars / total chars
+      accuracy = typedStr.length > 0 ? Math.round((currentCorrectChars / typedStr.length) * 100) : 100;
+    } else {
+      // User made corrections, use the weighted approach
+      const baseAccuracy = totalKeysPressed > 0 ? (totalCorrectChars / totalKeysPressed) * 100 : 100;
+      const currentAccuracy = typedStr.length > 0 ? (currentCorrectChars / typedStr.length) * 100 : 100;
+      accuracy = Math.round((currentAccuracy * 0.6) + (baseAccuracy * 0.4));
+    }
+    
+    const totalCharsTyped = typedStr.length;
+    const grossWPM = (totalCharsTyped / 5) / (elapsedSec / 60);
+    const wpm = Math.max(0, Math.round(grossWPM));
+    
+    return { wpm, accuracy: Math.max(0, Math.min(100, accuracy)) };
+  }
 
   function renderPassage() {
     const words = targetText.split(" ");
@@ -945,7 +953,7 @@ function computeStats(typedStr, elapsedSec) {
     const avgWordLength = 6;
     const WORDS_PER_ROW = Math.max(1, Math.floor(containerWidth / (avgWordLength * charWidth)));
 
-    const ROW_SIZE = WORDS_PER_ROW ;
+    const ROW_SIZE = WORDS_PER_ROW;
     let pageStartIndex = 0;
     while (pageStartIndex + ROW_SIZE <= currentWordIndex && pageStartIndex + ROW_SIZE < words.length) {
       pageStartIndex += ROW_SIZE;
@@ -992,49 +1000,40 @@ function computeStats(typedStr, elapsedSec) {
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  // Add this temporary debug version to see what's happening:
-async function finalizeTest() {
-  if (!running) return;
-  running = false;
-  clearInterval(timerInterval);
-  timerInterval = null;
-  typingInput.disabled = true;
-  statTime.textContent = timeLeft + 's';
-  
-  const elapsed = duration - timeLeft;
-  const stats = computeStats(typed, elapsed);
-  statWPM.textContent = stats.wpm;
-  statAcc.textContent = stats.accuracy + '%';
+  async function finalizeTest() {
+    if (!running) return;
+    running = false;
+    clearInterval(timerInterval);
+    timerInterval = null;
+    typingInput.disabled = true;
+    statTime.textContent = timeLeft + 's';
+    
+    const elapsed = duration - timeLeft;
+    const stats = computeStats(typed, elapsed);
+    statWPM.textContent = stats.wpm;
+    statAcc.textContent = stats.accuracy + '%';
 
-  const user = firebase.auth().currentUser;
-  console.log('Current user:', user?.uid); // DEBUG
-  
-  if (user) {
-    try {
-      const payload = {
-        uid: user.uid,
-        difficulty: currentDifficulty,
-        duration,
-        wpm: stats.wpm,
-        accuracy: stats.accuracy,
-        mode,
-        timestamp: firebase.firestore.Timestamp.now()
-      };
-      
-      console.log('Attempting to save:', payload); // DEBUG
-      
-      const docRef = await db.collection('results').add(payload);
-      console.log('SUCCESS: Saved with ID:', docRef.id); // DEBUG
-      
-      await refreshDashboard();
-    } catch (e) {
-      console.error('FIREBASE ERROR:', e.code, e.message); // DEBUG
-      alert('Save failed: ' + e.message); // Show user the error
+    const user = firebase.auth().currentUser;
+    
+    if (user) {
+      try {
+        const payload = {
+          uid: user.uid,
+          difficulty: currentDifficulty,
+          duration,
+          wpm: stats.wpm,
+          accuracy: stats.accuracy,
+          mode,
+          timestamp: firebase.firestore.Timestamp.now()
+        };
+        
+        await db.collection('results').add(payload);
+        await refreshDashboard();
+      } catch (e) {
+        console.error('Save failed:', e);
+      }
     }
-  } else {
-    console.error('No authenticated user!'); // DEBUG
   }
-}
 
   async function refreshDashboard() {
     if (!currentUser) return;
@@ -1058,26 +1057,25 @@ async function finalizeTest() {
     const recentSnap = await db.collection('results')
       .where('uid','==', currentUser.uid)
       .orderBy('timestamp','desc')
-      .limit(3)
+      .limit(5)
       .get();
     recentTableBody.innerHTML = '';
     recentSnap.forEach(d => {
       const v = d.data();
-      const when = v.timestamp?.toDate ? v.timestamp.toDate().toLocaleString() : '—';
+      const when = v.timestamp?.toDate ? v.timestamp.toDate().toLocaleDateString() : '—';
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${when}</td>
-        <td>${v.wpm}</td>
-        <td>${v.accuracy}%</td>
+        <td class="font-mono">${v.wpm}</td>
+        <td class="font-mono">${v.accuracy}%</td>
         <td>${v.duration}s</td>
-        <td>${v.difficulty}</td>
+        <td><span class="status-badge">${v.difficulty || v.mode}</span></td>
+        <td>${v.mode || 'Random'}</td>
       `;
       recentTableBody.appendChild(row);
     });
 
     const lbSnap = await db.collection('results')
-      .where('difficulty','==', currentDifficulty)
-      .where('duration','==', duration)
       .orderBy('wpm','desc')
       .limit(10)
       .get();
@@ -1086,50 +1084,123 @@ async function finalizeTest() {
     lbSnap.forEach(d => {
       const v = d.data();
       const when = v.timestamp?.toDate ? v.timestamp.toDate().toLocaleDateString() : '';
-      const shortUser = v.uid.slice(0, 6);
+      const shortUser = v.uid ? v.uid.slice(0, 6) + '...' : 'Anonymous';
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${rank}</td>
+        <td><strong>#${rank}</strong></td>
         <td>${shortUser}</td>
-        <td>${v.wpm}</td>
-        <td>${v.accuracy}%</td>
+        <td class="font-mono">${v.wpm}</td>
+        <td class="font-mono">${v.accuracy}%</td>
         <td>${when}</td>
+        <td><span class="status-badge">${v.mode || 'Random'}</span></td>
       `;
       leaderboardBody.appendChild(tr);
       rank++;
     });
   }
 
+  // ==== AUTH STATE CHANGE ====
   auth.onAuthStateChanged(async user => {
     currentUser = user;
     if (user) {
+      // User is logged in - hide auth card, show dashboard
       authCard.style.display = 'none';
+      document.getElementById('section-dashboard').style.display = 'block';
+      
       userEmailTag.textContent = user.email;
       emailVerifStatus.innerHTML = user.emailVerified
-        ? '<span style="color:#6bf58f;">Verified</span>'
-        : '<span style="color:#ffcc33;">Not verified</span>' + (user.emailVerified ? '' : ' <span style="font-size:11px;">(check inbox)</span>');
-      if (modeSelect.value === 'quote') loadNewQuote();
-      else if (modeSelect.value === 'story') loadNewStory();
-      else loadNewPassage();
-      await refreshDashboard();
+        ? '<span class="status-success">✓ Verified</span>'
+        : '<span class="status-warning">⚠ Not verified</span>';
+      
+      // Show leaderboard and recent runs sections when logged in
+      toggleDashboardSections(true);
+      
+      // Update auth summary in header
       authSummary.innerHTML = `
-        <div class="small">Hi, ${user.email}</div>
-        <button class="btn secondary" onclick="firebase.auth().signOut()">Log out</button>
+        <div class="user-badge">${user.email}</div>
+        ${user.emailVerified ? '<span class="status-success text-xs">✓</span>' : '<span class="status-warning text-xs">⚠</span>'}
       `;
+      
+      // Enable typing and load content
+      typingInput.disabled = false;
+      
+      // Initialize content based on current mode
+      if (mode === 'quote') {
+        loadNewQuote();
+      } else if (mode === 'story') {
+        loadNewStory();
+      } else {
+        loadNewPassage();
+      }
+      
+      await refreshDashboard();
     } else {
+      // User is not logged in - show auth card, hide protected sections
       authCard.style.display = 'block';
+      document.getElementById('section-dashboard').style.display = 'block'; // Keep dashboard visible
+      
       authSummary.innerHTML = '';
-      userEmailTag.textContent = 'Not signed in';
-      emailVerifStatus.textContent = '';
-      passageDisplay.textContent = 'Please log in to start typing and save results.';
-      typingInput.disabled = true;
+      userEmailTag.textContent = 'Guest User';
+      emailVerifStatus.innerHTML = '<span class="text-muted">Sign in to save results</span>';
+      
+      // Hide leaderboard and recent runs sections when not logged in
+      toggleDashboardSections(false);
+      
+      // Enable typing for guests too
+      typingInput.disabled = false;
+      
+      // Initialize content for guests
+      if (mode === 'quote') {
+        loadNewQuote();
+      } else if (mode === 'story') {
+        loadNewStory();
+      } else {
+        loadNewPassage();
+      }
+      
+      // Clear best stats when logged out
+      bestWPMEl.textContent = '0';
+      bestAccEl.textContent = '0%';
+      recentTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Sign in to view your recent tests</td></tr>';
+      leaderboardBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Sign in to view the leaderboard</td></tr>';
     }
   });
 
+  // ==== CUSTOM TEXT FEATURE ====
+  const customTextArea = document.getElementById('custom-text');
+  const startCustomBtn = document.getElementById('start-custom');
+  
+  if (startCustomBtn && customTextArea) {
+    startCustomBtn.addEventListener('click', () => {
+      const customText = customTextArea.value.trim();
+      if (customText.length < 10) {
+        alert('Please enter at least 10 characters of text.');
+        return;
+      }
+      
+      // Switch to dashboard and set custom text
+      navTabs.forEach(t => t.classList.remove('active'));
+      sections.forEach(s => s.classList.add('hidden'));
+      document.querySelector('[data-feature="dashboard"]').classList.add('active');
+      document.getElementById('section-dashboard').classList.remove('hidden');
+      
+      // Set the custom text as target
+      targetText = customText;
+      resetTestState();
+    });
+  }
+
   // ==== INITIALIZE ====
   mode = modeSelect.value || 'passage';
+  
+  // Initially show dashboard but hide protected sections until user logs in
+  authCard.style.display = 'none'; // Hide auth card initially, show it in onAuthStateChanged if needed
+  toggleDashboardSections(false);
+  
+  // Load initial content
   if (mode === 'quote') loadNewQuote();
-  else if (mode === 'story') loadNewStory();
+  else if (mode === 'story') loadNewStory();  
   else loadNewPassage();
-});
 
+  console.log('SoftFingers Pro initialized with Firebase integration');
+});
