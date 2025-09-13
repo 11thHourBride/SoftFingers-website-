@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ==== DYNAMIC Story controls  ====
+  // ==== DYNAMIC Story controls (auto-injected; no HTML change needed) ====
   const storyControls = document.createElement('div');
   storyControls.id = 'story-controls';
   storyControls.style.display = 'none';
@@ -100,8 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const storyPartSelect = storyControls.querySelector('#story-part');
   const storyMetaEl = storyControls.querySelector('#story-meta');
 
-  // ==== WORDS / QUOTES  ====
-    const WORDS = {
+  // ==== WORDS / QUOTES (from your version) ====
+ const WORDS = {
     Beginner: ["during","after","today","between","behind","defend","divine","middle","under","magic","beneath","withdraw",
     "Typing is fun when practiced daily.",
       "The sun sets and rises with a new day.",
@@ -855,7 +855,6 @@ document.addEventListener('DOMContentLoaded', () => {
     typed = '';
     typingInput.value = '';
     totalKeysPressed = 0;
-    totalCorrectChars = 0;
     lastTypedLength = 0;
     statTime.textContent = timeLeft + 's';
     statWPM.textContent = '0';
