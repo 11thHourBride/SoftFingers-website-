@@ -591,7 +591,7 @@ function resetTestState() {
   lastTypedLength = 0;
   statTime.textContent = timeLeft + 's';
   statWPM.textContent = '0';
-  statAcc.textContent = '100%';
+  statAcc.textContent = '';
   typingInput.disabled = false;
   renderPassage();
 }
@@ -958,3 +958,4 @@ function focusTypingInput() {
 
   console.log('SoftFingers Pro initialized with Firebase integration');
 });
+
