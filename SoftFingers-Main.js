@@ -436,9 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentStoryIndex = 0;
   let currentStoryPart = 0;
 
-  let totalKeysPressed = 0;
-  let totalCorrectChars = 0;
-  let lastTypedLength = 0;   // Track previous typed length to detect corrections
+
 
   // ==== FUNCTION TO SHOW/HIDE ONLY LEADERBOARD AND RECENT RUNS ====
   function toggleDashboardSections(show) {
@@ -636,18 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
-    // If user added characters (typed forward)
-    if (newTyped.length > lastTypedLength) {
-      const addedChars = newTyped.length - lastTypedLength;
-      totalKeysPressed += addedChars;
-      
-      // Count how many of the newly added characters are correct
-      for (let i = lastTypedLength; i < newTyped.length; i++) {
-        if (i < targetText.length && newTyped[i] === targetText[i]) {
-          totalCorrectChars++;
-        }
-      }
-    }
+ 
     
     lastTypedLength = newTyped.length;
     typed = newTyped;
@@ -668,12 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
-    // Count backspace and delete as keystrokes (corrections)
-    if (e.key === 'Backspace' || e.key === 'Delete') {
-      if (typingInput.value.length > 0) {
-        totalKeysPressed++;
-      }
-    }
+   
   });
 
   typingInput.addEventListener('paste', e => e.preventDefault());
@@ -723,8 +705,6 @@ function resetTestState() {
   startTime = null;
   typed = '';
   typingInput.value = '';
-  totalKeysPressed = 0;
-  lastTypedLength = 0;
   statTime.textContent = timeLeft + 's';
   statWPM.textContent = '0';
   statAcc.textContent = '';
@@ -785,29 +765,19 @@ function resetTestState() {
   }
 
   function computeStats(typedStr, elapsedSec) {
-    if (elapsedSec <= 0) return { wpm: 0, accuracy: 100 };
-    
-    const currentCorrectChars = [...typedStr].filter((ch, i) => ch === targetText[i]).length;
-    
-    let accuracy;
-    
-    // If total keys pressed equals typed length, no corrections were made
-    if (totalKeysPressed === typedStr.length) {
-      // Use simple accuracy: correct chars / total chars
-      accuracy = typedStr.length > 0 ? Math.round((currentCorrectChars / typedStr.length) * 100) : 100;
-    } else {
-      // User made corrections, use the weighted approach
-      const baseAccuracy = totalKeysPressed > 0 ? (totalCorrectChars / totalKeysPressed) * 100 : 100;
-      const currentAccuracy = typedStr.length > 0 ? (currentCorrectChars / typedStr.length) * 100 : 100;
-      accuracy = Math.round((currentAccuracy * 0.6) + (baseAccuracy * 0.4));
-    }
-    
-    const totalCharsTyped = typedStr.length;
-    const grossWPM = (totalCharsTyped / 5) / (elapsedSec / 60);
-    const wpm = Math.max(0, Math.round(grossWPM));
-    
-    return { wpm, accuracy: Math.max(0, Math.min(100, accuracy)) };
-  }
+  if (elapsedSec <= 0) return { wpm: 0, accuracy: 100 };
+  
+  // Simple, accurate calculation: count correct characters vs total typed
+  const correctChars = [...typedStr].filter((ch, i) => ch === targetText[i]).length;
+  const accuracy = typedStr.length > 0 ? Math.round((correctChars / typedStr.length) * 100) : 100;
+  
+  // WPM calculation
+  const totalCharsTyped = typedStr.length;
+  const grossWPM = (totalCharsTyped / 5) / (elapsedSec / 60);
+  const wpm = Math.max(0, Math.round(grossWPM));
+  
+  return { wpm, accuracy: Math.max(0, Math.min(100, accuracy)) };
+}
 
   function renderPassage() {
     const words = targetText.split(" ");
@@ -831,7 +801,7 @@ function resetTestState() {
       pageStartIndex += ROW_SIZE;
     }
 
-    const visibleWords = words.slice(pageStartIndex, pageStartIndex + ROW_SIZE * 2);
+    const visibleWords = words.slice(pageStartIndex, pageStartIndex + ROW_SIZE *2 );
 
     let html = "";
     for (let r = 0; r < visibleWords.length; r += WORDS_PER_ROW) {
@@ -1094,6 +1064,5 @@ function focusTypingInput() {
 
   console.log('SoftFingers Pro initialized with Firebase integration');
 });
-
 
 
