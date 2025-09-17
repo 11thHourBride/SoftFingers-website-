@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const storyPartSelect = storyControls.querySelector('#story-part');
   const storyMetaEl = storyControls.querySelector('#story-meta');
 
-  // ==== WORDS / QUOTES (from your version) ====
+  // ==== WORDS / QUOTES ====
  const WORDS = {
     Beginner: ["during","after","today","between","behind","defend","divine","middle","under","magic","beneath","withdraw","Typing is fun when practiced daily.","The sun sets and rises with a new day.","Small steps lead to great achievements.","believer","believe","release","adapt","construct","idiot","heaven","ignite","super","superb","dreadful","hover","infinite","Jordan","coward","flame","previous","maintain","honorary","legacy","legit","graze","content","grass","introduce","luggage","enter","ease","radio","junk","jelly","juice","juvenile","order","other","backspace","loop","museum","hail","loving","Ghana","America","hundred","attract","abnormal","adjust","down","pages","pages","vile","zebra","xylophone","lobby","easy","over","gamers","games","like","leave","leaves","lift","influence","frame","insane","breathe","raid","flee","mango","pumpkin","orange","voilet","apple","inside","intern","mediate","final","review","intend","brave","mapping","view","candle","handle","female","mandate","hunger","hungry","number","figure","habit","things","matter","synthesis","grant","redeem","floor","major","subject","attract","indeed","below","other","father","mother","uncle","auntie","nephew","niece","without","between","could","should","however","about","should","green","purple","yellow","royal","chariot","horses","artist","mechanic","sweep","holler","amnesia","triangle","angel","activate","windows","leader","settings","keyboard","majority","reel","track","preach","teach","leakage","angle",
     "trace","squeeze","truck","train","training","crystal","clear","clearance","mode","hatred","bitter","selfie","maize","blank","chat","chartered","altar","alter","altered","chain","block","music","discord","discount","anger","bitterness","duty","faith","individual","group","measure","kite","kiwi","forest","manner","statue","stature","Bible","chief","linquist","quick","quartz","ghost","narrow","road","rapture","beast","brute","human","acquaint","scarlet","brown","black","white","blue","peach","parrot","severe","several","plate","shadow","slain","three","eleven","computer","hazard","manager","account","cashier","clerk","clearance","darkness",
@@ -372,92 +372,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
       ];
-    Advanced: [
-"axiomatization","bioluminescence","characterization","conceptualization","cryptographically","differentiability","electromagnetism","fundamentalism","geostrategically","historiographical",
-"hyperintensionality","ideologically","immunohistochemistry","indistinguishability","instrumentalization","interdisciplinarity","intertextuality","irreversibility","jurisprudentially","lexicographical",
-"magnetohydrodynamics","metamathematics","metaphilosophy","methodologically","micropaleontology","morphophonemics","multidimensionality","nanofabrication","neurocognitive","nonrepresentational",
-"ontologically","overdetermination","paralinguistic","phenomenological","philosophization","phylogenetics","pluripotentiality","poststructuralism","prestidigitation","probabilistically",
-"psychopathology","quantificational","recontextualization","reproducibility","retrospectively","sociolinguistics","spectrographically","standardization","subterraneanly","superconductivity",
-"synchronization","syntactically","telecommunication","thermodynamically","transcendentalism","transdisciplinary","ultramicroscopy","uncharacteristically","undecidability","universalization",
-"verisimilitude","xenotransplantation","zoologically",
-  "In the symphony of progress, persistence plays the most enduring tune.",
-      "Mastery is not an act but a habit built from countless attempts.",
-      "Complex challenges refine character, shaping resilience and brilliance."
-]
-   };
 
-// Quote bank (from user)
-      const QUOTES = [
-        {"quote": "Be the change that you wish to see in the world.", "author": "Mahatma Gandhi"},
-        {"quote": "In the middle of every difficulty lies opportunity.", "author": "Albert Einstein"},
-        {"quote": "Success is not final, failure is not fatal: It is the courage to continue that counts.", "author": "Winston Churchill"},
-        {"quote": "The only thing we have to fear is fear itself.", "author": "Franklin D. Roosevelt"},
-        {"quote": "Do not go where the path may lead, go instead where there is no path and leave a trail.", "author": "Ralph Waldo Emerson"},
-        {"quote": "I have not failed. I've just found 10,000 ways that won't work.", "author": "Thomas Edison"},
-        {"quote": "The future belongs to those who believe in the beauty of their dreams.", "author": "Eleanor Roosevelt"},
-        {"quote": "What lies behind us and what lies before us are tiny matters compared to what lies within us.", "author": "Ralph Waldo Emerson"},
-        {"quote": "Life is what happens when you're busy making other plans.", "author": "John Lennon"},
-        {"quote": "Whether you think you can or you think you can't, you're right.", "author": "Henry Ford"},
-        {"quote": "It always seems impossible until it's done.", "author": "Nelson Mandela"},
-        {"quote": "The journey of a thousand miles begins with one step.", "author": "Lao Tzu"},
-        {"quote": "You must be the master of your own destiny.", "author": "Napoleon Hill"},
-        {"quote": "Don't count the days, make the days count.", "author": "Muhammad Ali"},
-        {"quote": "If opportunity doesn't knock, build a door.", "author": "Milton Berle"},
-        {"quote": "Strive not to be a success, but rather to be of value.", "author": "Albert Einstein"},
-        {"quote": "The best way to predict the future is to invent it.", "author": "Alan Kay"},
-        {"quote": "Hardships often prepare ordinary people for an extraordinary destiny.", "author": "C.S. Lewis"},
-        {"quote": "What you get by achieving your goals is not as important as what you become by achieving your goals.", "author": "Zig Ziglar"},
-        {"quote": "You miss 100% of the shots you don't take.", "author": "Wayne Gretzky"},
-        {"quote": "If you want to lift yourself up, lift up someone else.", "author": "Booker T. Washington"},
-        {"quote": "You must do the things you think you cannot do.", "author": "Eleanor Roosevelt"},
-        {"quote": "Act as if what you do makes a difference. It does.", "author": "William James"},
-        {"quote": "Believe you can and you're halfway there.", "author": "Theodore Roosevelt"},
-        {"quote": "Failure is another stepping stone to greatness.", "author": "Oprah Winfrey"},
-        {"quote": "A person who never made a mistake never tried anything new.", "author": "Albert Einstein"},
-        {"quote": "Courage is resistance to fear, mastery of fear-not absence of fear.", "author": "Mark Twain"},
-        {"quote": "To live is the rarest thing in the world. Most people exist, that is all.", "author": "Oscar Wilde"},
-        {"quote": "Happiness is not something ready-made. It comes from your own actions.", "author": "Dalai Lama"},
-        {"quote": "Your time is limited, so don't waste it living someone else's life.", "author": "Steve Jobs"},
-        {"quote": "Dream big and dare to fail.", "author": "Norman Vaughan"},
-        {"quote": "The greatest glory in living lies not in never falling, but in rising every time we fall.", "author": "Nelson Mandela"},
-        {"quote": "Do what you can, with what you have, where you are.", "author": "Theodore Roosevelt"},
-        {"quote": "Everything you've ever wanted is on the other side of fear.", "author": "George Addair"},
-        {"quote": "You only live once, but if you do it right, once is enough.", "author": "Mae West"},
-        {"quote": "A champion is defined not by their wins but by how they recover when they fall.", "author": "Serena Williams"},
-        {"quote": "Success usually comes to those who are too busy to be looking for it.", "author": "Henry David Thoreau"},
-        {"quote": "Don't be pushed by your problems. Be led by your dreams.", "author": "Ralph Waldo Emerson"},
-        {"quote": "Go confidently in the direction of your dreams. Live the life you have imagined.", "author": "Henry David Thoreau"},
-        {"quote": "The best revenge is massive success.", "author": "Frank Sinatra"},
-        {"quote": "It does not matter how slowly you go as long as you do not stop.", "author": "Confucius"},
-        {"quote": "The way to get started is to quit talking and begin doing.", "author": "Walt Disney"},
-        {"quote": "Only those who dare to fail greatly can ever achieve greatly.", "author": "Robert F. Kennedy"},
-        {"quote": "Everything you can imagine is real.", "author": "Pablo Picasso"},
-        {"quote": "A man is but what he knows.", "author": "Francis Bacon"},
-        {"quote": "Knowledge is power.", "author": "Francis Bacon"},
-        {"quote": "Leadership is the capacity to translate vision into reality.", "author": "Warren Bennis"},
-        {"quote": "Success is how high you bounce when you hit bottom.", "author": "George S. Patton"},
-        {"quote": "The mind is everything. What you think you become.", "author": "Buddha"},
-        {"quote": "I am not a product of my circumstances. I am a product of my decisions.", "author": "Stephen R. Covey"},
-        {"quote": "Learning never exhausts the mind.", "author": "Leonardo da Vinci"},
-        {"quote": "But, listen, many times, education leads to the demon of education. And that demon of education leads you to a know-all. And when you get there, then you become an infidel, and deny Christ. So you can't build upon the foundation of education.", "author": "Rev. William Marrion Branham - 64-0604 - To Whom Shall We Go?"},
-        {"quote": "Don't fear, stay right there at the Word, watch what God does; just be sure that you're right with God. Stay with that Word, and watch what happens.", "author": "Rev. William Marrion Branham - 61-0211 - Abraham"},
-        {"quote": "It's the way out of all troubles. It's the way to peace. It's the way to success. It's the way to Life, itself, is to follow this Star, the Lord Jesus. And now, if you are tied to that Star, the Holy Spirit is the Compass that'll only point to the Star.", "author": "Rev. William Marrion Branham - 63-0304 - A Absolute"},
-        {"quote": "We are saved by grace, that through faith, not by works. Works shows that you have been saved. But what saves you is the grace of God. Grace saves you. Grace is what God does for you. Works is what you do for God, to show appreciation of what God did for you. But by grace are you saved!", "author": "Rev. William Marrion Branham - 61-0827 - The Message Of Grace"},
-        {"quote": "Now, when God makes His ways, just wonder why He feels when He makes a way for us, for our healing, for our salvation, for our comfort, for our peace, and all these things, and we just walk away and leave them. Must make Him feel terribly bad.", "author": "Rev. William Marrion Branham - 61-0125 - Why?"},
-        {"quote": "And faith always admits the Word is right. Amen. If your faith don't punctuate every Word of God's Word, with an amen, there is something wrong with your experience. The Bible said, 'He is the same yesterday, today, and forever.' If it don't say amen to that, then there is something wrong. Jesus said, 'The works that I do shall you do also.' If it don't say amen to that, then there is something wrong. If it don't punctuate every Word of God's promise, with an amen, there is something wrong.", "author": "Rev. William Marrion Branham - 64-0305 - Perseverant"},
-        {"quote": "The true evidence of being baptized with the Holy Ghost is for the believer to receive the Word for the age in which he lives.", "author": "Rev. William Marrion Branham - An Exposition Of The Seven Church Ages(4-The Smyrnaean Church Age)"},
-        {"quote": "Just keep away...You just be a real, sweet, humble, Christian, live the life, and then God will take of the rest of it.", "author": "Rev. William Marrion Branham - 64-0830E - Questions And Answers #4"},
-        {"quote": "Greatness is humility. Don't forget that, Church. Greatness is expressed in humility, not how fine you can be.", "author": "Rev. William Marrion Branham - 63-0825M - How Can I Overcome?"},
-        {"quote": "Not always prosperity is a sign of a spiritual blessings, but sometimes on the contrary. People think maybe you have to own a lot of worldly goods, and shows that God is a blessing you. That's not true. Sometimes it's the other way.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": "This little, unknown fellow was Amos the prophet. And now we don't know very much about him. We don't know where he come from. Prophets usually come on the scene, unknown, leave the same way. We don't know where they come from, where they go, don't know about their backgrounds. God just raises them up. He wasn't much to look at, but he had THUS SAITH THE LORD. That's the main thing I see.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": "There is no excuse. It's just what's in the heart. That's what shows out. It identifies itself.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": "And now we find, in this city, it become morally decayed. The preachers was afraid to say anything about it. And, but they had a little, this little old fellow coming up over the hill, was coming to tell them THUS SAITH THE LORD, 'Clean this thing up, or you're going to go into captivity.' And he lived to see the days of his prophecy fulfilled.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": "You see, when people get away from God and won't listen to the Word, have no more desire for the Word, then there is one diagnoses to it, 'The soul that sinneth, that soul shall die.' Unbelief shall separate you from God. That's exactly right.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": "Determination kills all difficulties.", "author": "Godfred Mensah"},
-        {"quote": "We deem everyone that come closer to us as friend, because we don't know the one who becomes happy when we succeed and who becomes happy when we fail. But God knows the genuine and the hypocrite friends.", "author": "Godfred Mensah"},
-        {"quote": "Your ability to lift heavy objects doesn't guarantee your victory in a battle.", "author": "Godfred Mensah"}
-      ];
 
+  
   // ==== STORIES (chaptered, each with two halves) ====
   const STORIES = [
     {
@@ -1177,5 +1094,6 @@ function focusTypingInput() {
 
   console.log('SoftFingers Pro initialized with Firebase integration');
 });
+
 
 
