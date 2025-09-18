@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SoftFingers Admin</title>
+  <title>SoftFingers Admin Dashboard</title>
 
   <!-- Firebase compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -14,443 +14,1264 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <style>
-    :root{
-      --bg:#f4f6fb; --card:#fff; --text:#111827; --muted:#6b7280; --accent:#6c5ce7;
+    :root {
+      --primary: #2563eb;
+      --primary-light: #3b82f6;
+      --secondary: #64748b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
-    body.dark{ --bg:#0b1020; --card:#111427; --text:#e6edf3; --muted:#9aa4b2; --accent:#9f7cff; }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:var(--text)}
+    
+    body.dark {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #334155;
+    }
+    
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
 
-    /* sidebar */
+    /* Layout */
+    .admin-layout {
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
     .sidebar {
-      width:260px;
-      background:var(--card);
-      height:100vh;
-      padding:20px;
-      position:fixed;
-      left:0;
-      top:0;
-      border-right:1px solid rgba(0,0,0,0.04);
-      transition:left .25s ease, width .25s ease;
-      z-index:1200;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: var(--shadow-lg);
     }
-    .sidebar.closed { left:-260px; }
-    .logo{font-weight:700;color:var(--accent);margin-bottom:18px}
-    .nav{list-style:none;padding:0;margin:0}
-    .nav li{padding:10px 8px;border-radius:8px;cursor:pointer;color:var(--muted);margin-bottom:6px}
-    .nav li:hover{background:rgba(0,0,0,0.04);color:var(--text)}
 
-    /* header & content */
+    .sidebar-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-menu {
+      padding: 1rem 0;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0.875rem 2rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-item:hover {
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--primary);
+    }
+
+    .nav-item.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .nav-icon {
+      margin-right: 0.75rem;
+      width: 1.25rem;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 280px;
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
     .topbar {
-      position:fixed;
-      left:260px;
-      right:0;
-      top:0;
-      height:64px;
-      padding:12px 20px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      background:var(--card);
-      box-shadow:0 2px 6px rgba(0,0,0,0.05);
-      z-index:1500; /* ensures above text */
-      transition:left .25s ease;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .topbar.full { left:0; }
-    .hamburger{cursor:pointer;padding:8px;border-radius:8px;font-size:20px;z-index:1600;}
-    .content { margin-left:260px; padding:90px 24px 24px; min-height:100vh; transition:margin-left .25s ease; }
-    .content.full { margin-left:0; }
 
-    /* cards */
-    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
-    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 8px 20px rgba(13,26,80,0.04)}
-    .card h3{margin:0 0 8px}
+    .topbar-left h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
 
-    /* tables */
-    table{width:100%;border-collapse:collapse;margin-top:12px;background:var(--card);border-radius:8px;overflow:hidden}
-    th, td{padding:10px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:left}
-    th{background:rgba(0,0,0,0.03);font-weight:600}
-    button{background:var(--accent);color:#fff;padding:6px 10px;border:0;border-radius:8px;cursor:pointer}
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
 
-    /* mobile */
-    @media (max-width:900px){
-      .sidebar { left:-300px; }
-      .sidebar.open { left:0; }
-      .topbar { left:0; }
-      .content { margin-left:0; padding-top:78px; }
-      .overlay {
-        position:fixed; top:0; left:0; right:0; bottom:0;
-        background:rgba(0,0,0,0.5); z-index:1100;
+    #admin-email {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary { 
+      background: var(--primary); 
+      color: white; 
+    }
+    .btn-primary:hover { 
+      background: var(--primary-light); 
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary { 
+      background: var(--secondary); 
+      color: white; 
+    }
+    .btn-secondary:hover { 
+      opacity: 0.9; 
+    }
+    
+    .btn-danger { 
+      background: var(--danger); 
+      color: white; 
+    }
+    .btn-sm { 
+      padding: 0.25rem 0.75rem; 
+      font-size: 0.75rem; 
+    }
+
+    /* Content Area */
+    .content {
+      padding: 2rem;
+      max-width: 100%;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat-title {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-change {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .stat-change.positive { color: var(--success); }
+    .stat-change.negative { color: var(--danger); }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .card-content {
+      padding: 1.5rem;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 0.5rem;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .table th,
+    .table td {
+      padding: 0.875rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .table th {
+      background: var(--bg);
+      font-weight: 600;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .table tbody tr {
+      transition: background-color 0.2s ease;
+    }
+
+    .table tbody tr:hover {
+      background: rgba(37, 99, 235, 0.04);
+    }
+
+    .table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Charts */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    /* Status badges */
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .status-success { background: #dcfce7; color: #166534; }
+    .status-warning { background: #fef3c7; color: #92400e; }
+    .status-danger { background: #fee2e2; color: #991b1b; }
+    .status-secondary { background: #f1f5f9; color: #475569; }
+
+    /* Loading states */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Mobile hamburger */
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .chart-grid {
+        grid-template-columns: 1fr;
       }
     }
+
+    @media (max-width: 768px) {
+      .topbar {
+        padding: 1rem;
+      }
+
+      .topbar-left h1 {
+        font-size: 1.25rem;
+      }
+
+      .content {
+        padding: 1rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .stat-card {
+        padding: 1.25rem;
+      }
+
+      .card-content {
+        padding: 1rem;
+      }
+
+      .table th,
+      .table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8125rem;
+      }
+
+      .topbar-right {
+        gap: 0.5rem;
+      }
+
+      #admin-email {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar {
+        width: 100%;
+      }
+
+      .stat-value {
+        font-size: 1.75rem;
+      }
+    }
+
+    /* Dark mode styles */
+    body.dark .status-success { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+    body.dark .status-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    body.dark .status-danger { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    body.dark .status-secondary { background: rgba(100, 116, 139, 0.2); color: #cbd5e1; }
   </style>
 </head>
 <body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span>⌨️</span>
+          SoftFingers Admin
+        </div>
+      </div>
+      
+      <nav class="nav-menu">
+        <button class="nav-item active" data-section="overview">
+          <span class="nav-icon">📊</span>
+          Overview
+        </button>
+        <button class="nav-item" data-section="results">
+          <span class="nav-icon">📈</span>
+          Test Results
+        </button>
+        <button class="nav-item" data-section="leaderboard">
+          <span class="nav-icon">🏆</span>
+          Leaderboard
+        </button>
+        <button class="nav-item" data-section="analytics">
+          <span class="nav-icon">📊</span>
+          Analytics
+        </button>
+        <button class="nav-item" data-section="users">
+          <span class="nav-icon">👥</span>
+          User Management
+        </button>
+        <button class="nav-item" id="logout-btn">
+          <span class="nav-icon">🚪</span>
+          Logout
+        </button>
+      </nav>
+    </aside>
 
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="logo">SoftFingers Admin</div>
-    <ul class="nav" id="nav">
-      <li data-section="dashboard">📊 Dashboard</li>
-      <li data-section="users">👥 Users</li>
-      <li data-section="scores">✍️ Scores</li>
-      <li data-section="leaderboard">🏆 Leaderboard</li>
-      <li id="nav-logout">⎋ Logout</li>
-    </ul>
-  </aside>
-  
-  <!-- Topbar -->
-  <div class="topbar" id="topbar">
-    <div>
-      <span class="hamburger" id="hamburger">☰</span>
-      <strong id="welcome">Hello, Admin</strong>
-    </div>
-    <div>
-      <button id="dark-toggle">Toggle Dark</button>
-    </div>
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle" id="mobile-toggle">☰</button>
+          <h1 id="page-title">Dashboard Overview</h1>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-secondary" id="theme-toggle">🌓 Toggle Theme</button>
+          <span id="admin-email">Loading...</span>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- Overview Section -->
+        <section id="overview-section" class="section active">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-title">Total Tests</span>
+                <span>📝</span>
+              </div>
+              <div class="stat-value" id="total-tests">0</div>
+              <div class="stat-change positive" id="tests-change">Loading...</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-title">Unique Users</span>
+                <span>👤</span>
+              </div>
+              <div class="stat-value" id="unique-users">0</div>
+              <div class="stat-change positive" id="users-change">Loading...</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-title">Average WPM</span>
+                <span>⚡</span>
+              </div>
+              <div class="stat-value" id="avg-wpm">0</div>
+              <div class="stat-change" id="wpm-change">Loading...</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-title">Tests Today</span>
+                <span>📅</span>
+              </div>
+              <div class="stat-value" id="tests-today">0</div>
+              <div class="stat-change positive" id="today-change">+0 from yesterday</div>
+            </div>
+          </div>
+
+          <div class="chart-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Daily Activity (Last 30 Days)</h3>
+              </div>
+              <div class="card-content">
+                <canvas id="activityChart" height="200"></canvas>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Mode Distribution</h3>
+              </div>
+              <div class="card-content">
+                <canvas id="modeChart" height="200"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="section">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Recent Test Results</h3>
+            </div>
+            <div class="card-content">
+              <div class="table-container">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>WPM</th>
+                      <th>Accuracy</th>
+                      <th>Duration</th>
+                      <th>Difficulty</th>
+                      <th>Mode</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="results-tbody">
+                    <tr><td colspan="7" class="loading">Loading...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Leaderboard Section -->
+        <section id="leaderboard-section" class="section">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Top Performers</h3>
+            </div>
+            <div class="card-content">
+              <div class="table-container">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>User</th>
+                      <th>WPM</th>
+                      <th>Accuracy</th>
+                      <th>Duration</th>
+                      <th>Mode</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leaderboard-tbody">
+                    <tr><td colspan="7" class="loading">Loading...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics-section" class="section">
+          <div class="chart-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">WPM Distribution</h3>
+              </div>
+              <div class="card-content">
+                <canvas id="wpmDistChart" height="200"></canvas>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Accuracy Distribution</h3>
+              </div>
+              <div class="card-content">
+                <canvas id="accDistChart" height="200"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 1.5rem;">
+            <div class="card-header">
+              <h3 class="card-title">Performance Trends</h3>
+            </div>
+            <div class="card-content">
+              <canvas id="trendsChart" height="300"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="users-section" class="section">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">User Analytics</h3>
+            </div>
+            <div class="card-content">
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-title">Most Active User</div>
+                  <div class="stat-value" id="most-active-user">Loading...</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-title">Highest WPM</div>
+                  <div class="stat-value" id="highest-wpm">Loading...</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-title">Best Accuracy</div>
+                  <div class="stat-value" id="best-accuracy">Loading...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
   </div>
 
-  <!-- Content -->
-  <main class="content" id="content">
-    <!-- Dashboard -->
-    <section id="dashboard-section">
-      <h2>Overview</h2>
-      <div class="cards">
-        <div class="card"><h3>Total Users</h3><p id="total-users">0</p></div>
-        <div class="card"><h3>Total Scores</h3><p id="total-scores">0</p></div>
-        <div class="card"><h3>Active Today</h3><p id="active-today">0</p></div>
-        <div class="card"><h3>Best WPM</h3><p id="best-wpm">0</p></div>
-      </div>
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCoQO4vR_lIStx2lMPSy_YhHYPh75gHRSQ",
+      authDomain: "softfingers-typing.firebaseapp.com",
+      projectId: "softfingers-typing",
+      storageBucket: "softfingers-typing.firebasestorage.app",
+      messagingSenderId: "896354348357",
+      appId: "1:896354348357:web:72fda3e79dce5f5b8b622c",
+      measurementId: "G-SLF302PVR4"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-      <div style="margin-top:18px;" class="card">
-        <h3>Users vs Scores</h3>
-        <canvas id="barChart" height="100"></canvas>
-      </div>
+    // Admin emails
+    const ADMIN_EMAILS = [
+      "mgodfred42@gmail.com",
+      "augustinelovestephens@gmail.com",
+      "support@softfingers.com"
+    ];
 
-      <div style="margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <div class="card">
-          <h3>Roles Distribution</h3>
-          <canvas id="pieChart" height="160"></canvas>
-        </div>
-        <div class="card">
-          <h3>Avg WPM — last 7 days</h3>
-          <canvas id="lineChart" height="160"></canvas>
-        </div>
-      </div>
-    </section>
+    let currentUser = null;
+    let charts = {};
 
-    <!-- Users -->
-    <section id="users-section" style="display:none;">
-      <h2>Users</h2>
-      <div class="card">
-        <table id="users-table">
-          <thead><tr><th>Email</th><th>Role</th><th>Created</th><th>Actions</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      setupEventListeners();
+      loadTheme();
+    });
 
-    <!-- Scores -->
-    <section id="scores-section" style="display:none;">
-      <h2>Scores (latest)</h2>
-      <div class="card">
-        <table id="scores-table">
-          <thead><tr><th>User</th><th>WPM</th><th>Acc</th><th>Duration</th><th>Date</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+    function setupEventListeners() {
+      // Navigation
+      document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+        item.addEventListener('click', () => {
+          switchSection(item.dataset.section);
+          // Close mobile sidebar after selection
+          if (window.innerWidth <= 1024) {
+            document.getElementById('sidebar').classList.remove('open');
+          }
+        });
+      });
 
-    <!-- Leaderboard -->
-    <section id="leaderboard-section" style="display:none;">
-      <h2>Leaderboard (Top 100)</h2>
-      <div class="card">
-        <table id="leaderboard-table">
-          <thead><tr><th>#</th><th>User</th><th>WPM</th><th>Acc</th><th>Date</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+      // Mobile toggle
+      document.getElementById('mobile-toggle').addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('open');
+      });
 
-<script>
-  // ===== Replace with your firebase config =====
-  const firebaseConfig = {
-    apiKey: "AIzaSyCoQO4vR_lIStx2lMPSy_YhHYPh75gHRSQ",
-    authDomain: "softfingers-typing.firebaseapp.com",
-    projectId: "softfingers-typing",
-    storageBucket: "softfingers-typing.firebasestorage.app",
-    messagingSenderId: "896354348357",
-    appId: "1:896354348357:web:72fda3e79dce5f5b8b622c",
-    measurementId: "G-SLF302PVR4"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener('click', (e) => {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('mobile-toggle');
+        if (window.innerWidth <= 1024 && 
+            !sidebar.contains(e.target) && 
+            !toggle.contains(e.target) && 
+            sidebar.classList.contains('open')) {
+          sidebar.classList.remove('open');
+        }
+      });
 
-  const ADMIN_EMAIL = "mgodfred42@gmail.com";
+      // Logout
+      document.getElementById('logout-btn').addEventListener('click', logout);
 
-  const sidebar = document.getElementById('sidebar');
-  const hamburger = document.getElementById('hamburger');
-  const topbar = document.getElementById('topbar');
-  const content = document.getElementById('content');
-  const nav = document.getElementById('nav');
-  const welcome = document.getElementById('welcome');
+      // Theme toggle
+      document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+    }
 
-  // Toggle sidebar
-  function openSidebar(){
-    sidebar.classList.add('open');
-    let overlay = document.createElement('div');
-    overlay.className = 'overlay';
-    overlay.id = 'overlay';
-    document.body.appendChild(overlay);
-    overlay.addEventListener('click', closeSidebar);
-  }
-  function closeSidebar(){
-    sidebar.classList.remove('open');
-    const overlay = document.getElementById('overlay');
-    if (overlay) overlay.remove();
-  }
-  function toggleSidebar(){
-    if (window.innerWidth > 900) {
-      sidebar.classList.toggle('closed');
-      topbar.classList.toggle('full');
-      content.classList.toggle('full');
-    } else {
-      if (sidebar.classList.contains('open')) {
-        closeSidebar();
-      } else {
-        openSidebar();
+    function switchSection(sectionName) {
+      // Update navigation
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+
+      // Update content
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.getElementById(`${sectionName}-section`).classList.add('active');
+
+      // Update title
+      const titles = {
+        overview: 'Dashboard Overview',
+        results: 'Test Results',
+        leaderboard: 'Leaderboard',
+        analytics: 'Analytics',
+        users: 'User Management'
+      };
+      document.getElementById('page-title').textContent = titles[sectionName] || 'Dashboard';
+
+      // Load section data
+      loadSectionData(sectionName);
+    }
+
+    function loadTheme() {
+      if (localStorage.getItem('sf-admin-dark') === 'true') {
+        document.body.classList.add('dark');
       }
     }
-  }
-  hamburger.addEventListener('click', toggleSidebar);
 
-  // nav clicks
-  nav.addEventListener('click', (e) => {
-    const li = e.target.closest('li');
-    if(!li) return;
-    const section = li.dataset.section;
-    if (section) showSection(section);
-    if (li.id === 'nav-logout') logout();
-  });
-
-  // dark mode
-  const darkToggle = document.getElementById('dark-toggle');
-  if (localStorage.getItem('sf-dark') === 'true') document.body.classList.add('dark');
-  darkToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark');
-    localStorage.setItem('sf-dark', document.body.classList.contains('dark'));
-  });
-
-  function showSection(key) {
-    const map = {
-      dashboard: 'dashboard-section',
-      users: 'users-section',
-      scores: 'scores-section',
-      leaderboard: 'leaderboard-section'
-    };
-    document.querySelectorAll('main section').forEach(s => s.style.display = 'none');
-    document.getElementById(map[key]).style.display = 'block';
-  }
-
-  function logout(){
-    auth.signOut().then(()=> window.location.href = 'SoftFingers Admin-login.html');
-  }
-
-  // AUTH guard & auto-promote super admin
-  auth.onAuthStateChanged(async (user) => {
-    if (!user) {
-      window.location.href = 'SoftFingers Admin-login.html';
-      return;
-    }
-    const uRef = db.collection('users').doc(user.uid);
-    const uSnap = await uRef.get();
-
-    if (user.email === ADMIN_EMAIL) {
-      await uRef.set({
-        email: user.email,
-        role: 'admin',
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('sf-admin-dark', document.body.classList.contains('dark'));
     }
 
-    const updated = await uRef.get();
-    if (!updated.exists || updated.data().role !== 'admin') {
-      alert('Access denied: not an admin');
-      await auth.signOut();
-      window.location.href = 'index.html';
-      return;
+    async function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        await auth.signOut();
+        window.location.href = 'login.html';
+      }
     }
 
-    welcome.textContent = `Hello, ${user.email}`;
-    showSection('dashboard');
-    await loadAll();
-  });
+    // Auth state observer
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
 
-  // LOAD ALL
-  let barChart, pieChart, lineChart;
-  async function loadAll(){
-    await Promise.all([loadDashboard(), loadUsers(), loadScores(), loadLeaderboard()]);
-  }
+      if (!ADMIN_EMAILS.includes(user.email)) {
+        alert('Access denied. Admin privileges required.');
+        await auth.signOut();
+        return;
+      }
 
-  async function loadDashboard(){
-    const usersSnap = await db.collection('users').get();
-    document.getElementById('total-users').textContent = usersSnap.size;
+      currentUser = user;
+      document.getElementById('admin-email').textContent = user.email;
+      
+      // Load initial data
+      loadAllData();
+    });
 
-    const scoresSnap = await db.collection('scores').get();
-    document.getElementById('total-scores').textContent = scoresSnap.size;
-
-    const start = new Date(); start.setHours(0,0,0,0);
-    const startTS = firebase.firestore.Timestamp.fromDate(start);
-    const todayScoresSnap = await db.collection('scores').where('createdAt', '>=', startTS).get().catch(()=> ({docs:[]}));
-    const activeSet = new Set();
-    todayScoresSnap.forEach(d => { const s = d.data(); if (s.email) activeSet.add(s.email); });
-    document.getElementById('active-today').textContent = activeSet.size;
-
-    const bestSnap = await db.collection('scores').orderBy('wpm', 'desc').limit(1).get().catch(()=> ({docs:[]}));
-    let best = 0;
-    bestSnap.forEach(d => best = d.data().wpm || 0);
-    document.getElementById('best-wpm').textContent = best;
-
-    let adminCount = 0;
-    usersSnap.forEach(u => { if (u.data().role === 'admin') adminCount++; });
-    const userCount = usersSnap.size - adminCount;
-
-    const sevenDaysAgo = new Date(); sevenDaysAgo.setHours(0,0,0,0); sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
-    const sevenTS = firebase.firestore.Timestamp.fromDate(sevenDaysAgo);
-    const recentScoresSnap = await db.collection('scores').where('createdAt', '>=', sevenTS).get().catch(()=> ({docs:[]}));
-
-    const dayMap = {};
-    for (let i=0;i<7;i++){
-      const d = new Date(sevenDaysAgo); d.setDate(sevenDaysAgo.getDate() + i);
-      const key = d.toISOString().slice(0,10);
-      dayMap[key] = {sum:0,count:0};
+    async function loadAllData() {
+      await Promise.all([
+        loadOverviewData(),
+        loadResultsData(),
+        loadLeaderboardData(),
+        loadAnalyticsData(),
+        loadUsersData()
+      ]);
     }
-    recentScoresSnap.forEach(d => {
-      const s = d.data();
-      const ts = s.createdAt ? s.createdAt.toDate() : new Date();
-      const key = ts.toISOString().slice(0,10);
-      if (!dayMap[key]) dayMap[key] = {sum:0,count:0};
-      dayMap[key].sum += (s.wpm || 0);
-      dayMap[key].count += 1;
-    });
-    const labels = Object.keys(dayMap);
-    const avgData = labels.map(k => dayMap[k].count ? Math.round(dayMap[k].sum / dayMap[k].count) : 0);
 
-    const barCtx = document.getElementById('barChart').getContext('2d');
-    if (barChart) barChart.destroy();
-    barChart = new Chart(barCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Users','Scores'],
-        datasets: [{ label: 'Count', data: [usersSnap.size, scoresSnap.size ], backgroundColor: [getColor('--accent'), '#00b894'] }]
-      },
-      options:{responsive:true, plugins:{legend:{display:false}}}
-    });
+    function loadSectionData(section) {
+      switch (section) {
+        case 'overview':
+          loadOverviewData();
+          break;
+        case 'results':
+          loadResultsData();
+          break;
+        case 'leaderboard':
+          loadLeaderboardData();
+          break;
+        case 'analytics':
+          loadAnalyticsData();
+          break;
+        case 'users':
+          loadUsersData();
+          break;
+      }
+    }
 
-    const pieCtx = document.getElementById('pieChart').getContext('2d');
-    if (pieChart) pieChart.destroy();
-    pieChart = new Chart(pieCtx, {
-      type:'pie',
-      data: { labels: ['Admins','Users'], datasets:[{data:[adminCount,userCount], backgroundColor: ['#ff7675','#74b9ff']}]}
-    });
+    async function loadOverviewData() {
+      try {
+        const resultsSnapshot = await db.collection('results').get();
+        const results = resultsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          timestamp: doc.data().timestamp?.toDate()
+        }));
 
-    const lineCtx = document.getElementById('lineChart').getContext('2d');
-    if (lineChart) lineChart.destroy();
-    lineChart = new Chart(lineCtx, {
-      type:'line',
-      data:{ labels, datasets:[{ label:'Avg WPM', data: avgData, tension:0.3, fill:false, borderColor: getColor('--accent') }]},
-      options:{scales:{y:{beginAtZero:true}}}
-    });
-  }
+        // Calculate stats
+        const totalTests = results.length;
+        const uniqueUsers = new Set(results.map(r => r.uid)).size;
+        const avgWpm = Math.round(results.reduce((sum, r) => sum + (r.wpm || 0), 0) / totalTests);
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const testsToday = results.filter(r => r.timestamp && r.timestamp >= today).length;
 
-  async function loadUsers(){
-    const tbody = document.querySelector('#users-table tbody');
-    tbody.innerHTML = '<tr><td colspan="4">Loading…</td></tr>';
-    const snap = await db.collection('users').get().catch(()=> ({docs:[]}));
-    const rows = [];
-    snap.forEach(doc => {
-      const u = doc.data();
-      const created = u.createdAt ? u.createdAt.toDate().toLocaleString() : '-';
-      rows.push(`<tr>
-        <td>${escapeHtml(u.email||'')}</td>
-        <td>${escapeHtml(u.role||'user')}</td>
-        <td>${created}</td>
-        <td>
-          <button onclick="promote('${doc.id}')">Promote</button>
-          <button onclick="demote('${doc.id}')">Demote</button>
-          <button onclick="removeUser('${doc.id}')">Delete</button>
-        </td>
-      </tr>`);
-    });
-    tbody.innerHTML = rows.length ? rows.join('') : '<tr><td colspan="4">No users</td></tr>';
-  }
+        // Update UI
+        document.getElementById('total-tests').textContent = totalTests.toLocaleString();
+        document.getElementById('unique-users').textContent = uniqueUsers.toLocaleString();
+        document.getElementById('avg-wpm').textContent = avgWpm || 0;
+        document.getElementById('tests-today').textContent = testsToday.toLocaleString();
 
-  async function promote(uid){
-    if (!confirm('Promote to admin?')) return;
-    await db.collection('users').doc(uid).update({role:'admin'});
-    await loadUsers(); await loadDashboard();
-  }
-  async function demote(uid){
-    if (!confirm('Demote to user?')) return;
-    await db.collection('users').doc(uid).update({role:'user'});
-    await loadUsers(); await loadDashboard();
-  }
-  async function removeUser(uid){
-    if (!confirm('Delete this user? This cannot be undone.')) return;
-    await db.collection('users').doc(uid).delete();
-    await loadUsers(); await loadDashboard();
-  }
+        // Create charts
+        createActivityChart(results);
+        createModeChart(results);
 
-  async function loadScores(){
-    const tbody = document.querySelector('#scores-table tbody');
-    tbody.innerHTML = '<tr><td colspan="5">Loading…</td></tr>';
-    const snap = await db.collection('scores').orderBy('createdAt','desc').limit(20).get().catch(()=> ({docs:[]}));
-    const rows = [];
-    snap.forEach(doc => {
-      const s = doc.data();
-      const date = s.createdAt ? s.createdAt.toDate().toLocaleString() : '-';
-      rows.push(`<tr>
-        <td>${escapeHtml(s.email||'')}</td>
-        <td>${s.wpm||0}</td>
-        <td>${s.accuracy||0}%</td>
-        <td>${s.duration||0}s</td>
-        <td>${date}</td>
-      </tr>`);
-    });
-    tbody.innerHTML = rows.length ? rows.join('') : '<tr><td colspan="5">No scores</td></tr>';
-  }
+      } catch (error) {
+        console.error('Error loading overview data:', error);
+      }
+    }
 
-  async function loadLeaderboard(){
-    const tbody = document.querySelector('#leaderboard-table tbody');
-    tbody.innerHTML = '<tr><td colspan="5">Loading…</td></tr>';
-    const snap = await db.collection('scores').orderBy('wpm','desc').limit(100).get().catch(()=> ({docs:[]}));
-    const rows = [];
-    let rank=1;
-    snap.forEach(doc => {
-      const s = doc.data();
-      const date = s.createdAt ? s.createdAt.toDate().toLocaleDateString() : '-';
-      rows.push(`<tr>
-        <td>${rank++}</td>
-        <td>${escapeHtml(s.email||'')}</td>
-        <td>${s.wpm||0}</td>
-        <td>${s.accuracy||0}%</td>
-        <td>${date}</td>
-      </tr>`);
-    });
-    tbody.innerHTML = rows.length ? rows.join('') : '<tr><td colspan="5">Empty</td></tr>';
-  }
+    async function loadResultsData() {
+      try {
+        const snapshot = await db.collection('results')
+          .orderBy('timestamp', 'desc')
+          .limit(50)
+          .get();
 
-  function escapeHtml(text){
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-  function getColor(cssVar){
-    return getComputedStyle(document.body).getPropertyValue(cssVar).trim();
-  }
-</script>
+        const tbody = document.getElementById('results-tbody');
+        tbody.innerHTML = '';
+
+        if (snapshot.empty) {
+          tbody.innerHTML = '<tr><td colspan="7" class="loading">No results found</td></tr>';
+          return;
+        }
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const row = document.createElement('tr');
+          
+          const date = data.timestamp?.toDate();
+          const formattedDate = date ? date.toLocaleDateString() + ' ' + date.toLocaleTimeString() : 'Unknown';
+          
+          row.innerHTML = `
+            <td>${maskUserId(data.uid)}</td>
+            <td><strong>${data.wpm || 0}</strong></td>
+            <td>${data.accuracy || 0}%</td>
+            <td>${data.duration || 0}s</td>
+            <td><span class="status-badge status-${getDifficultyColor(data.difficulty)}">${data.difficulty || 'Unknown'}</span></td>
+            <td>${data.mode || 'passage'}</td>
+            <td>${formattedDate}</td>
+          `;
+          
+          tbody.appendChild(row);
+        });
+
+      } catch (error) {
+        console.error('Error loading results:', error);
+        document.getElementById('results-tbody').innerHTML = 
+          '<tr><td colspan="7" class="loading">Error loading results</td></tr>';
+      }
+    }
+
+    async function loadLeaderboardData() {
+      try {
+        const snapshot = await db.collection('results')
+          .orderBy('wpm', 'desc')
+          .limit(100)
+          .get();
+
+        const tbody = document.getElementById('leaderboard-tbody');
+        tbody.innerHTML = '';
+
+        if (snapshot.empty) {
+          tbody.innerHTML = '<tr><td colspan="7" class="loading">No results found</td></tr>';
+          return;
+        }
+
+        let rank = 1;
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const row = document.createElement('tr');
+          
+          const date = data.timestamp?.toDate();
+          const formattedDate = date ? date.toLocaleDateString() : 'Unknown';
+          
+          row.innerHTML = `
+            <td><strong>#${rank}</strong></td>
+            <td>${maskUserId(data.uid)}</td>
+            <td><strong>${data.wpm || 0}</strong></td>
+            <td>${data.accuracy || 0}%</td>
+            <td>${data.duration || 0}s</td>
+            <td>${data.mode || 'passage'}</td>
+            <td>${formattedDate}</td>
+          `;
+          
+          tbody.appendChild(row);
+          rank++;
+        });
+
+      } catch (error) {
+        console.error('Error loading leaderboard:', error);
+      }
+    }
+
+    async function loadAnalyticsData() {
+      try {
+        const snapshot = await db.collection('results').get();
+        const results = snapshot.docs.map(doc => doc.data());
+
+        createWpmDistributionChart(results);
+        createAccuracyDistributionChart(results);
+        createTrendsChart(results);
+
+      } catch (error) {
+        console.error('Error loading analytics:', error);
+      }
+    }
+
+    async function loadUsersData() {
+      try {
+        const snapshot = await db.collection('results').get();
+        const results = snapshot.docs.map(doc => doc.data());
+
+        // Most active user
+        const userCounts = {};
+        results.forEach(r => {
+          userCounts[r.uid] = (userCounts[r.uid] || 0) + 1;
+        });
+        const mostActive = Object.entries(userCounts).sort((a, b) => b[1] - a[1])[0];
+        
+        // Highest WPM
+        const highestWpm = Math.max(...results.map(r => r.wpm || 0));
+        
+        // Best accuracy
+        const bestAccuracy = Math.max(...results.map(r => r.accuracy || 0));
+
+        document.getElementById('most-active-user').textContent = 
+          mostActive ? `${maskUserId(mostActive[0])} (${mostActive[1]} tests)` : 'N/A';
+        document.getElementById('highest-wpm').textContent = highestWpm + ' WPM';
+        document.getElementById('best-accuracy').textContent = bestAccuracy + '%';
+
+      } catch (error) {
+        console.error('Error loading users data:', error);
+      }
+    }
+
+    function createActivityChart(results) {
+      const ctx = document.getElementById('activityChart');
+      if (charts.activity) charts.activity.destroy();
+
+      // Group by date
+      const dailyData = {};
+      const last30Days = [];
+      for (let i = 29; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const key = date.toDateString();
+        last30Days.push(key);
+        dailyData[key] = 0;
+      }
+
+      results.forEach(result => {
+        if (result.timestamp) {
+          const key = result.timestamp.toDateString();
+          if (dailyData.hasOwnProperty(key)) {
+            dailyData[key]++;
+          }
+        }
+      });
+
+      charts.activity = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: last30Days.map(date => new Date(date).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})),
+          datasets: [{
+            label: 'Tests',
+            data: last30Days.map(date => dailyData[date]),
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function createModeChart(results) {
+      const ctx = document.getElementById('modeChart');
+      if (charts.mode) charts.mode.destroy();
+
+      const modes = {};
+      results.forEach(result => {
+        const mode = result.mode || 'passage';
+        modes[mode] = (modes[mode] || 0) + 1;
+      });
+
+      charts.mode = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(modes),
+          datasets: [{
+            data: Object.values(modes),
+            backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#ef4444'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom' }
+          }
+        }
+      });
+    }
+
+    function createWpmDistributionChart(results) {
+      const ctx = document.getElementById('wpmDistChart');
+      if (charts.wpmDist) charts.wpmDist.destroy();
+
+      const ranges = {
+        '0-20': 0, '21-40': 0, '41-60': 0, '61-80': 0, '81-100': 0, '100+': 0
+      };
+
+      results.forEach(result => {
+        const wpm = result.wpm || 0;
+        if (wpm <= 20) ranges['0-20']++;
+        else if (wpm <= 40) ranges['21-40']++;
+        else if (wpm <= 60) ranges['41-60']++;
+        else if (wpm <= 80) ranges['61-80']++;
+        else if (wpm <= 100) ranges['81-100']++;
+        else ranges['100+']++;
+      });
+
+      charts.wpmDist = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(ranges),
+          datasets: [{
+            label: 'Number of Tests',
+            data: Object.values(ranges),
+            backgroundColor: '#2563eb',
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function createAccuracyDistributionChart(results) {
+      const ctx = document.getElementById('accDistChart');
+      if (charts.accDist) charts.accDist.destroy();
+
+      const ranges = {
+        '0-50%': 0, '51-70%': 0, '71-85%': 0, '86-95%': 0, '96-100%': 0
+      };
+
+      results.forEach(result => {
+        const acc = result.accuracy || 0;
+        if (acc <= 50) ranges['0-50%']++;
+        else if (acc <= 70) ranges['51-70%']++;
+        else if (acc <= 85) ranges['71-85%']++;
+        else if (acc <= 95) ranges['86-95%']++;
+        else ranges['96-100%']++;
+      });
+
+      charts.accDist = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(ranges),
+          datasets: [{
+            label: 'Number of Tests',
+            data: Object.values(ranges),
+            backgroundColor: '#10b981',
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function createTrendsChart(results) {
+      const ctx = document.getElementById('trendsChart');
+      if (charts.trends) charts.trends.destroy();
+
+      // Sort results by date and group by week
+      const sortedResults = results
+        .filter(r => r.timestamp)
+        .sort((a, b) => a.timestamp - b.timestamp);
+
+      const weeklyData = {};
+      sortedResults.forEach(result => {
+        const date = new Date(result.timestamp);
+        const weekStart = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
+        const weekKey = weekStart.toDateString();
+        
+        if (!weeklyData[weekKey]) {
+          weeklyData[weekKey] = { wpm: [], accuracy: [] };
+        }
+        weeklyData[weekKey].wpm.push(result.wpm || 0);
+        weeklyData[weekKey].accuracy.push(result.accuracy || 0);
+      });
+
+      const weeks = Object.keys(weeklyData).sort();
+      const avgWpm = weeks.map(week => {
+        const wpms = weeklyData[week].wpm;
+        return wpms.reduce((sum, wpm) => sum + wpm, 0) / wpms.length;
+      });
+      const avgAccuracy = weeks.map(week => {
+        const accs = weeklyData[week].accuracy;
+        return accs.reduce((sum, acc) => sum + acc, 0) / accs.length;
+      });
+
+      charts.trends = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: weeks.map(week => new Date(week).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})),
+          datasets: [{
+            label: 'Average WPM',
+            data: avgWpm,
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            yAxisID: 'y'
+          }, {
+            label: 'Average Accuracy (%)',
+            data: avgAccuracy,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            yAxisID: 'y1'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              title: { display: true, text: 'WPM' }
+            },
+            y1: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              title: { display: true, text: 'Accuracy (%)' },
+              grid: { drawOnChartArea: false }
+            }
+          }
+        }
+      });
+    }
+
+    // Utility functions
+    function maskUserId(uid) {
+      return uid ? uid.substring(0, 8) + '...' : 'Anonymous';
+    }
+
+    function getDifficultyColor(difficulty) {
+      switch (difficulty?.toLowerCase()) {
+        case 'beginner': return 'success';
+        case 'intermediate': return 'warning';
+        case 'advanced': return 'danger';
+        default: return 'secondary';
+      }
+    }
+
+    function formatNumber(num) {
+      return num ? num.toLocaleString() : '0';
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp) return 'Unknown';
+      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    }
+  </script>
 </body>
 </html>
-
