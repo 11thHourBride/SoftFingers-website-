@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale1.0">
   <title>SoftFingers - Professional Typing Lessons</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="canonical" href="https://softfingers-typing.com/lessons.html">
@@ -208,11 +209,11 @@
 
     .passage {
       background: var(--bg-card);
-      padding: 2rem;
+      padding: 1.5rem;
       border-radius: var(--radius-md);
       font-family: 'Monaco', 'Consolas', monospace;
       font-size: 1.5rem;
-      line-height: 1.8;
+      line-height: 1.3;
       margin-bottom: 1.5rem;
       border: 2px solid var(--border-subtle);
       max-height: 120px;
@@ -220,8 +221,8 @@
 
     .typing-input {
       width: 100%;
-      padding: 1.5rem;
-      font-size: 1.1rem;
+      padding: 1.3rem;
+      font-size: 1.3rem;
       background: var(--bg-input);
       border: 2px solid var(--border-subtle);
       border-radius: var(--radius-md);
@@ -277,6 +278,12 @@
     .btn:hover {
       transform: translateY(-1px);
       box-shadow: var(--shadow-sm);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .stat-card {
@@ -357,27 +364,6 @@
     .key.xwide { min-width: 6rem; }
     .key.xxwide { min-width: 8rem; }
     .key.space { min-width: 20rem; }
-
-    /* Locked Content */
-    .locked-section {
-      background: var(--bg-secondary);
-      border: 2px dashed var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 3rem;
-      text-align: center;
-      opacity: 0.6;
-    }
-
-    .lock-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      opacity: 0.5;
-    }
-
-    .lock-message {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-    }
 
     /* Modal Styles */
     .modal {
@@ -499,18 +485,64 @@
       }
     }
 
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Exercise System Styles */
+    .completed {
+      border: 2px solid #4ade80 !important;
+      background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.1)) !important;
+    }
+    
+    .locked {
+      border: 2px solid #6b7280 !important;
+      background: linear-gradient(135deg, rgba(107, 114, 128, 0.1), rgba(75, 85, 99, 0.1)) !important;
+    }
+
     /* Hidden class */
     .hidden {
       display: none;
     }
+ img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  aspect-ratio: 5 / 4;        /* consistent rectangle */
+  object-fit: cover;
+  border-radius: 20px;        /* rounded rectangle */
+  display: block;
+  margin: 0 auto;
+
+  /* initial hidden state */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+img.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+img:hover {
+  transform: scale(1.05) translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+}
+
+
+
+
+
   </style>
 </head>
 <body>
   <!-- Header -->
   <div class="header">
     <div class="header-content">
-      <h1>Professional Typing Lessons</h1>
-      <div class="subtitle">Master touch typing with our comprehensive training program 🚀</div>
+      <h1>SoftFingers Professional Typing Lessons</h1>
+      <div class="subtitle">Master touch typing with our comprehensive training program</div>
     </div>
   </div>
 
@@ -522,20 +554,7 @@
       <button class="tab" data-level="advanced">Advanced</button>
     </div>
 
-    <!-- Beginner Section -->
-    <div class="section fade-in" id="section-beginner">
-      <!-- Progress Section -->
-      <div class="progress-section">
-        <div class="progress-header">
-          <span class="progress-text" id="progress-text">Progress: 0 / 120 lessons passed</span>
-          <button class="btn btn-secondary" id="progress-btn">📊 View History</button>
-        </div>
-        <div class="progress-bar-container">
-          <div class="progress-bar" id="progress-bar"></div>
-        </div>
-      </div>
-
-      <!-- Introduction Card -->
+       <!-- Introduction Card -->
       <div class="card slide-up">
         <h2>Introduction to Touch Typing</h2>
         <p style="margin-bottom: 2rem; font-size: 1.1rem; color: var(--text-secondary);">
@@ -550,13 +569,16 @@
               <li>Keep feet flat on the floor with monitor at eye level</li>
               <li>Maintain slightly raised wrists without resting them on the keyboard</li>
               <li>Keep forearms parallel to the floor and take regular breaks</li>
+              <img src="correcting-your-sitting-posture-1.jpg" alt="Sitting Posture" />
             </ul>
+            
           </div>
           <div>
             <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Hand Positioning</h3>
             <p style="color: var(--text-secondary); line-height: 1.8;">
               Position your hands on the <strong>Home Row</strong>: <strong>A S D F</strong> (left hand) and <strong>J K L ;</strong> (right hand). 
               Keep your thumbs on the <strong>Space</strong> bar and always return to the home row position after pressing each key.
+              <img src="keybd_hand_position.jpg" alt="Hand Positioning" />
             </p>
           </div>
         </div>
@@ -574,8 +596,8 @@
       <!-- Lesson Requirements -->
       <div class="card slide-up">
         <h2>Lesson Requirements</h2>
-        <div style="background: #8d52d1; color: white; padding: 1.5rem; border-radius: var(--radius-md); text-align: center; font-weight: 600;">
-          Pass Requirement: ≥ 30 WPM and ≥ 90% Accuracy | Each lesson duration: 120 seconds
+        <div style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);; color: white; padding: 1.5rem; border-radius: var(--radius-md); text-align: center; font-weight: 600;">
+          Pass Requirement: ≥ 30 WPM and ≥ 90% Accuracy | 30 exercises per lesson
         </div>
       </div>
 
@@ -587,21 +609,11 @@
             <div class="lesson-timestamp" id="lesson-timestamp"></div>
           </div>
         </div>
-
-        <div class="passage" id="passage">
-          Welcome to SoftFingers Professional Typing Lessons. Select a lesson from the grid below to start your typing journey.
-        </div>
-
-        <input 
-          id="typing-input" 
-          type="text" 
-          class="typing-input" 
-          placeholder="Start typing here when lesson begins…" 
-          autocomplete="off" 
-          spellcheck="false"
-        />
-
-        <div class="lesson-controls">
+               
+      
+<!-- Virtual Keyboard -->
+      <div class="keyboard-section slide-up">
+          <div class="lesson-controls">
           <div class="control-group">
             <button class="btn btn-secondary" id="prev-btn">← Previous</button>
             <button class="btn btn-secondary" id="next-btn">Next →</button>
@@ -622,13 +634,24 @@
             <div class="stat-label">Accuracy</div>
             <div class="stat-value" id="stat-acc">100%</div>
           </div>
+          
         </div>
       </div>
-
-      <!-- Virtual Keyboard -->
-      <div class="keyboard-section slide-up">
+      
         <div class="card">
           <h2 style="text-align: center; margin-bottom: 2rem;">Live Keyboard Guide</h2>
+           <div class="passage" id="passage">
+          Welcome to SoftFingers Professional Typing Lessons. Select a lesson from the grid below to start your typing journey with 30 exercises per lesson.
+        </div>
+        
+          <input 
+          id="typing-input" 
+          type="text" 
+          class="typing-input" 
+          placeholder="Start typing here when lesson begins…" 
+          autocomplete="off" 
+          spellcheck="false"
+        />
           <div class="keyboard-container">
             <div class="keyboard">
               <!-- Row 1 -->
@@ -711,29 +734,29 @@
                 <div class="key wide" data-code="ContextMenu">Menu</div>
                 <div class="key wide" data-code="ControlRight">Ctrl</div>
               </div>
-            </div>
+             </div>
           </div>
         </div>
       </div>
+      <!-- Beginner Section -->
+    <div class="section fade-in" id="section-beginner">
+      <!-- Progress Section -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <span class="progress-text" id="progress-text">Progress: 0 / 12 lessons | 0 / 300 exercises</span>
+          <button class="btn btn-secondary" id="progress-btn">📊 View History</button>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
 
-      <!-- Lessons Grid Placeholder -->
+             
+      <!-- Lessons Grid -->
       <div class="card slide-up">
         <h2>Lesson Selection</h2>
-        <div id="lessons-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+        <div id="lessons-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;">
           <!-- Lessons will be populated by JavaScript -->
-          <div class="stat-card" style="cursor: pointer;">
-            <div class="stat-label">Lesson 1</div>
-            <div class="stat-value" style="font-size: 1rem;">Home Row Keys</div>
-          </div>
-          <div class="stat-card" style="cursor: pointer;">
-            <div class="stat-label">Lesson 2</div>
-            <div class="stat-value" style="font-size: 1rem;">Basic Words</div>
-          </div>
-          <div class="stat-card" style="cursor: pointer;">
-            <div class="stat-label">Lesson 3</div>
-            <div class="stat-value" style="font-size: 1rem;">Numbers & Symbols</div>
-          </div>
-          <!-- More lessons would be added here -->
         </div>
       </div>
 
@@ -747,23 +770,27 @@
 
     <!-- Intermediate Section -->
     <div class="section hidden" id="section-intermediate">
-      <div class="locked-section">
-        <div class="lock-icon">🔒</div>
-        <h2>Intermediate Lessons</h2>
-        <p class="lock-message">
-          Complete all Beginner lessons with ≥ 30 WPM & ≥ 90% accuracy to unlock Intermediate level.
-        </p>
+      <div class="card">
+        <div style="text-align: center; padding: 3rem;">
+          <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">🔒</div>
+          <h2>Intermediate Lessons</h2>
+          <p style="color: var(--text-muted); font-size: 1.1rem;">
+            Complete all Beginner lessons with ≥ 30 WPM & ≥ 90% accuracy to unlock Intermediate level.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- Advanced Section -->
     <div class="section hidden" id="section-advanced">
-      <div class="locked-section">
-        <div class="lock-icon">🔒</div>
-        <h2>Advanced Lessons</h2>
-        <p class="lock-message">
-          Complete all Intermediate lessons to unlock Advanced level training.
-        </p>
+      <div class="card">
+        <div style="text-align: center; padding: 3rem;">
+          <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">🔒</div>
+          <h2>Advanced Lessons</h2>
+          <p style="color: var(--text-muted); font-size: 1.1rem;">
+            Complete all Intermediate lessons to unlock Advanced level training.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -781,7 +808,7 @@
       <span class="close" id="close-progress">&times;</span>
       <h2>📊 Progress History</h2>
       <div class="progress-bar-container" style="margin: 1rem 0;">
-        <div class="progress-bar" style="width: 25%;"></div>
+        <div class="progress-bar" style="width: 0%;"></div>
       </div>
       <p id="progress-details">Track your learning progress and see detailed statistics for each completed lesson.</p>
       <div id="progress-list">
@@ -791,409 +818,540 @@
   </div>
 
   <script>
-    // Tab switching functionality
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        // Remove active class from all tabs
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        // Add active class to clicked tab
-        tab.classList.add('active');
-        
-        // Hide all sections
-        document.querySelectorAll('.section').forEach(section => {
-          section.classList.add('hidden');
-        });
-        
-        // Show selected section
-        const level = tab.getAttribute('data-level');
-        document.getElementById(`section-${level}`).classList.remove('hidden');
-      });
-    });
-
-    // Progress modal functionality
-    const progressBtn = document.getElementById('progress-btn');
-    const progressModal = document.getElementById('progress-modal');
-    const closeProgress = document.getElementById('close-progress');
-
-    progressBtn.addEventListener('click', () => {
-      progressModal.style.display = 'block';
-    });
-
-    closeProgress.addEventListener('click', () => {
-      progressModal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (e) => {
-      if (e.target === progressModal) {
-        progressModal.style.display = 'none';
-      }
-    });
-
-    // Keyboard highlighting functionality
-    const keys = document.querySelectorAll('.key');
-    
-    // Simulate key highlighting for demonstration
-    function highlightKey(keyCode) {
-      keys.forEach(key => key.classList.remove('active'));
-      const targetKey = document.querySelector(`[data-code="${keyCode}"]`);
-      if (targetKey) {
-        targetKey.classList.add('active');
-        setTimeout(() => targetKey.classList.remove('active'), 500);
-      }
-    }
-
-    // Typing input functionality
-    const typingInput = document.getElementById('typing-input');
-    const passage = document.getElementById('passage');
-    
-    typingInput.addEventListener('keydown', (e) => {
-      highlightKey(e.code);
-    });
-
-    // Lesson navigation
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const retryBtn = document.getElementById('retry-btn');
-    
-    prevBtn.addEventListener('click', () => {
-      console.log('Previous lesson');
-      // Add previous lesson logic
-    });
-    
-    nextBtn.addEventListener('click', () => {
-      console.log('Next lesson');
-      // Add next lesson logic
-    });
-    
-    retryBtn.addEventListener('click', () => {
-      typingInput.value = '';
-      document.getElementById('timer').textContent = '120s';
-      document.getElementById('stat-wpm').textContent = '0';
-      document.getElementById('stat-acc').textContent = '100%';
-    });
-
-    // Sample lesson data
-    const lessons = [
-      { id: 1, name: 'Home Row Keys', text: 'asdf jkl; asdf jkl; home row practice' },
-      { id: 2, name: 'Basic Words', text: 'the quick brown fox jumps over lazy dog' },
-      { id: 3, name: 'Numbers', text: '1234567890 practice typing numbers quickly' },
-      { id: 4, name: 'Punctuation', text: 'Hello, world! How are you today? Fine, thanks.' },
-      { id: 5, name: 'Mixed Practice', text: 'Typing 123 words per minute requires practice!' }
-    ];
-
-    // Populate lessons grid
-    const lessonsGrid = document.getElementById('lessons-grid');
-    lessons.forEach((lesson, index) => {
-      const lessonCard = document.createElement('div');
-      lessonCard.className = 'stat-card';
-      lessonCard.style.cursor = 'pointer';
-      lessonCard.innerHTML = `
-        <div class="stat-label">Lesson ${lesson.id}</div>
-        <div class="stat-value" style="font-size: 1rem;">${lesson.name}</div>
-      `;
-      
-      lessonCard.addEventListener('click', () => {
-        document.getElementById('lesson-title').textContent = `Lesson ${lesson.id}: ${lesson.name}`;
-        document.getElementById('lesson-timestamp').textContent = new Date().toLocaleTimeString();
-        document.getElementById('passage').textContent = lesson.text;
-        typingInput.focus();
-      });
-      
-      lessonsGrid.appendChild(lessonCard);
-    });
-
-    // Timer functionality
+    // Global state
+    let currentLessonIndex = 0;
+    let currentExerciseIndex = 0;
+    let startTime = null;
+    let timerInterval = null;
     let timeLeft = 120;
-    let timerInterval;
     let isTyping = false;
 
-    function startTimer() {
-      if (!isTyping) {
-        isTyping = true;
-        timerInterval = setInterval(() => {
-          timeLeft--;
-          document.getElementById('timer').textContent = timeLeft + 's';
-          
-          if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            typingInput.disabled = true;
-            alert('Time\'s up! Check your results.');
-          }
-        }, 1000);
-      }
-    }
-
-    typingInput.addEventListener('input', () => {
-      startTimer();
-      updateStats();
-    });
-
-    // Calculate and update stats
-    function updateStats() {
-      const typed = typingInput.value;
-      const target = passage.textContent;
-      
-      if (typed.length === 0) return;
-      
-      // Calculate accuracy
-      let correct = 0;
-      for (let i = 0; i < typed.length; i++) {
-        if (typed[i] === target[i]) correct++;
-      }
-      
-      const accuracy = Math.round((correct / typed.length) * 100);
-      document.getElementById('stat-acc').textContent = accuracy + '%';
-      
-      // Calculate WPM
-      const wordsTyped = typed.length / 5;
-      const timeElapsed = (120 - timeLeft) / 60;
-      const wpm = timeElapsed > 0 ? Math.round(wordsTyped / timeElapsed) : 0;
-      document.getElementById('stat-wpm').textContent = wpm;
-      
-      // Update progress bar (mock calculation)
-      const progress = Math.min((typed.length / target.length) * 100, 100);
-      document.getElementById('progress-bar').style.width = progress + '%';
-    }
-
-    // Initialize animations
-    setTimeout(() => {
-      document.querySelectorAll('.slide-up').forEach((el, index) => {
-        setTimeout(() => el.style.animation = 'slideUp 0.5s ease forwards', index * 100);
-      });
-    }, 100);
-
-    // Responsive keyboard handling
-    function adjustKeyboardForMobile() {
-      if (window.innerWidth < 768) {
-        document.querySelectorAll('.key.space').forEach(key => {
-          key.style.minWidth = '10rem';
-        });
-      }
-    }
-
-    window.addEventListener('resize', adjustKeyboardForMobile);
-    adjustKeyboardForMobile();
-
-    // Enhanced typing functionality with character-by-character tracking
-    let currentLesson = 0;
-    let startTime = null;
-    let errors = 0;
-    let totalTyped = 0;
-    let lessonCompleted = false;
-
-    // Enhanced lesson data with comprehensive keyboard coverage
+    // Enhanced lessons data
     const enhancedLessons = [
-      // Home Row Lessons (1-4)
+      // Lesson 1: Home Row Fundamentals (30 exercises)
       {
-        id: 1,
-        name: 'Home Row Basics',
-        text: 'asdf jkl; asdf jkl; sad jak fall jak sad fall ask dad asks lads fads jade jaded',
+       id:1,
+        name: 'Home Row Fundamentals',
+        category: 'home-row',
+        target_wpm: 20,
+        description: 'Master the foundation keys of the Left Hand  A S D F',
+        exercises:[
+          'a s d f',
+'s d f a',
+'d f a s',
+'f a s d',
+'a s a s',
+'a s d a',
+'a s d f',
+'a s a f',
+'a s d f a',
+'a d f a s',
+'a f s a s',
+'a f d a f',
+'s a s d',
+'d a f s',
+'f s a d',
+'d f d a',
+'s a f d',
+'f d s a',
+'a d s f',
+'s f a s',
+'d a s f',
+'f s d a',
+'a f d s',
+'s a d f',
+'d s f a',
+'f a d s',
+'a d a f',
+'s f s a',
+'d f d s',
+'f s f a',
+]},
+        {id:2,
+        name: 'Home Row Fundamentals',
+        category: 'home-row',
+        target_wpm: 20,
+        description: 'Master the foundation keys of the Right Hand  J K L ;',
+        exercises:[
+          'j k l ;',
+'k l ; j',
+'l ; j k',
+'; j k l',
+'j k j k',
+'j k l j',
+'j k l ;',
+'j k j ;',
+'j k l ; j',
+'j l ; j k',
+'j ; k j k',
+'j ; l j ;',
+'k j k l',
+'l j ; k',
+'; k j l',
+'l ; l j',
+'k j ; l',
+'; l k j',
+'j l k ;',
+'k ; j k',
+'l j k ;',
+'; k l j',
+'j ; l k',
+'k j l ;',
+'l k ; j',
+'; j l k',
+'j l j ;',
+'k ; k j',
+'l ; l k',
+'; k ; j',
+]},
+        {id: 3,
+        name: 'Home Row Fundamentals',
         category: 'home-row',
         target_wpm: 25,
-        description: 'Master the home row keys A S D F J K L ;'
-      },
-      {
-        id: 2,
-        name: 'Home Row Words',
-        text: 'ask sad fall dad lads fads jade hash dash flask glass flash shall slash;',
-        category: 'home-row',
-        target_wpm: 28,
-        description: 'Form words using only home row keys'
-      },
-      {
-        id: 3,
-        name: 'Home Row Sentences',
-        text: 'Dad asks a sad lad; A lass had a flask; Lads dash; A dad has a glass.',
-        category: 'home-row',
-        target_wpm: 30,
-        description: 'Complete sentences with home row mastery'
+        description: 'Master the foundation keys A S D F J K L ;',
+        exercises: [
+          'asdf jkl; asdf jkl; asdf jkl;',
+          'fff jjj fff jjj fff jjj fff jjj',
+          'ddd kkk ddd kkk ddd kkk ddd kkk',
+          'sss lll sss lll sss lll sss lll',
+          'aaa ;;; aaa ;;; aaa ;;; aaa ;;;',
+          'fd jk fd jk fd jk fd jk fd jk',
+          'sa l; sa l; sa l; sa l; sa l;',
+          'af jk af jk af jk af jk af jk',
+          'ds kl ds kl ds kl ds kl ds kl',
+          'ask ask ask ask ask ask ask',
+          'lad lad lad lad lad lad lad',
+          'sad sad sad sad sad sad sad',
+          'fall fall fall fall fall fall',
+          'ask a lad; ask a lad; ask a lad;',
+          'a sad dad; a sad dad; a sad dad;',
+          'fall ask fall ask fall ask',
+          'lads ask lads; lads ask lads;',
+          'a flask; a flask; a flask;',
+          'dad has a flask; dad has a flask;',
+          'sad lads fall; sad lads fall;',
+          'ask dad; fall lads; ask dad;',
+          'a lass has a flask; a lass has',
+          'falls ask lads; falls ask lads;',
+          'flash flash flash flash flash',
+          'slash slash slash slash slash',
+          'dads ask; lads fall; dads ask;',
+          'a sad lass asks dad; asks dad;',
+          'fall; ask; sad; lads; flask;',
+          'dad asks a sad lass; sad lass;',
+          'ask lads; fall flask; sad dads;'
+        ]
       },
       {
         id: 4,
-        name: 'Home Row Challenge',
-        text: 'Flask glass slash dash; Lads ask dad; A sad lass had a jade glass; Dad shall dash.',
+        name: 'Home Row Mastery',
         category: 'home-row',
-        target_wpm: 32,
-        description: 'Advanced home row typing fluency'
+        target_wpm: 28,
+        description: 'Advanced home row combinations and words',
+        exercises: [
+          'glass glass glass glass glass',
+          'class class class class class',
+          'shall shall shall shall shall',
+          'lass lass lass lass lass lass',
+          'flask flask flask flask flask',
+          'slash slash slash slash slash',
+          'flash flash flash flash flash',
+          'ask a class; ask a class;',
+          'a glass flask; a glass flask;',
+          'shall ask; shall fall; shall;',
+          'dad has a glass; has a glass;',
+          'a lass asks; a lass asks;',
+          'flash; slash; glass; class;',
+          'lads shall ask; lads shall ask;',
+          'a sad class falls; class falls;',
+          'ask dads; slash glass; ask dads;',
+          'shall flash; shall slash; shall;',
+          'a flask has glass; has glass;',
+          'sad lass asks dad; asks dad;',
+          'fall flash; ask glass; fall;',
+          'dads shall ask a lass; ask lass;',
+          'glass flask falls; flask falls;',
+          'ask; fall; flash; slash; glass;',
+          'a class shall ask; shall ask;',
+          'sad dads fall; lads flash; fall;',
+          'flask glass; slash ask; glass;',
+          'shall a lass ask dad? ask dad?',
+          'flash glass slash; glass slash;',
+          'ask class; fall flask; sad glass;',
+          'a glass flask shall fall; shall;'
+        ]
       },
-      
-      // Upper Row Lessons (5-8)
       {
         id: 5,
-        name: 'Upper Row Introduction',
-        text: 'qwer tyui op qwer tyui op quite write route tire your quit port topic',
+        name: 'Upper Row Q W E R',
         category: 'upper-row',
         target_wpm: 26,
-        description: 'Learn upper row keys Q W E R T Y U I O P'
+        description: 'Learn Q W E R keys with home row',
+        exercises: [
+          'qqq www eee rrr qqq www eee rrr',
+          'qwe qwe qwe qwe qwe qwe qwe qwe',
+          'req req req req req req req req',
+          'wer wer wer wer wer wer wer wer',
+          'qwer qwer qwer qwer qwer qwer',
+          'were were were were were were',
+          'wear wear wear wear wear wear',
+          'dear dear dear dear dear dear',
+          'read read read read read read',
+          'real real real real real real',
+          'dale dale dale dale dale dale',
+          'ware ware ware ware ware ware',
+          'earl earl earl earl earl earl',
+          'rade rade rade rade rade rade',
+          'we are; we are; we are; we are;',
+          'read a dear; read a dear; read;',
+          'wear real; wear real; wear real;',
+          'a dear earl; a dear earl; earl;',
+          'we read; we wear; we read; read;',
+          'earl reads; earl reads; earl;',
+          'dear dale wears; dale wears;',
+          'we are real; we are real; real;',
+          'a dear reads; a dear reads;',
+          'wear red; read dear; wear red;',
+          'earl wears; dale reads; earl;',
+          'we read a dear earl; dear earl;',
+          'real ware; dear read; real ware;',
+          'a red earl reads; earl reads;',
+          'dear dale; real earl; dear dale;',
+          'we wear real red; wear real red;'
+        ]
       },
       {
         id: 6,
-        name: 'Upper Row Words',
-        text: 'quit write route tire your port topic quite power tower outer paper writer',
+        name: 'Upper Row T Y U I O P',
         category: 'upper-row',
         target_wpm: 30,
-        description: 'Practice words using upper row keys'
+        description: 'Complete upper row key mastery',
+        exercises: [
+          'ttt yyy uuu iii ooo ppp ttt yyy',
+          'tyu tyu tyu tyu tyu tyu tyu tyu',
+          'iop iop iop iop iop iop iop iop',
+          'tyui tyui tyui tyui tyui tyui',
+          'yiop yiop yiop yiop yiop yiop',
+          'quit quit quit quit quit quit',
+          'your your your your your your',
+          'port port port port port port',
+          'type type type type type type',
+          'troy troy troy troy troy troy',
+          'pity pity pity pity pity pity',
+          'pour pour pour pour pour pour',
+          'tour tour tour tour tour tour',
+          'riot riot riot riot riot riot',
+          'port your; port your; port your;',
+          'type a quit; type a quit; type;',
+          'your port; tour pity; your port;',
+          'pour troy; riot port; pour troy;',
+          'quit your tour; quit your tour;',
+          'type port; your riot; type port;',
+          'troy pours; pity quits; troy;',
+          'your tour port; your tour port;',
+          'riot type; pour quit; riot type;',
+          'port pity troy; port pity troy;',
+          'quit your riot; quit your riot;',
+          'type tour pours; type tour pours;',
+          'your pity port; your pity port;',
+          'riot quits; troy tours; riot;',
+          'pour type; quit tour; pour type;',
+          'your troy port quits; port quits;'
+        ]
       },
       {
         id: 7,
-        name: 'Upper Row Sentences',
-        text: 'Your writer quit; The tower has power; Route to the port; Write a proper topic.',
-        category: 'upper-row',
-        target_wpm: 34,
-        description: 'Form sentences with upper row mastery'
+        name: 'Bottom Row Z X C V',
+        category: 'bottom-row',
+        target_wpm: 24,
+        description: 'Learn Z X C V keys',
+        exercises: [
+          'zzz xxx ccc vvv zzz xxx ccc vvv',
+          'zxc zxc zxc zxc zxc zxc zxc zxc',
+          'xcv xcv xcv xcv xcv xcv xcv xcv',
+          'zxcv zxcv zxcv zxcv zxcv zxcv',
+          'cave cave cave cave cave cave',
+          'coax coax coax coax coax coax',
+          'vex vex vex vex vex vex vex vex',
+          'czar czar czar czar czar czar',
+          'zeal zeal zeal zeal zeal zeal',
+          'zero zero zero zero zero zero',
+          'axis axis axis axis axis axis',
+          'civic civic civic civic civic',
+          'voice voice voice voice voice',
+          'crave crave crave crave crave',
+          'cave zero; cave zero; cave zero;',
+          'vex czar; coax voice; vex czar;',
+          'zero axis; cave civic; zero axis;',
+          'crave zeal; voice coax; crave;',
+          'czar caves; zero voices; czar;',
+          'vex civic; coax cave; vex civic;',
+          'zero craves; axis voices; zero;',
+          'cave czar; vex zeal; cave czar;',
+          'civic voice; coax zero; civic;',
+          'crave axis; cave vex; crave axis;',
+          'zero civic czar; zero civic czar;',
+          'vex voice; coax crave; vex voice;',
+          'cave axis; czar zero; cave axis;',
+          'civic craves; voice coax; civic;',
+          'zero vex; cave voice; zero vex;',
+          'czar civic cave; czar civic cave;'
+        ]
       },
       {
         id: 8,
-        name: 'Upper Row Challenge',
-        text: 'Quite proper writers route power to your port; Outer tower paper topic quality.',
-        category: 'upper-row',
-        target_wpm: 36,
-        description: 'Advanced upper row combinations'
+        name: 'Bottom Row B N M',
+        category: 'bottom-row',
+        target_wpm: 28,
+        description: 'Complete bottom row with B N M',
+        exercises: [
+          'bbb nnn mmm bbb nnn mmm bbb nnn',
+          'bnm bnm bnm bnm bnm bnm bnm bnm',
+          'mnb mnb mnb mnb mnb mnb mnb mnb',
+          'been been been been been been',
+          'name name name name name name',
+          'come come come come come come',
+          'beam beam beam beam beam beam',
+          'moon moon moon moon moon moon',
+          'bone bone bone bone bone bone',
+          'mean mean mean mean mean mean',
+          'boom boom boom boom boom boom',
+          'room room room room room room',
+          'main main main main main main',
+          'norm norm norm norm norm norm',
+          'been name; been name; been name;',
+          'come beam; moon bone; come beam;',
+          'mean boom; room main; mean boom;',
+          'norm comes; beam moons; norm;',
+          'name been; bone mean; name been;',
+          'come room; main boom; come room;',
+          'moon beam; norm name; moon beam;',
+          'been main; come norm; been main;',
+          'boom room; bone beam; boom room;',
+          'name moon; mean come; name moon;',
+          'norm been boom; norm been boom;',
+          'come main beam; come main beam;',
+          'moon room; bone name; moon room;',
+          'been boom; mean norm; been boom;',
+          'come bone; name beam; come bone;',
+          'main moon norm; main moon norm;'
+        ]
       },
-      
-      // Bottom Row Lessons (9-12)
       {
         id: 9,
-        name: 'Bottom Row Introduction',
-        text: 'zxcv bnm, zxcv bnm, zone exam cave been name come move buzz maximum',
-        category: 'bottom-row',
-        target_wpm: 24,
-        description: 'Learn bottom row keys Z X C V B N M , .'
+        name: 'Three Row Integration',
+        category: 'combined',
+        target_wpm: 32,
+        description: 'Combine all keyboard rows',
+        exercises: [
+          'quick brown fox; quick brown fox;',
+          'jumps over lazy; jumps over lazy;',
+          'the dog runs; the dog runs; runs;',
+          'brown fox jumps; brown fox jumps;',
+          'quick lazy dog; quick lazy dog;',
+          'over the brown; over the brown;',
+          'fox runs quick; fox runs quick;',
+          'lazy dog jumps; lazy dog jumps;',
+          'the quick fox; the quick fox;',
+          'brown dog over; brown dog over;',
+          'jumps lazy fox; jumps lazy fox;',
+          'quick brown runs; quick brown runs;',
+          'the fox over; the fox over; over;',
+          'lazy jumps dog; lazy jumps dog;',
+          'brown quick fox; brown quick fox;',
+          'the dog jumps over; dog jumps over;',
+          'quick brown lazy fox; brown lazy;',
+          'over the quick dog; the quick dog;',
+          'fox jumps brown; fox jumps brown;',
+          'lazy the over; lazy the over;',
+          'quick dog brown fox; dog brown fox;',
+          'jumps over the lazy; over the lazy;',
+          'brown fox quick dog; fox quick dog;',
+          'the lazy jumps; the lazy jumps;',
+          'over quick brown; over quick brown;',
+          'fox dog lazy; fox dog lazy; lazy;',
+          'the quick brown fox jumps; fox jumps;',
+          'over the lazy dog; over lazy dog;',
+          'brown quick fox; brown quick fox;',
+          'jumps lazy over the; lazy over the;'
+        ]
       },
       {
         id: 10,
-        name: 'Bottom Row Words',
-        text: 'zone exam cave been name come move buzz maximum become bronze comma',
-        category: 'bottom-row',
+        name: 'Numbers 1-5',
+        category: 'numbers',
         target_wpm: 28,
-        description: 'Practice words using bottom row keys'
+        description: 'Learn numbers 1 2 3 4 5',
+        exercises: [
+          '111 222 333 444 555 111 222 333',
+          '12345 12345 12345 12345 12345',
+          '54321 54321 54321 54321 54321',
+          '1234 1234 1234 1234 1234 1234',
+          '5432 5432 5432 5432 5432 5432',
+          '123 321 123 321 123 321 123 321',
+          '45 54 45 54 45 54 45 54 45 54',
+          '135 531 135 531 135 531 135 531',
+          '24 42 24 42 24 42 24 42 24 42',
+          '1 cat 2 dogs 3 birds 4 fish 5 mice',
+          '5 apples 4 oranges 3 bananas today',
+          '12 hours 34 minutes 5 seconds left',
+          'room 123 has 45 chairs and 5 tables',
+          'call 555-1234 for 3 quick answers',
+          'buy 2 books 4 pens and 1 notebook',
+          'drive 15 miles in 23 minutes today',
+          'score 12 points in 34 seconds flat',
+          '5 teams 4 games 3 wins 2 losses 1 tie',
+          'page 123 line 45 word 1 letter 2',
+          'add 12 plus 34 equals 46 total sum',
+          '1st place 2nd runner 3rd position',
+          '4 cups 5 spoons 3 plates 2 bowls 1 pot',
+          'meet at 12:34 in room 15 today',
+          '25 students 13 teachers 4 classes',
+          '1 dog 2 cats 3 birds 4 fish 5 mice play',
+          'dial 123-4567 extension 15 quickly',
+          '54 degrees 32 minutes 1 second north',
+          '123 main street apartment 45 today',
+          '1 plus 2 plus 3 plus 4 equals 10',
+          '5 minutes 4 hours 3 days 2 weeks 1 month'
+        ]
       },
       {
         id: 11,
-        name: 'Bottom Row Sentences',
-        text: 'Come to the zone; Maximum buzz, become bronze; Move the cave exam.',
-        category: 'bottom-row',
-        target_wpm: 32,
-        description: 'Form sentences with bottom row mastery'
+        name: 'Numbers 6-0',
+        category: 'numbers',
+        target_wpm: 30,
+        description: 'Complete number row 6 7 8 9 0',
+        exercises: [
+          '666 777 888 999 000 666 777 888',
+          '67890 67890 67890 67890 67890',
+          '09876 09876 09876 09876 09876',
+          '6789 6789 6789 6789 6789 6789',
+          '0987 0987 0987 0987 0987 0987',
+          '678 876 678 876 678 876 678 876',
+          '90 09 90 09 90 09 90 09 90 09',
+          '679 976 679 976 679 976 679 976',
+          '80 08 80 08 80 08 80 08 80 08',
+          '6 cars 7 bikes 8 trucks 9 vans 0 boats',
+          '70 degrees 89 humidity 6 wind speed',
+          '678 west avenue apartment 90 today',
+          'call 890-6789 between 6 and 7 pm',
+          'buy 6 apples 7 oranges 8 bananas 9 pears',
+          'score 67 to 89 in 90 minutes total',
+          'drive 678 miles in 90 hours exactly',
+          '8 teams 9 games 7 wins 6 losses 0 ties',
+          'page 678 line 90 word 6 letter 7',
+          '60 plus 78 plus 9 equals 147 total',
+          '6th grade 7th period 8th chapter 9th page',
+          '9 cups 8 spoons 7 plates 6 bowls 0 pots',
+          'meet at 6:78 wait that is 6:30 today',
+          '89 students 67 teachers 0 substitutes',
+          '6 dogs 7 cats 8 birds 9 fish 0 mice run',
+          'dial 678-9012 extension 60 quickly now',
+          '89 degrees 67 minutes 0 seconds south',
+          '6789 oak street apartment 0 today only',
+          '6 plus 7 plus 8 plus 9 equals 30 sum',
+          '90 minutes 8 hours 7 days 6 weeks 0 months',
+          '1234567890 all numbers typed correctly now'
+        ]
       },
       {
         id: 12,
-        name: 'Bottom Row Challenge',
-        text: 'Maximum bronze buzz, zone exam become; Move comma, cave name buzz maximum.',
-        category: 'bottom-row',
-        target_wpm: 34,
-        description: 'Advanced bottom row combinations'
-      },
-      
-      // All Rows Combined (13-16)
-      {
-        id: 13,
-        name: 'Two Row Combination',
-        text: 'Ask the writer; Your dad has been quite sad; The tower cave move zone.',
-        category: 'combined',
-        target_wpm: 35,
-        description: 'Combine home row with upper and bottom rows'
-      },
-      {
-        id: 14,
-        name: 'Three Row Mastery',
-        text: 'Quite the maximum power; Your bronze zone writer; Cave tower exam route.',
-        category: 'combined',
-        target_wpm: 38,
-        description: 'Master all three keyboard rows together'
-      },
-      {
-        id: 15,
-        name: 'Common Words',
-        text: 'the and for are but not you all can had her was one our out day get has him his how',
-        category: 'words',
-        target_wpm: 40,
-        description: 'Practice most common English words'
-      },
-      {
-        id: 16,
-        name: 'Quick Phrases',
-        text: 'the quick brown fox jumps over the lazy dog pack my box with five dozen liquor jugs',
-        category: 'phrases',
-        target_wpm: 42,
-        description: 'Type complete sentences with proper spacing'
-      },
-      
-      // Numbers and Punctuation (17-20)
-      {
-        id: 17,
-        name: 'Numbers Practice',
-        text: '1234567890 one two three four five six seven eight nine zero 12 34 56 78 90 123 456',
-        category: 'numbers',
-        target_wpm: 30,
-        description: 'Learn to type numbers efficiently'
-      },
-      {
-        id: 18,
         name: 'Basic Punctuation',
-        text: 'Hello, world! How are you today? I am fine, thank you. What time is it? It is 3:30 PM.',
         category: 'punctuation',
-        target_wpm: 35,
-        description: 'Master basic punctuation marks'
-      },
-      {
-        id: 19,
-        name: 'Advanced Punctuation',
-        text: 'The "quick" brown fox: jumped 50% higher! Cost was $25.99 (tax included); amazing!',
-        category: 'punctuation',
-        target_wpm: 38,
-        description: 'Practice advanced punctuation and symbols'
-      },
-      {
-        id: 20,
-        name: 'Final Challenge',
-        text: 'Typing at 50+ WPM requires consistent daily practice. Focus on accuracy first, then speed will follow naturally.',
-        category: 'mixed',
-        target_wpm: 45,
-        description: 'Ultimate typing speed and accuracy test'
+        target_wpm: 32,
+        description: 'Master . , ? ! ; : " \'',
+        exercises: [
+          '... ,,, ??? !!! ;;; ::: """ \'\'\'',
+          'hello, world. how are you today?',
+          'i am fine, thank you very much!',
+          'what time is it? it is 3:30 pm.',
+          'she said, "hello there, friend."',
+          'don\'t worry; everything will be okay.',
+          'yes, i can help you with that task.',
+          'where are you going? i\'m going home.',
+          'stop! look both ways before crossing.',
+          'the cat, dog, and bird are playing.',
+          '"are you ready?" she asked quickly.',
+          'no, i can\'t go; i have work today.',
+          'wow! that\'s amazing news to hear.',
+          'please, sit down and make yourself comfortable.',
+          'what\'s your name? my name is john.',
+          'i love pizza, pasta, and ice cream.',
+          '"hello," he said. "how are you?"',
+          'stop, look, listen; then cross safely.',
+          'yes! we won the game by five points.',
+          'she can\'t come; she\'s busy working.',
+          'what time? when? where? why ask now?',
+          'i said, "please wait for me here."',
+          'don\'t run; walk carefully and slowly.',
+          'great! that\'s exactly what we needed.',
+          'the book, pen, and paper are ready.',
+          '"good morning," she said with a smile.',
+          'i won\'t go; it\'s too late tonight.',
+          'help! someone call for assistance now!',
+          'he asked, "can you help me, please?"',
+          'wait; let me think about this carefully.'
+        ]
       }
     ];
 
-    // Progress tracking system
+    // Progress data stored in localStorage
     let progressData = JSON.parse(localStorage.getItem('typingProgress')) || {
       completedLessons: [],
       bestScores: {},
       totalTime: 0,
-      streak: 0
+      streak: 0,
+      exerciseProgress: {},
+      unlockedLessons: [1]
     };
 
-    // Update lessons grid with enhanced data and categorization
+    // DOM references
+    const lessonsGrid = document.getElementById('lessons-grid');
+    const keys = document.querySelectorAll('.key');
+    const typingInput = document.getElementById('typing-input');
+    const passageEl = document.getElementById('passage');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const retryBtn = document.getElementById('retry-btn');
+    const progressBtn = document.getElementById('progress-btn');
+    const progressModal = document.getElementById('progress-modal');
+    const closeProgress = document.getElementById('close-progress');
+
+    // Utility: get lesson index from lesson id
+    function lessonIndexById(id) {
+      return enhancedLessons.findIndex(l => l.id === id);
+    }
+
+    // Populate lesson cards grid
     function populateLessonsGrid() {
       lessonsGrid.innerHTML = '';
-      
-      // Create category sections
+
       const categories = {
+        'home-row': { name: 'Home Row Left-Hand', lessons: [] },
+        'home-row': { name: 'Home Row Right-Hand', lessons: [] },
         'home-row': { name: 'Home Row Mastery', lessons: [] },
+        'upper-row': { name: 'Upper Row Left-Hand', lessons: [] },
+        'upper-row': { name: 'Upper Row Right-Hand', lessons: [] },
         'upper-row': { name: 'Upper Row Training', lessons: [] },
+        'bottom-row': { name: 'Bottom Row Left-Hand', lessons: [] },
+        'bottom-row': { name: 'Bottom Row Right-Hand', lessons: [] },
         'bottom-row': { name: 'Bottom Row Practice', lessons: [] },
         'combined': { name: 'Multi-Row Combinations', lessons: [] },
-        'words': { name: 'Common Words', lessons: [] },
-        'phrases': { name: 'Sentence Practice', lessons: [] },
         'numbers': { name: 'Numbers & Digits', lessons: [] },
-        'punctuation': { name: 'Punctuation & Symbols', lessons: [] },
-        'mixed': { name: 'Advanced Challenges', lessons: [] }
+        'punctuation': { name: 'Punctuation & Symbols', lessons: [] }
       };
-      
-      // Group lessons by category
+
       enhancedLessons.forEach(lesson => {
-        if (categories[lesson.category]) {
-          categories[lesson.category].lessons.push(lesson);
-        }
+        if (categories[lesson.category]) categories[lesson.category].lessons.push(lesson);
       });
-      
-      // Create HTML for each category
-      Object.keys(categories).forEach(categoryKey => {
-        const category = categories[categoryKey];
-        if (category.lessons.length === 0) return;
-        
-        // Create category header
-        const categoryHeader = document.createElement('div');
-        categoryHeader.style.cssText = `
+
+      Object.keys(categories).forEach(catKey => {
+        const cat = categories[catKey];
+        if (!cat.lessons.length) return;
+
+        // Category header
+        const catHeader = document.createElement('div');
+        catHeader.style.cssText = `
           grid-column: 1 / -1;
           margin: 2rem 0 1rem 0;
           padding: 1rem;
@@ -1203,40 +1361,37 @@
           font-weight: 600;
           font-size: 1.1rem;
         `;
-        categoryHeader.innerHTML = `
-          <div>${category.name}</div>
+        catHeader.innerHTML = `
+          <div>${cat.name}</div>
           <div style="font-size: 0.8rem; opacity: 0.9; margin-top: 0.5rem;">
-            ${category.lessons.length} lesson${category.lessons.length > 1 ? 's' : ''}
+            ${cat.lessons.length} lesson${cat.lessons.length > 1 ? 's' : ''} • 30 exercises each
           </div>
         `;
-        lessonsGrid.appendChild(categoryHeader);
-        
-        // Add lessons for this category
-        category.lessons.forEach((lesson, index) => {
+        lessonsGrid.appendChild(catHeader);
+
+        // Lessons
+        cat.lessons.forEach(lesson => {
           const lessonCard = document.createElement('div');
           const isCompleted = progressData.completedLessons.includes(lesson.id);
+          const exerciseProg = progressData.exerciseProgress[lesson.id] || [];
+          const completedExercises = exerciseProg.length;
           const bestScore = progressData.bestScores[lesson.id];
-          
-          // Determine if lesson is locked (for progressive learning)
-          const isLocked = lesson.id > 1 && !progressData.completedLessons.includes(lesson.id - 1);
-          
+
+          const isLocked = !progressData.unlockedLessons.includes(lesson.id);
+
           lessonCard.className = `stat-card ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}`;
           lessonCard.style.cursor = isLocked ? 'not-allowed' : 'pointer';
           lessonCard.style.opacity = isLocked ? '0.5' : '1';
-          
-          // Add category color coding
+
           const categoryColors = {
             'home-row': '#4ade80',
             'upper-row': '#3b82f6', 
             'bottom-row': '#f59e0b',
             'combined': '#8b5cf6',
-            'words': '#ec4899',
-            'phrases': '#06b6d4',
             'numbers': '#ef4444',
-            'punctuation': '#10b981',
-            'mixed': '#f97316'
+            'punctuation': '#10b981'
           };
-          
+
           lessonCard.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
               <div class="stat-label">Lesson ${lesson.id}</div>
@@ -1250,319 +1405,126 @@
               ${lesson.description}
             </div>
             <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.5rem;">
-              Target: ${lesson.target_wpm} WPM
+              Target: ${lesson.target_wpm} WPM • ${lesson.exercises.length} exercises
+            </div>
+            <div style="margin-top: 0.5rem;">
+              <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.3rem;">
+                Progress: ${completedExercises}/${lesson.exercises.length}
+              </div>
+              <div style="width: 100%; height: 4px; background: var(--bg-input); border-radius: 2px; overflow: hidden;">
+                <div style="height: 100%; background: ${categoryColors[lesson.category]}; width: ${(completedExercises / lesson.exercises.length) * 100}%; transition: width 0.3s ease;"></div>
+              </div>
             </div>
             ${bestScore ? `
               <div style="font-size: 0.7rem; color: ${categoryColors[lesson.category]}; margin-top: 0.5rem;">
-                ${bestScore.starRating ? generateStarDisplay(bestScore.starRating) : '⭐'} Best: ${bestScore.wpm} WPM (${bestScore.accuracy}%)
+                Best: ${bestScore.wpm} WPM (${bestScore.accuracy}%)
               </div>
             ` : ''}
             ${isCompleted ? `
               <div style="font-size: 0.8rem; color: #4ade80; margin-top: 0.5rem;">
-                ✓ Completed
+                ✓ All Exercises Completed
               </div>
             ` : isLocked ? `
               <div style="font-size: 0.7rem; color: #ef4444; margin-top: 0.5rem;">
-                Complete Lesson ${lesson.id - 1} to unlock
+                Complete previous lessons to unlock
+              </div>
+            ` : completedExercises > 0 ? `
+              <div style="font-size: 0.7rem; color: #f59e0b; margin-top: 0.5rem;">
+                📚 In Progress
               </div>
             ` : ''}
           `;
-          
+
           lessonCard.addEventListener('click', () => {
-            if (!isLocked) {
-              loadLesson(enhancedLessons.findIndex(l => l.id === lesson.id));
+            if (isLocked) {
+              alert(`Please complete previous lessons to unlock this lesson.`);
             } else {
-              alert(`Please complete Lesson ${lesson.id - 1} first to unlock this lesson.`);
+              loadLesson(lessonIndexById(lesson.id));
             }
           });
-          
+
           lessonsGrid.appendChild(lessonCard);
         });
       });
-      
-      // Update grid layout to accommodate categories
-      lessonsGrid.style.display = 'grid';
-      lessonsGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(250px, 1fr))';
-      lessonsGrid.style.gap = '1rem';
-      lessonsGrid.style.marginTop = '1rem';
     }
 
-    // Load specific lesson
-    function loadLesson(index) {
-      currentLesson = index;
-      const lesson = enhancedLessons[index];
-      
-      document.getElementById('lesson-title').textContent = `Lesson ${lesson.id}: ${lesson.name}`;
-      document.getElementById('lesson-timestamp').textContent = `Target: ${lesson.target_wpm} WPM | ${new Date().toLocaleTimeString()}`;
-      document.getElementById('passage').textContent = lesson.text;
-      
-      resetLesson();
-      highlightCurrentCharacter();
-      typingInput.focus();
-    }
-
-    // Reset lesson state
-    function resetLesson() {
-      typingInput.value = '';
-      typingInput.disabled = false;
-      timeLeft = 120;
-      startTime = null;
-      errors = 0;
-      totalTyped = 0;
-      lessonCompleted = false;
-      isTyping = false;
-      
-      document.getElementById('timer').textContent = '120s';
-      document.getElementById('stat-wpm').textContent = '0';
-      document.getElementById('stat-acc').textContent = '100%';
-      
-      clearInterval(timerInterval);
-    }
-
-    // Enhanced character highlighting
-    function highlightCurrentCharacter() {
-      const typed = typingInput.value;
-      const target = document.getElementById('passage').textContent;
-      let html = '';
-      
-      for (let i = 0; i < target.length; i++) {
-        if (i < typed.length) {
-          if (typed[i] === target[i]) {
-            html += `<span style="background-color: #4ade80; color: #000;">${target[i]}</span>`;
-          } else {
-            html += `<span style="background-color: #ef4444; color: #fff;">${target[i]}</span>`;
-          }
-        } else if (i === typed.length) {
-          html += `<span style="background-color: #3b82f6; color: #fff; animation: pulse 1s infinite;">${target[i]}</span>`;
-        } else {
-          html += target[i];
-        }
-      }
-      
-      document.getElementById('passage').innerHTML = html;
-    }
-
-    // Enhanced typing input handler with auto-focus maintenance
-    typingInput.addEventListener('input', function() {
-      if (!startTime) {
-        startTime = new Date();
-        startTimer();
-      }
-      
-      totalTyped++;
-      highlightCurrentCharacter();
-      updateStats();
-      
-      // Check if lesson is completed
-      const target = enhancedLessons[currentLesson].text;
-      if (typingInput.value === target) {
-        completeLesson();
-      }
-    });
-
-    // Maintain focus on typing input
-    typingInput.addEventListener('blur', function() {
-      // Re-focus after a short delay to prevent interference with other interactions
-      setTimeout(() => {
-        if (!lessonCompleted && !typingInput.disabled) {
-          typingInput.focus();
-        }
-      }, 100);
-    });
-
-    // Prevent pasting
-    typingInput.addEventListener('paste', function(e) {
-      e.preventDefault();
-      alert('Pasting is not allowed. Please type the text manually.');
-    });
-
-    // Enhanced stats calculation
-    function updateStats() {
-      const typed = typingInput.value;
-      const target = enhancedLessons[currentLesson].text;
-      
-      if (typed.length === 0) return;
-      
-      // Calculate accuracy
-      let correct = 0;
-      let currentErrors = 0;
-      
-      for (let i = 0; i < typed.length; i++) {
-        if (typed[i] === target[i]) {
-          correct++;
-        } else {
-          currentErrors++;
-        }
-      }
-      
-      const accuracy = Math.round((correct / typed.length) * 100);
-      document.getElementById('stat-acc').textContent = accuracy + '%';
-      
-      // Calculate WPM
-      if (startTime) {
-        const timeElapsed = (new Date() - startTime) / 1000 / 60; // minutes
-        const wordsTyped = correct / 5; // 5 characters = 1 word
-        const wpm = timeElapsed > 0 ? Math.round(wordsTyped / timeElapsed) : 0;
-        document.getElementById('stat-wpm').textContent = wpm;
-      }
-      
-      // Update progress bar
-      const progress = Math.min((typed.length / target.length) * 100, 100);
-      document.getElementById('progress-bar').style.width = progress + '%';
-    }
-
-    // Complete lesson
-    function completeLesson() {
-      lessonCompleted = true;
-      clearInterval(timerInterval);
-      typingInput.disabled = true;
-      
-      const timeElapsed = (new Date() - startTime) / 1000;
-      const wpm = Math.round((typingInput.value.length / 5) / (timeElapsed / 60));
-      const accuracy = Math.round((typingInput.value.length - errors) / typingInput.value.length * 100);
-      
-      // Check if passed
-      const lesson = enhancedLessons[currentLesson];
-      const passed = wpm >= 30 && accuracy >= 90;
-      
-      setTimeout(() => {
-        showLessonResults(wpm, accuracy, passed, timeElapsed);
-        if (passed) {
-          saveProgress(lesson.id, wpm, accuracy, timeElapsed);
-        }
-      }, 500);
-    }
-
-    // Show lesson results
-    function showLessonResults(wpm, accuracy, passed, time) {
-      const message = passed 
-        ? `🎉 Congratulations! You passed!\n\nWPM: ${wpm}\nAccuracy: ${accuracy}%\nTime: ${Math.round(time)}s\n\nReady for the next lesson!`
-        : `📚 Keep practicing!\n\nWPM: ${wpm} (need ≥30)\nAccuracy: ${accuracy}% (need ≥90%)\nTime: ${Math.round(time)}s\n\nTry again to improve your score!`;
-      
-      alert(message);
-    }
-
-    // Save progress
-    function saveProgress(lessonId, wpm, accuracy, time) {
-      if (!progressData.completedLessons.includes(lessonId)) {
-        progressData.completedLessons.push(lessonId);
-      }
-      
-      if (!progressData.bestScores[lessonId] || wpm > progressData.bestScores[lessonId].wpm) {
-        progressData.bestScores[lessonId] = { wpm, accuracy, time };
-      }
-      
-      progressData.totalTime += time;
-      progressData.streak++;
-      
-      localStorage.setItem('typingProgress', JSON.stringify(progressData));
-      updateProgressDisplay();
-      populateLessonsGrid();
-      
-      // Check if intermediate should be unlocked
-      if (progressData.completedLessons.length >= enhancedLessons.length) {
-        unlockIntermediate();
-      }
-    }
-
-    // Update progress display
+    // Update overall progress display
     function updateProgressDisplay() {
       const completed = progressData.completedLessons.length;
       const total = enhancedLessons.length;
-      const percentage = (completed / total) * 100;
-      
-      document.getElementById('progress-text').textContent = 
-        `Progress: ${completed} / ${total} lessons passed (${Math.round(percentage)}%)`;
-      document.getElementById('progress-bar').style.width = percentage + '%';
-    }
 
-    // Enhanced lesson navigation with auto-focus
-    prevBtn.addEventListener('click', () => {
-      if (currentLesson > 0) {
-        loadLesson(currentLesson - 1);
-      }
-    });
-    
-    nextBtn.addEventListener('click', () => {
-      if (currentLesson < enhancedLessons.length - 1) {
-        const nextLesson = enhancedLessons[currentLesson + 1];
-        const isNextLocked = nextLesson.id > 1 && !progressData.completedLessons.includes(nextLesson.id - 1);
-        
-        if (!isNextLocked) {
-          loadLesson(currentLesson + 1);
-        } else {
-          alert(`Please complete Lesson ${nextLesson.id - 1} first to unlock this lesson.`);
-        }
-      }
-    });
-    
-    retryBtn.addEventListener('click', () => {
-      resetLesson();
-      highlightCurrentCharacter();
-    });
+      let totalExercisesCompleted = 0;
+      let totalExercises = 0;
 
-    // Unlock intermediate level
-    function unlockIntermediate() {
-      const intermediateSection = document.getElementById('section-intermediate');
-      const lockBox = document.getElementById('intermediate-lock');
-      const content = document.getElementById('intermediate-content');
-      
-      if (lockBox && content) {
-        lockBox.style.display = 'none';
-        content.classList.remove('hidden');
-        content.innerHTML = `
-          <h2>🎉 Intermediate Lessons Unlocked!</h2>
-          <p>Congratulations on completing all beginner lessons! You're ready for more challenging content.</p>
-          <div style="background: var(--success-gradient); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-            <strong>Your Achievement:</strong> Completed ${enhancedLessons.length} lessons with required accuracy!
-          </div>
-        `;
+      enhancedLessons.forEach(lesson => {
+        totalExercises += lesson.exercises.length;
+        const exProg = progressData.exerciseProgress[lesson.id] || [];
+        totalExercisesCompleted += exProg.length;
+      });
+
+      const progressText = document.getElementById('progress-text');
+      if (progressText) {
+        progressText.textContent = `Progress: ${completed}/${total} lessons | ${totalExercisesCompleted}/${totalExercises} exercises`;
+      }
+
+      const progressBar = document.getElementById('progress-bar');
+      if (progressBar) {
+        const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+        progressBar.style.width = percentage + '%';
       }
     }
 
-    // Enhanced progress modal
-    progressBtn.addEventListener('click', () => {
-      updateProgressModal();
-      progressModal.style.display = 'block';
-    });
-
+    // Progress modal population
     function updateProgressModal() {
       const progressList = document.getElementById('progress-list');
       progressList.innerHTML = '';
-      
+
       enhancedLessons.forEach(lesson => {
         const isCompleted = progressData.completedLessons.includes(lesson.id);
+        const exerciseProgress = progressData.exerciseProgress[lesson.id] || [];
+        const completedExercises = exerciseProgress.length;
         const bestScore = progressData.bestScores[lesson.id];
-        
+
         const listItem = document.createElement('div');
         listItem.style.cssText = `
           padding: 1rem;
           margin: 0.5rem 0;
           background: var(--bg-secondary);
           border-radius: 8px;
-          border-left: 4px solid ${isCompleted ? '#4ade80' : '#6b7280'};
+          border-left: 4px solid ${isCompleted ? '#4ade80' : completedExercises > 0 ? '#f59e0b' : '#6b7280'};
         `;
-        
+
         listItem.innerHTML = `
-          <div style="font-weight: 600;">${lesson.name}</div>
-          <div style="color: var(--text-muted); font-size: 0.9rem;">${lesson.description}</div>
+          <div style="font-weight: 600; margin-bottom: 0.5rem;">${lesson.name}</div>
+          <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">${lesson.description}</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary);">
+            Progress: ${completedExercises}/${lesson.exercises.length} exercises completed
+          </div>
+          <div style="width: 100%; height: 6px; background: var(--bg-input); border-radius: 3px; margin: 0.5rem 0;">
+            <div style="height: 100%; background: ${isCompleted ? '#4ade80' : '#f59e0b'}; width: ${(completedExercises / lesson.exercises.length) * 100}%; border-radius: 3px; transition: width 0.3s ease;"></div>
+          </div>
           ${bestScore ? 
             `<div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-secondary);">
               Best Score: ${bestScore.wpm} WPM, ${bestScore.accuracy}% accuracy
             </div>` : 
-            '<div style="margin-top: 0.5rem; font-size: 0.8rem; color: #ef4444;">Not completed</div>'
+            '<div style="margin-top: 0.5rem; font-size: 0.8rem; color: #ef4444;">Not started</div>'
           }
         `;
-        
         progressList.appendChild(listItem);
       });
-      
-      // Update modal stats
+
+      const totalExercises = enhancedLessons.reduce((sum, l) => sum + l.exercises.length, 0);
+      const completedExercises = Object.values(progressData.exerciseProgress).reduce((sum, arr) => sum + arr.length, 0);
+
       document.getElementById('progress-details').innerHTML = `
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1rem 0;">
           <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
             <div style="font-size: 1.5rem; font-weight: 700;">${progressData.completedLessons.length}</div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">Lessons Completed</div>
+          </div>
+          <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+            <div style="font-size: 1.5rem; font-weight: 700;">${completedExercises}</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Exercises Completed</div>
           </div>
           <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
             <div style="font-size: 1.5rem; font-weight: 700;">${Math.round(progressData.totalTime / 60)}</div>
@@ -1576,56 +1538,420 @@
       `;
     }
 
-    // Keyboard event listeners for physical keyboard
+    // Keyboard highlight
+    function highlightKey(keyCode) {
+      keys.forEach(key => key.classList.remove('active'));
+      const targetKey = document.querySelector(`[data-code="${keyCode}"]`);
+      if (targetKey) {
+        targetKey.classList.add('active');
+        setTimeout(() => targetKey.classList.remove('active'), 500);
+      }
+    }
+
+    // Load a lesson by index (0-based)
+    function loadLesson(lessonIndex) {
+      currentLessonIndex = lessonIndex;
+      const lesson = enhancedLessons[lessonIndex];
+
+      // Initialize exerciseProgress entry
+      if (!progressData.exerciseProgress[lesson.id]) {
+        progressData.exerciseProgress[lesson.id] = [];
+      }
+
+      // Start from exercise 0 by default - user can navigate freely
+      currentExerciseIndex = 0;
+
+      loadExercise();
+      updateNavigationButtons();
+      populateLessonsGrid();
+      updateProgressDisplay();
+    }
+
+    // Load the current exercise
+    function loadExercise() {
+      const lesson = enhancedLessons[currentLessonIndex];
+      const exercise = lesson.exercises[currentExerciseIndex];
+
+      document.getElementById('lesson-title').textContent =
+        `Lesson ${lesson.id}: ${lesson.name} (${currentExerciseIndex + 1}/${lesson.exercises.length})`;
+
+      document.getElementById('lesson-timestamp').textContent =
+        `Target: ${lesson.target_wpm} WPM | Exercise ${currentExerciseIndex + 1} | ${new Date().toLocaleTimeString()}`;
+
+      // Reset passage and typing input
+      passageEl.textContent = exercise;
+      resetLesson();
+      highlightCurrentCharacter();
+      typingInput.focus();
+      updateNavigationButtons();
+    }
+
+    // Update navigation button states
+    function updateNavigationButtons() {
+      const lesson = enhancedLessons[currentLessonIndex];
+      
+      // Previous button - disabled if first exercise of first lesson
+      prevBtn.disabled = currentLessonIndex === 0 && currentExerciseIndex === 0;
+      
+      // Next button - disabled if last exercise of last lesson  
+      nextBtn.disabled = currentLessonIndex === enhancedLessons.length - 1 && 
+                        currentExerciseIndex === lesson.exercises.length - 1;
+    }
+
+    // Show passage with character-level highlighting
+    function highlightCurrentCharacter() {
+      const typed = typingInput.value || '';
+      const currentExercise = enhancedLessons[currentLessonIndex].exercises[currentExerciseIndex];
+      let html = '';
+
+      for (let i = 0; i < currentExercise.length; i++) {
+        const ch = currentExercise[i];
+        if (i < typed.length) {
+          if (typed[i] === ch) {
+            html += `<span style="background-color: #4ade80; color: #000;">${escapeHtml(ch)}</span>`;
+          } else {
+            html += `<span style="background-color: #ef4444; color: #fff;">${escapeHtml(ch)}</span>`;
+          }
+        } else if (i === typed.length) {
+          html += `<span style="background-color: #3b82f6; color: #fff; animation: pulse 1s infinite;">${escapeHtml(ch)}</span>`;
+        } else {
+          html += escapeHtml(ch);
+        }
+      }
+
+      passageEl.innerHTML = html;
+    }
+
+    // Escape HTML for safe rendering
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Update stats live
+    function updateStats() {
+      const typed = typingInput.value;
+      const currentExercise = enhancedLessons[currentLessonIndex].exercises[currentExerciseIndex];
+      if (!startTime) return;
+
+      // accuracy
+      let correct = 0;
+      for (let i = 0; i < typed.length; i++) {
+        if (typed[i] === currentExercise[i]) correct++;
+      }
+      const accuracy = typed.length > 0 ? Math.round((correct / typed.length) * 100) : 100;
+      document.getElementById('stat-acc').textContent = accuracy + '%';
+
+      // WPM
+      const timeElapsedMinutes = (new Date() - startTime) / 1000 / 60;
+      const wordsTyped = correct / 5;
+      const wpm = timeElapsedMinutes > 0 ? Math.round(wordsTyped / timeElapsedMinutes) : 0;
+      document.getElementById('stat-wpm').textContent = wpm;
+    }
+
+    // Complete exercise
+    // Complete exercise
+    function completeExercise(isTimeUp = false) {
+      clearInterval(timerInterval);
+      typingInput.disabled = true;
+
+      const timeElapsed = (new Date() - startTime) / 1000;
+      const typed = typingInput.value;
+      let correct = 0;
+      const currentExercise = enhancedLessons[currentLessonIndex].exercises[currentExerciseIndex];
+      for (let i = 0; i < typed.length; i++) {
+        if (typed[i] === currentExercise[i]) correct++;
+      }
+      const accuracy = typed.length > 0 ? Math.round((correct / typed.length) * 100) : 100;
+      const wpm = timeElapsed > 0 ? Math.round((correct / 5) / (timeElapsed / 60)) : 0;
+
+      const lesson = enhancedLessons[currentLessonIndex];
+      const passed = wpm >= lesson.target_wpm && accuracy >= 90 && !isTimeUp;
+
+      // Show results immediately
+      showExerciseResults(wpm, accuracy, passed, timeElapsed, isTimeUp);
+      
+      if (passed) {
+        saveExerciseProgress(lesson.id, currentExerciseIndex, wpm, accuracy, timeElapsed);
+        // Auto-advance to next exercise after short delay
+        setTimeout(() => {
+          if (currentExerciseIndex < lesson.exercises.length - 1) {
+            currentExerciseIndex++;
+            loadExercise();
+          } else {
+            // finished all exercises in this lesson
+            completeLessonFully();
+          }
+        }, 1500);
+      } else {
+        // allow retry
+        setTimeout(() => {
+          typingInput.disabled = false;
+          resetLesson();
+          highlightCurrentCharacter();
+          typingInput.focus();
+        }, 2000);
+      }
+    }
+
+    // Show results alert
+    function showExerciseResults(wpm, accuracy, passed, time) {
+      const lesson = enhancedLessons[currentLessonIndex];
+      const exerciseNum = currentExerciseIndex + 1;
+      const total = lesson.exercises.length;
+
+      if (passed) {
+        alert(`Exercise ${exerciseNum}/${total} Complete!\n\nWPM: ${wpm}\nAccuracy: ${accuracy}%\nTime: ${Math.round(time)}s\n\nAdvancing to next exercise...`);
+      } else {
+        alert(`Try Again!\nWPM: ${wpm} (need ≥ ${lesson.target_wpm})\nAccuracy: ${accuracy}% (need ≥ 90%)\n\nRestarting exercise...`);
+      }
+    }
+
+    // Save exercise progress
+    function saveExerciseProgress(lessonId, exerciseIndex, wpm, accuracy, time) {
+      if (!progressData.exerciseProgress[lessonId]) {
+        progressData.exerciseProgress[lessonId] = [];
+      }
+      if (!progressData.exerciseProgress[lessonId].includes(exerciseIndex)) {
+        progressData.exerciseProgress[lessonId].push(exerciseIndex);
+      }
+
+      // Update lesson-level best if better
+      if (!progressData.bestScores[lessonId] || wpm > progressData.bestScores[lessonId].wpm) {
+        progressData.bestScores[lessonId] = { wpm, accuracy, time };
+      }
+
+      progressData.totalTime += time;
+      localStorage.setItem('typingProgress', JSON.stringify(progressData));
+      updateProgressDisplay();
+      populateLessonsGrid();
+    }
+
+    // When full lesson completed
+    function completeLessonFully() {
+      const lesson = enhancedLessons[currentLessonIndex];
+      const completed = progressData.exerciseProgress[lesson.id] || [];
+      
+      if (completed.length >= lesson.exercises.length && !progressData.completedLessons.includes(lesson.id)) {
+        progressData.completedLessons.push(lesson.id);
+        progressData.streak = (progressData.streak || 0) + 1;
+
+        // unlock next lesson if exists
+        const nextLesson = enhancedLessons[currentLessonIndex + 1];
+        if (nextLesson && !progressData.unlockedLessons.includes(nextLesson.id)) {
+          progressData.unlockedLessons.push(nextLesson.id);
+        }
+
+        localStorage.setItem('typingProgress', JSON.stringify(progressData));
+        populateLessonsGrid();
+        updateProgressDisplay();
+
+        alert(`Congratulations! Lesson ${lesson.id} Fully Completed!\n\nYou've mastered all ${lesson.exercises.length} exercises!\n${nextLesson ? 'Next lesson unlocked!' : 'All lessons completed!'}`);
+        
+        // auto-load next lesson if unlocked
+        if (nextLesson) {
+          setTimeout(() => loadLesson(currentLessonIndex + 1), 2000);
+        }
+      }
+    }
+
+    // Reset current exercise/typing state
+    function resetLesson() {
+      typingInput.value = '';
+      typingInput.disabled = false;
+      timeLeft = 120;
+      startTime = null;
+      isTyping = false;
+
+      document.getElementById('timer').textContent = '120s';
+      document.getElementById('stat-wpm').textContent = '0';
+      document.getElementById('stat-acc').textContent = '100%';
+
+      clearInterval(timerInterval);
+    }
+
+    // Timer start
+    function startTimer() {
+      if (isTyping) return;
+      isTyping = true;
+      startTime = startTime || new Date();
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = timeLeft + 's';
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          typingInput.disabled = true;
+          alert('Time\'s up! You can retry this exercise.');
+          setTimeout(() => {
+            resetLesson();
+            highlightCurrentCharacter();
+            typingInput.focus();
+          }, 1000);
+        }
+      }, 1000);
+    }
+
+    // Typing input handlers
+    typingInput.addEventListener('input', () => {
+      if (!startTime) startTime = new Date();
+      startTimer();
+
+      highlightCurrentCharacter();
+      updateStats();
+
+      const current = enhancedLessons[currentLessonIndex].exercises[currentExerciseIndex];
+      if (typingInput.value === current) {
+        completeExercise();
+      }
+    });
+
+    typingInput.addEventListener('blur', function() {
+      setTimeout(() => {
+        if (!typingInput.disabled) typingInput.focus();
+      }, 100);
+    });
+
+    typingInput.addEventListener('paste', function(e) {
+      e.preventDefault();
+      alert('Pasting is not allowed. Please type manually to practice.');
+    });
+
+    // Prev/Next/Retry handlers
+    prevBtn.addEventListener('click', () => {
+      if (currentExerciseIndex > 0) {
+        currentExerciseIndex--;
+        loadExercise();
+      } else if (currentLessonIndex > 0) {
+        // Go to previous lesson's last exercise
+        const prevLessonIndex = currentLessonIndex - 1;
+        const prevLesson = enhancedLessons[prevLessonIndex];
+        // Only go to previous lesson if it's unlocked
+        if (progressData.unlockedLessons.includes(prevLesson.id)) {
+          currentLessonIndex = prevLessonIndex;
+          currentExerciseIndex = prevLesson.exercises.length - 1;
+          loadExercise();
+        }
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      const lesson = enhancedLessons[currentLessonIndex];
+      if (currentExerciseIndex < lesson.exercises.length - 1) {
+        currentExerciseIndex++;
+        loadExercise();
+      } else if (currentLessonIndex < enhancedLessons.length - 1) {
+        // Go to next lesson's first exercise
+        const nextLessonIndex = currentLessonIndex + 1;
+        const nextLesson = enhancedLessons[nextLessonIndex];
+        // Only go to next lesson if it's unlocked
+        if (progressData.unlockedLessons.includes(nextLesson.id)) {
+          currentLessonIndex = nextLessonIndex;
+          currentExerciseIndex = 0;
+          loadExercise();
+        } else {
+          alert('Complete all exercises in the current lesson to unlock the next lesson.');
+        }
+      }
+    });
+
+    retryBtn.addEventListener('click', () => {
+      resetLesson();
+      highlightCurrentCharacter();
+      typingInput.focus();
+    });
+
+    // keyboard highlight on keydown
     document.addEventListener('keydown', (e) => {
-      if (typingInput === document.activeElement) {
+      if (document.activeElement === typingInput && !typingInput.disabled) {
         highlightKey(e.code);
       }
     });
 
-    // Initialize the application
+    // progress modal controls
+    progressBtn.addEventListener('click', () => {
+      updateProgressModal();
+      progressModal.style.display = 'block';
+    });
+
+    closeProgress.addEventListener('click', () => {
+      progressModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === progressModal) progressModal.style.display = 'none';
+    });
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.section').forEach(section => section.classList.add('hidden'));
+        const level = tab.getAttribute('data-level');
+        document.getElementById(`section-${level}`).classList.remove('hidden');
+      });
+    });
+    //Image Effect
+   document.addEventListener("DOMContentLoaded", () => {
+    const images = document.querySelectorAll("img");
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target); // fade only once
+        }
+      });
+    }, { threshold: 0.2 }); // triggers when 20% of the image is visible
+
+    images.forEach(img => observer.observe(img));
+  });
+    // Initial animations
+    setTimeout(() => {
+      document.querySelectorAll('.slide-up').forEach((el, index) => {
+        setTimeout(() => el.style.animation = 'slideUp 0.5s ease forwards', index * 100);
+      });
+    }, 100);
+
+    // Responsive keyboard
+    function adjustKeyboardForMobile() {
+      if (window.innerWidth < 768) {
+        document.querySelectorAll('.key.space').forEach(key => {
+          key.style.minWidth = '10rem';
+        });
+      } else {
+        document.querySelectorAll('.key.space').forEach(key => {
+          key.style.minWidth = '20rem';
+        });
+      }
+    }
+    window.addEventListener('resize', adjustKeyboardForMobile);
+    adjustKeyboardForMobile();
+
+    // Initialize
     function initializeApp() {
+      // Ensure progress data has required structure
+      if (!progressData.unlockedLessons || progressData.unlockedLessons.length === 0) {
+        progressData.unlockedLessons = [1];
+        localStorage.setItem('typingProgress', JSON.stringify(progressData));
+      }
+
       populateLessonsGrid();
       updateProgressDisplay();
-      loadLesson(0); // Load first lesson by default
-      
-      // Check if intermediate should be unlocked
-      if (progressData.completedLessons.length >= enhancedLessons.length) {
-        unlockIntermediate();
-      }
-      
-      // Add pulse animation to CSS
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-        .completed {
-          border: 2px solid #4ade80 !important;
-          background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(34, 197, 94, 0.1)) !important;
-        }
-        .locked {
-          border: 2px solid #6b7280 !important;
-          background: linear-gradient(135deg, rgba(107, 114, 128, 0.1), rgba(75, 85, 99, 0.1)) !important;
-        }
-        .category-indicator {
-          position: absolute;
-          top: 0.5rem;
-          right: 0.5rem;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-        }
-      `;
-      document.head.appendChild(style);
+
+      // Load first unlocked lesson
+      const firstUnlockedId = progressData.unlockedLessons[0];
+      const idx = lessonIndexById(firstUnlockedId);
+      loadLesson(idx >= 0 ? idx : 0);
+      console.log('SoftFingers lessons initialized successfully.');
     }
 
-    // Start the application
+    // Initialize the app
     initializeApp();
-    
-    console.log('Professional Typing Lessons fully initialized!');
-    console.log('Progress data:', progressData);
   </script>
 </body>
 </html>
