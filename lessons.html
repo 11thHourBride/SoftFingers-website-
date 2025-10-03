@@ -649,6 +649,61 @@
       display: none;
     }
 
+    /* Game Card Styles */
+    .game-card {
+      transition: var(--transition);
+      border: 2px solid transparent;
+    }
+
+    .game-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+    }
+
+    .game-card h3 {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Game Canvas Styles */
+    #game-canvas {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .falling-word {
+      position: absolute;
+      background: var(--primary-gradient);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: top 0.05s linear;
+      box-shadow: var(--shadow-md);
+    }
+
+    .game-input {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.2rem;
+      background: var(--bg-card);
+      border: 2px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-family: 'Monaco', 'Consolas', monospace;
+      text-align: center;
+    }
+
+    .game-input:focus {
+      outline: none;
+      border-color: var(--border-accent);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    }
+
     img {
       width: 100%;
       max-width: 500px;
@@ -804,6 +859,17 @@
           <div class="level-progress">Locked</div>
         </div>
         <div class="level-status">🔒</div>
+      </div>
+
+      <div class="level-nav-item" data-level="games">
+        <div class="level-icon" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">
+          🎮
+        </div>
+        <div class="level-info">
+          <div class="level-name">Games</div>
+          <div class="level-progress">Practice & Fun</div>
+        </div>
+        <div class="level-status">🎯</div>
       </div>
     </div>
 
@@ -1081,6 +1147,157 @@
             <p style="color: var(--text-muted); font-size: 1.1rem;">
               Complete all Intermediate lessons to unlock Advanced level training.
             </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Games Section -->
+      <div class="section hidden" id="section-games">
+        <!-- Games Header -->
+        <div class="card slide-up">
+          <h2>🎮 Typing Games</h2>
+          <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 1rem;">
+            Practice your typing skills with fun and engaging games! These games help improve speed, accuracy, and reaction time.
+          </p>
+        </div>
+
+        <!-- Game Selection Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+          
+          <!-- Game 1: Falling Words -->
+          <div class="card game-card" data-game="falling-words" style="cursor: pointer;">
+            <div style="text-align: center;">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">⬇️</div>
+              <h3 style="margin-bottom: 0.5rem;">Falling Words</h3>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                Type words before they reach the bottom! Test your speed under pressure.
+              </p>
+              <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Speed</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Reaction</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Easy</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 2: Word Race -->
+          <div class="card game-card" data-game="word-race" style="cursor: pointer;">
+            <div style="text-align: center;">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">🏁</div>
+              <h3 style="margin-bottom: 0.5rem;">Word Race</h3>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                Race against time! Type as many words as possible in 60 seconds.
+              </p>
+              <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Speed</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Endurance</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Medium</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 3: Letter Ninja -->
+          <div class="card game-card" data-game="letter-ninja" style="cursor: pointer;">
+            <div style="text-align: center;">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">🥷</div>
+              <h3 style="margin-bottom: 0.5rem;">Letter Ninja</h3>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                Hit the correct keys as letters appear! Master keyboard accuracy.
+              </p>
+              <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Accuracy</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Focus</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Medium</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 4: Typing Destroyer -->
+          <div class="card game-card" data-game="typing-destroyer" style="cursor: pointer;">
+            <div style="text-align: center;">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">💥</div>
+              <h3 style="margin-bottom: 0.5rem;">Typing Destroyer</h3>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                Destroy words by typing them correctly! Combo multipliers included.
+              </p>
+              <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Speed</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Combos</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Hard</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 5: Sentence Challenge -->
+          <div class="card game-card" data-game="sentence-challenge" style="cursor: pointer;">
+            <div style="text-align: center;">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+              <h3 style="margin-bottom: 0.5rem;">Sentence Challenge</h3>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                Type complete sentences accurately. Perfect for real-world practice.
+              </p>
+              <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Accuracy</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Practical</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Easy</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game 6: Typing Marathon -->
+          <div class="card game-card" data-game="typing-marathon" style="cursor: pointer;">
+            <div style="text-align: center;">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">🏃</div>
+              <h3 style="margin-bottom: 0.5rem;">Typing Marathon</h3>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                Endless typing! See how long you can maintain your speed and accuracy.
+              </p>
+              <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Endurance</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Stamina</span>
+                <span style="background: var(--bg-secondary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Hard</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Game Canvas Container -->
+        <div id="game-container" class="card hidden" style="min-height: 500px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2 id="game-title">Game Title</h2>
+            <button class="btn btn-secondary" id="close-game">✕ Close Game</button>
+          </div>
+          
+          <div id="game-canvas" style="background: var(--bg-secondary); border-radius: var(--radius-md); padding: 2rem; min-height: 400px; position: relative;">
+            <!-- Game content will be injected here -->
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div class="stat-card">
+              <div class="stat-label">Score</div>
+              <div class="stat-value" id="game-score">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Time</div>
+              <div class="stat-value" id="game-time">0s</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">WPM</div>
+              <div class="stat-value" id="game-wpm">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Accuracy</div>
+              <div class="stat-value" id="game-accuracy">100%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- High Scores -->
+        <div class="card">
+          <h2>🏆 Your High Scores</h2>
+          <div id="high-scores-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <!-- High scores will be populated here -->
           </div>
         </div>
       </div>
@@ -1975,6 +2192,747 @@
       }, { threshold: 0.2 });
       images.forEach(img => observer.observe(img));
     });
+    
+    // Initialize
+    function initializeApp() {
+      if (!progressData.unlockedLessons || progressData.unlockedLessons.length === 0) {
+        progressData.unlockedLessons = [1];
+        localStorage.setItem('typingProgress', JSON.stringify(progressData));
+      }
+
+      populateLessonsGrid();
+      updateProgressDisplay();
+      updateSidebarStats();
+      initializeGames();
+      displayHighScores();
+
+      const firstUnlockedId = progressData.unlockedLessons[0];
+      const idx = lessonIndexById(firstUnlockedId);
+      loadLesson(idx >= 0 ? idx : 0);
+      
+      console.log('SoftFingers Professional Typing Lessons initialized.');
+    }
+
+    // =======================
+    // GAMES SYSTEM
+    // =======================
+
+    let currentGame = null;
+    let gameInterval = null;
+    let gameScores = JSON.parse(localStorage.getItem('typingGameScores')) || {};
+
+    // Word lists for games
+    const gameWords = {
+      easy: ['cat', 'dog', 'run', 'jump', 'book', 'tree', 'sun', 'moon', 'star', 'fish', 'bird', 'home', 'love', 'play', 'work', 'talk', 'walk', 'read', 'write', 'think'],
+      medium: ['house', 'water', 'speed', 'brain', 'quick', 'storm', 'light', 'space', 'power', 'magic', 'dream', 'peace', 'happy', 'smart', 'brave', 'strong', 'bright', 'clear', 'fresh', 'clean'],
+      hard: ['computer', 'keyboard', 'mountain', 'butterfly', 'adventure', 'challenge', 'excellent', 'wonderful', 'beautiful', 'javascript', 'development', 'programming', 'algorithm', 'function', 'variable', 'technology', 'creativity', 'experience', 'intelligence', 'performance']
+    };
+
+    const sentences = [
+      'The quick brown fox jumps over the lazy dog.',
+      'Practice makes perfect when learning to type.',
+      'Typing skills are essential in the modern world.',
+      'Focus on accuracy first, then build up your speed.',
+      'Regular practice will improve your typing abilities.',
+      'Keep your fingers on the home row position.',
+      'Touch typing helps reduce eye strain and fatigue.',
+      'Develop muscle memory through consistent practice.'
+    ];
+
+    function initializeGames() {
+      document.querySelectorAll('.game-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const gameName = card.getAttribute('data-game');
+          startGame(gameName);
+        });
+      });
+
+      document.getElementById('close-game').addEventListener('click', () => {
+        closeGame();
+      });
+    }
+
+    function startGame(gameName) {
+      closeGame(); // Close any existing game
+      
+      document.getElementById('game-container').classList.remove('hidden');
+      document.getElementById('game-container').scrollIntoView({ behavior: 'smooth' });
+      
+      currentGame = gameName;
+      
+      const gameCanvas = document.getElementById('game-canvas');
+      gameCanvas.innerHTML = '';
+      
+      // Reset stats
+      document.getElementById('game-score').textContent = '0';
+      document.getElementById('game-time').textContent = '0s';
+      document.getElementById('game-wpm').textContent = '0';
+      document.getElementById('game-accuracy').textContent = '100%';
+      
+      switch(gameName) {
+        case 'falling-words':
+          startFallingWords();
+          break;
+        case 'word-race':
+          startWordRace();
+          break;
+        case 'letter-ninja':
+          startLetterNinja();
+          break;
+        case 'typing-destroyer':
+          startTypingDestroyer();
+          break;
+        case 'sentence-challenge':
+          startSentenceChallenge();
+          break;
+        case 'typing-marathon':
+          startTypingMarathon();
+          break;
+      }
+    }
+
+    function closeGame() {
+      if (gameInterval) {
+        clearInterval(gameInterval);
+        gameInterval = null;
+      }
+      
+      if (currentGame) {
+        document.getElementById('game-container').classList.add('hidden');
+        currentGame = null;
+      }
+    }
+
+    // Game 1: Falling Words
+    function startFallingWords() {
+      document.getElementById('game-title').textContent = '⬇️ Falling Words';
+      
+      const gameCanvas = document.getElementById('game-canvas');
+      const canvasHeight = 400;
+      
+      let score = 0;
+      let time = 0;
+      let lives = 3;
+      let totalTyped = 0;
+      let correctTyped = 0;
+      let fallingWords = [];
+      let nextWordId = 0;
+      
+      gameCanvas.innerHTML = `
+        <div style="position: relative; height: ${canvasHeight}px; border: 2px solid var(--border-subtle); border-radius: var(--radius-md); overflow: hidden; background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-card) 100%);">
+          <div id="falling-area" style="position: relative; height: 100%; width: 100%;"></div>
+          <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 8px;">
+            <span style="color: #ef4444; font-weight: 600;">❤️ Lives: <span id="lives-count">${lives}</span></span>
+          </div>
+        </div>
+        <input type="text" id="game-word-input" class="game-input" placeholder="Type the falling words..." autocomplete="off" style="margin-top: 1rem;">
+      `;
+      
+      const fallingArea = document.getElementById('falling-area');
+      const input = document.getElementById('game-word-input');
+      const livesDisplay = document.getElementById('lives-count');
+      
+      input.focus();
+      
+      function createFallingWord() {
+        const word = gameWords.easy[Math.floor(Math.random() * gameWords.easy.length)];
+        const wordElement = document.createElement('div');
+        wordElement.className = 'falling-word';
+        wordElement.textContent = word;
+        wordElement.style.left = Math.random() * (fallingArea.offsetWidth - 100) + 'px';
+        wordElement.style.top = '0px';
+        wordElement.dataset.wordId = nextWordId++;
+        wordElement.dataset.word = word;
+        
+        fallingArea.appendChild(wordElement);
+        
+        fallingWords.push({
+          element: wordElement,
+          word: word,
+          top: 0,
+          speed: 1 + Math.random() * 0.5
+        });
+      }
+      
+      function updateFallingWords() {
+        fallingWords = fallingWords.filter(wordObj => {
+          wordObj.top += wordObj.speed;
+          wordObj.element.style.top = wordObj.top + 'px';
+          
+          if (wordObj.top > canvasHeight - 50) {
+            wordObj.element.remove();
+            lives--;
+            livesDisplay.textContent = lives;
+            
+            if (lives <= 0) {
+              endGame();
+            }
+            return false;
+          }
+          return true;
+        });
+      }
+      
+      input.addEventListener('input', () => {
+        const typed = input.value.trim().toLowerCase();
+        
+        for (let i = 0; i < fallingWords.length; i++) {
+          if (fallingWords[i].word === typed) {
+            score += 10;
+            correctTyped += typed.length;
+            totalTyped += typed.length;
+            
+            fallingWords[i].element.remove();
+            fallingWords.splice(i, 1);
+            
+            input.value = '';
+            document.getElementById('game-score').textContent = score;
+            updateGameWPM();
+            break;
+          }
+        }
+      });
+      
+      input.addEventListener('keydown', (e) => {
+        totalTyped++;
+      });
+      
+      function updateGameWPM() {
+        const minutes = time / 60;
+        const wpm = minutes > 0 ? Math.round((correctTyped / 5) / minutes) : 0;
+        const accuracy = totalTyped > 0 ? Math.round((correctTyped / totalTyped) * 100) : 100;
+        
+        document.getElementById('game-wpm').textContent = wpm;
+        document.getElementById('game-accuracy').textContent = accuracy + '%';
+      }
+      
+      function endGame() {
+        clearInterval(gameInterval);
+        input.disabled = true;
+        
+        saveGameScore('falling-words', score);
+        displayHighScores();
+        
+        setTimeout(() => {
+          alert(`Game Over!\n\nFinal Score: ${score}\nTime: ${time}s\nWPM: ${document.getElementById('game-wpm').textContent}`);
+        }, 500);
+      }
+      
+      // Create initial words
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => createFallingWord(), i * 1000);
+      }
+      
+      gameInterval = setInterval(() => {
+        time++;
+        document.getElementById('game-time').textContent = time + 's';
+        updateFallingWords();
+        
+        if (Math.random() < 0.3) {
+          createFallingWord();
+        }
+      }, 1000);
+    }
+
+    // Game 2: Word Race
+    function startWordRace() {
+      document.getElementById('game-title').textContent = '🏁 Word Race';
+      
+      const gameCanvas = document.getElementById('game-canvas');
+      const gameDuration = 60;
+      let timeLeft = gameDuration;
+      let score = 0;
+      let wordsTyped = 0;
+      let totalChars = 0;
+      let correctChars = 0;
+      
+      gameCanvas.innerHTML = `
+        <div style="text-align: center; padding: 2rem;">
+          <div style="font-size: 3rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;" id="time-remaining">${timeLeft}s</div>
+          <div style="font-size: 2rem; padding: 2rem; background: var(--bg-card); border-radius: var(--radius-md); margin-bottom: 1rem; min-height: 100px; display: flex; align-items: center; justify-content: center;" id="current-word-display">
+            Ready...
+          </div>
+          <input type="text" id="race-input" class="game-input" placeholder="Type the word and press Enter..." autocomplete="off">
+          <div style="margin-top: 1rem; color: var(--text-muted);">
+            <span id="words-typed-count">0</span> words typed
+          </div>
+        </div>
+      `;
+      
+      const wordDisplay = document.getElementById('current-word-display');
+      const input = document.getElementById('race-input');
+      const timeDisplay = document.getElementById('time-remaining');
+      const wordsCount = document.getElementById('words-typed-count');
+      
+      let currentWord = '';
+      
+      function getRandomWord() {
+        const allWords = [...gameWords.easy, ...gameWords.medium, ...gameWords.hard];
+        return allWords[Math.floor(Math.random() * allWords.length)];
+      }
+      
+      function setNewWord() {
+        currentWord = getRandomWord();
+        wordDisplay.textContent = currentWord;
+      }
+      
+      setTimeout(() => {
+        setNewWord();
+        input.focus();
+        input.disabled = false;
+        
+        gameInterval = setInterval(() => {
+          timeLeft--;
+          timeDisplay.textContent = timeLeft + 's';
+          document.getElementById('game-time').textContent = (gameDuration - timeLeft) + 's';
+          
+          if (timeLeft <= 0) {
+            endRace();
+          }
+        }, 1000);
+      }, 1000);
+      
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const typed = input.value.trim();
+          totalChars += typed.length;
+          
+          if (typed === currentWord) {
+            score += currentWord.length * 2;
+            wordsTyped++;
+            correctChars += typed.length;
+            
+            wordsCount.textContent = wordsTyped;
+            document.getElementById('game-score').textContent = score;
+            
+            setNewWord();
+            input.value = '';
+            
+            const minutes = (gameDuration - timeLeft) / 60;
+            const wpm = minutes > 0 ? Math.round((correctChars / 5) / minutes) : 0;
+            const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
+            
+            document.getElementById('game-wpm').textContent = wpm;
+            document.getElementById('game-accuracy').textContent = accuracy + '%';
+          } else {
+            input.value = '';
+            input.style.borderColor = '#ef4444';
+            setTimeout(() => {
+              input.style.borderColor = '';
+            }, 300);
+          }
+        }
+      });
+      
+      function endRace() {
+        clearInterval(gameInterval);
+        input.disabled = true;
+        
+        saveGameScore('word-race', score);
+        displayHighScores();
+        
+        setTimeout(() => {
+          alert(`Race Complete!\n\nWords Typed: ${wordsTyped}\nScore: ${score}\nWPM: ${document.getElementById('game-wpm').textContent}\nAccuracy: ${document.getElementById('game-accuracy').textContent}`);
+        }, 500);
+      }
+    }
+
+    // Game 3: Letter Ninja
+    function startLetterNinja() {
+      document.getElementById('game-title').textContent = '🥷 Letter Ninja';
+      
+      const gameCanvas = document.getElementById('game-canvas');
+      let score = 0;
+      let time = 0;
+      let streak = 0;
+      let maxStreak = 0;
+      let hits = 0;
+      let misses = 0;
+      
+      const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+      let currentLetter = '';
+      
+     gameCanvas.innerHTML = `
+        <div style="text-align: center; padding: 2rem;">
+          <div style="font-size: 5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2rem; padding: 2rem; background: var(--bg-card); border-radius: var(--radius-md); min-height: 150px; display: flex; align-items: center; justify-content: center;" id="ninja-letter">
+            Press any key to start
+          </div>
+          <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 1rem;">
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Streak</div>
+              <div style="font-size: 1.5rem; font-weight: 700;" id="ninja-streak">0</div>
+            </div>
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Max Streak</div>
+              <div style="font-size: 1.5rem; font-weight: 700;" id="ninja-max-streak">0</div>
+            </div>
+          </div>
+          <div style="color: var(--text-muted);">
+            Hits: <span id="ninja-hits" style="color: #4ade80;">0</span> | 
+            Misses: <span id="ninja-misses" style="color: #ef4444;">0</span>
+          </div>
+        </div>
+      `;
+      
+      const letterDisplay = document.getElementById('ninja-letter');
+      const streakDisplay = document.getElementById('ninja-streak');
+      const maxStreakDisplay = document.getElementById('ninja-max-streak');
+      const hitsDisplay = document.getElementById('ninja-hits');
+      const missesDisplay = document.getElementById('ninja-misses');
+      
+      let gameStarted = false;
+      
+      function setNewLetter() {
+        currentLetter = letters[Math.floor(Math.random() * letters.length)];
+        letterDisplay.textContent = currentLetter.toUpperCase();
+        letterDisplay.style.color = 'var(--text-primary)';
+      }
+      
+      document.addEventListener('keydown', handleKeyPress);
+      
+      function handleKeyPress(e) {
+        if (!gameStarted) {
+          gameStarted = true;
+          setNewLetter();
+          
+          gameInterval = setInterval(() => {
+            time++;
+            document.getElementById('game-time').textContent = time + 's';
+          }, 1000);
+          return;
+        }
+        
+        if (e.key.toLowerCase() === currentLetter) {
+          score += 10 + (streak * 2);
+          hits++;
+          streak++;
+          
+          if (streak > maxStreak) {
+            maxStreak = streak;
+            maxStreakDisplay.textContent = maxStreak;
+          }
+          
+          letterDisplay.style.color = '#4ade80';
+          setTimeout(() => setNewLetter(), 200);
+          
+          document.getElementById('game-score').textContent = score;
+          streakDisplay.textContent = streak;
+          hitsDisplay.textContent = hits;
+          
+        } else if (e.key.length === 1) {
+          misses++;
+          streak = 0;
+          letterDisplay.style.color = '#ef4444';
+          
+          missesDisplay.textContent = misses;
+          streakDisplay.textContent = streak;
+          
+          setTimeout(() => {
+            letterDisplay.style.color = 'var(--text-primary)';
+          }, 200);
+        }
+        
+        const accuracy = (hits + misses) > 0 ? Math.round((hits / (hits + misses)) * 100) : 100;
+        document.getElementById('game-accuracy').textContent = accuracy + '%';
+      }
+    }
+
+    // Game 4: Typing Destroyer
+    function startTypingDestroyer() {
+      document.getElementById('game-title').textContent = '💥 Typing Destroyer';
+      
+      const gameCanvas = document.getElementById('game-canvas');
+      let score = 0;
+      let time = 0;
+      let combo = 0;
+      let destroyed = 0;
+      let totalTyped = 0;
+      let correctTyped = 0;
+      
+      gameCanvas.innerHTML = `
+        <div style="position: relative; padding: 2rem;">
+          <div style="position: absolute; top: 1rem; right: 1rem; background: var(--primary-gradient); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 700; font-size: 1.2rem;">
+            COMBO: <span id="destroyer-combo">0</span>x
+          </div>
+          <div id="words-container" style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; min-height: 200px; margin-bottom: 2rem;">
+            <!-- Words will appear here -->
+          </div>
+          <input type="text" id="destroyer-input" class="game-input" placeholder="Type words to destroy them..." autocomplete="off">
+          <div style="text-align: center; margin-top: 1rem; color: var(--text-muted);">
+            Destroyed: <span id="destroyed-count" style="color: #4ade80; font-weight: 600;">0</span>
+          </div>
+        </div>
+      `;
+      
+      const wordsContainer = document.getElementById('words-container');
+      const input = document.getElementById('destroyer-input');
+      const comboDisplay = document.getElementById('destroyer-combo');
+      const destroyedDisplay = document.getElementById('destroyed-count');
+      
+      let activeWords = [];
+      
+      function createWord() {
+        const allWords = [...gameWords.medium, ...gameWords.hard];
+        const word = allWords[Math.floor(Math.random() * allWords.length)];
+        
+        const wordElement = document.createElement('div');
+        wordElement.className = 'falling-word';
+        wordElement.textContent = word;
+        wordElement.dataset.word = word;
+        wordElement.style.position = 'relative';
+        wordElement.style.animation = 'pulse 2s infinite';
+        
+        wordsContainer.appendChild(wordElement);
+        activeWords.push({ element: wordElement, word: word });
+      }
+      
+      for (let i = 0; i < 4; i++) {
+        createWord();
+      }
+      
+      input.focus();
+      
+      input.addEventListener('input', () => {
+        const typed = input.value.trim().toLowerCase();
+        totalTyped = input.value.length;
+        
+        for (let i = 0; i < activeWords.length; i++) {
+          if (activeWords[i].word === typed) {
+            const wordLen = typed.length;
+            score += wordLen * 5 * (combo + 1);
+            correctTyped += wordLen;
+            destroyed++;
+            combo++;
+            
+            activeWords[i].element.style.animation = 'none';
+            activeWords[i].element.style.transform = 'scale(1.5)';
+            activeWords[i].element.style.opacity = '0';
+            
+            setTimeout(() => {
+              activeWords[i].element.remove();
+            }, 300);
+            
+            activeWords.splice(i, 1);
+            input.value = '';
+            
+            document.getElementById('game-score').textContent = score;
+            comboDisplay.textContent = combo;
+            destroyedDisplay.textContent = destroyed;
+            
+            createWord();
+            
+            const minutes = time / 60;
+            const wpm = minutes > 0 ? Math.round((correctTyped / 5) / minutes) : 0;
+            const accuracy = totalTyped > 0 ? Math.round((correctTyped / totalTyped) * 100) : 100;
+            
+            document.getElementById('game-wpm').textContent = wpm;
+            document.getElementById('game-accuracy').textContent = accuracy + '%';
+            break;
+          }
+        }
+      });
+      
+      let comboTimeout;
+      input.addEventListener('keydown', () => {
+        clearTimeout(comboTimeout);
+        comboTimeout = setTimeout(() => {
+          combo = 0;
+          comboDisplay.textContent = combo;
+        }, 3000);
+      });
+      
+      gameInterval = setInterval(() => {
+        time++;
+        document.getElementById('game-time').textContent = time + 's';
+        
+        if (Math.random() < 0.2 && activeWords.length < 8) {
+          createWord();
+        }
+      }, 1000);
+    }
+
+    // Game 5: Sentence Challenge
+    function startSentenceChallenge() {
+      document.getElementById('game-title').textContent = '📝 Sentence Challenge';
+      
+      const gameCanvas = document.getElementById('game-canvas');
+      let score = 0;
+      let time = 0;
+      let sentencesCompleted = 0;
+      let totalChars = 0;
+      let correctChars = 0;
+      
+      gameCanvas.innerHTML = `
+        <div style="text-align: center; padding: 2rem;">
+          <div style="font-size: 1.5rem; padding: 2rem; background: var(--bg-card); border-radius: var(--radius-md); margin-bottom: 1rem; line-height: 1.8;" id="sentence-display">
+            Loading...
+          </div>
+          <input type="text" id="sentence-input" class="game-input" placeholder="Type the sentence exactly..." autocomplete="off">
+          <div style="margin-top: 1rem; color: var(--text-muted);">
+            Sentences completed: <span id="sentences-count" style="color: #4ade80; font-weight: 600;">0</span>
+          </div>
+        </div>
+      `;
+      
+      const sentenceDisplay = document.getElementById('sentence-display');
+      const input = document.getElementById('sentence-input');
+      const sentencesCount = document.getElementById('sentences-count');
+      
+      let currentSentence = '';
+      
+      function setNewSentence() {
+        currentSentence = sentences[Math.floor(Math.random() * sentences.length)];
+        sentenceDisplay.textContent = currentSentence;
+        input.value = '';
+      }
+      
+      setNewSentence();
+      input.focus();
+      
+      input.addEventListener('input', () => {
+        const typed = input.value;
+        totalChars = typed.length;
+        
+        let correct = 0;
+        for (let i = 0; i < typed.length && i < currentSentence.length; i++) {
+          if (typed[i] === currentSentence[i]) {
+            correct++;
+          }
+        }
+        correctChars = correct;
+        
+        if (typed === currentSentence) {
+          score += currentSentence.length * 3;
+          sentencesCompleted++;
+          
+          document.getElementById('game-score').textContent = score;
+          sentencesCount.textContent = sentencesCompleted;
+          
+          input.style.borderColor = '#4ade80';
+          setTimeout(() => {
+            input.style.borderColor = '';
+            setNewSentence();
+          }, 500);
+        }
+        
+        const minutes = time / 60;
+        const wpm = minutes > 0 ? Math.round((correctChars / 5) / minutes) : 0;
+        const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
+        
+        document.getElementById('game-wpm').textContent = wpm;
+        document.getElementById('game-accuracy').textContent = accuracy + '%';
+      });
+      
+      gameInterval = setInterval(() => {
+        time++;
+        document.getElementById('game-time').textContent = time + 's';
+      }, 1000);
+    }
+
+    // Game 6: Typing Marathon
+    function startTypingMarathon() {
+      document.getElementById('game-title').textContent = '🏃 Typing Marathon';
+      
+      const gameCanvas = document.getElementById('game-canvas');
+      let score = 0;
+      let time = 0;
+      let wordsTyped = 0;
+      let totalChars = 0;
+      let correctChars = 0;
+      
+      gameCanvas.innerHTML = `
+        <div style="text-align: center; padding: 2rem;">
+          <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2rem;">
+            🏃 Keep Going! 🏃
+          </div>
+          <div style="font-size: 1.8rem; padding: 2rem; background: var(--bg-card); border-radius: var(--radius-md); margin-bottom: 1rem;" id="marathon-word">
+            Ready...
+          </div>
+          <input type="text" id="marathon-input" class="game-input" placeholder="Type the word and keep going..." autocomplete="off">
+          <div style="margin-top: 1rem;">
+            <div style="display: inline-block; background: var(--primary-gradient); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">
+              Marathon Progress: <span id="marathon-progress">0</span> words
+            </div>
+          </div>
+        </div>
+      `;
+      
+      const wordDisplay = document.getElementById('marathon-word');
+      const input = document.getElementById('marathon-input');
+      const progressDisplay = document.getElementById('marathon-progress');
+      
+      let currentWord = '';
+      
+      function getRandomWord() {
+        const allWords = [...gameWords.easy, ...gameWords.medium, ...gameWords.hard];
+        return allWords[Math.floor(Math.random() * allWords.length)];
+      }
+      
+      function setNewWord() {
+        currentWord = getRandomWord();
+        wordDisplay.textContent = currentWord;
+      }
+      
+      setTimeout(() => {
+        setNewWord();
+        input.focus();
+      }, 500);
+      
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const typed = input.value.trim();
+          totalChars += typed.length;
+          
+          if (typed === currentWord) {
+            score += currentWord.length * 2;
+            wordsTyped++;
+            correctChars += typed.length;
+            
+            document.getElementById('game-score').textContent = score;
+            progressDisplay.textContent = wordsTyped;
+            
+            setNewWord();
+            input.value = '';
+            
+            const minutes = time / 60;
+            const wpm = minutes > 0 ? Math.round((correctChars / 5) / minutes) : 0;
+            const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
+            
+            document.getElementById('game-wpm').textContent = wpm;
+            document.getElementById('game-accuracy').textContent = accuracy + '%';
+          } else {
+            input.value = '';
+            input.style.borderColor = '#ef4444';
+            setTimeout(() => {
+              input.style.borderColor = '';
+            }, 300);
+          }
+        }
+      });
+         gameInterval = setInterval(() => {
+        time++;
+        document.getElementById('game-time').textContent = time + 's';
+      }, 1000);
+    }
+
+    // Save and display high scores
+    function saveGameScore(gameName, score) {
+      if (!gameScores[gameName]) {
+        gameScores[gameName] = [];
+      }
+      
+      gameScores[gameName].push({
+        score: score,
+        date: new Date().toLocaleDateString(),
+        time: document.getElementById('game-time').textContent,
+        wpm: document.getElementById('game-wpm').textContent
+      });
+      
+      gameScores[gameName].sort((a, b) => b.score - a.score);
+      gameScores[gameName] = gameScores[gameName].slice(0, 5);
+      
+      localStorage.setItem('typingGameScores', JSON.stringify(gameScores));}
+    
 
     // Initialize
     function initializeApp() {
