@@ -10,7 +10,7 @@
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <link rel="stylesheet" href="SoftFingers-Main.css">
-  
+  <link rel="stylesheet" href="achievements.css">
 </head>
 <body>
   <!-- Header -->
@@ -208,15 +208,7 @@
               </div>
             </div>
 
-            <div class="card hidden sidebar-section" id="section-achievements">
-              <div class="card-header">
-                <h3 class="card-title">Achievements</h3>
-              </div>
-              <div class="card-content">
-                <p class="text-muted">Your badges and milestones will appear here.</p>
-              </div>
-            </div>
-
+           
             <div class="card hidden sidebar-section" id="section-competition">
               <div class="card-header">
                 <h3 class="card-title">Competition</h3>
@@ -322,6 +314,28 @@
           </div>
         </div>
       </div>
+      <!-- Achievements Full Page (Hidden by default) -->
+            <div id="achievements-full-page" class="hidden">
+              <div class="achievements-header">
+                <div>
+                  <h2 class="achievements-page-title">Your Achievements</h2>
+                  <p class="achievements-page-subtitle">Track your typing milestones and unlock badges</p>
+                </div>
+                <div id="achievements-stats" class="achievements-stats-summary">
+                  <div class="stat-pill">
+                    <span class="stat-pill-value" id="total-achievements">0</span>
+                    <span class="stat-pill-label">Unlocked</span>
+                  </div>
+                  <div class="stat-pill">
+                    <span class="stat-pill-value" id="achievement-percentage">0%</span>
+                    <span class="stat-pill-label">Complete</span>
+                  </div>
+                </div>
+              </div>
+              <div id="achievements-container" class="achievements-grid">
+                <p class="text-muted text-center">Complete tests to unlock achievements!</p>
+              </div>
+            </div>
 
       <!-- Authentication Card -->
       <div class="card" id="auth-card" style="margin: 64px auto; max-width: 500px;">
