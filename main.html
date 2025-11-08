@@ -167,6 +167,34 @@
                     <div class="stat-value" id="best-acc">0%</div>
                   </div>
                 </div>
+                
+                <!-- Last Test Results (Hidden by default) -->
+                <div id="last-test-results" class="hidden" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+                  <div class="loader" id="results-loader" style="margin: 20px auto;"></div>
+                  <div id="results-content" class="hidden">
+                    <h4 style="margin: 0 0 12px; font-size: 0.875rem; color: var(--text-secondary);">Last Test Results</h4>
+                    <div class="stats-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 12px;">
+                      <div class="stat-card">
+                        <div class="stat-label">WPM</div>
+                        <div class="stat-value" id="last-wpm">0</div>
+                      </div>
+                      <div class="stat-card">
+                        <div class="stat-label">Accuracy</div>
+                        <div class="stat-value" id="last-acc">0%</div>
+                      </div>
+                    </div>
+                    <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+                      <div class="stat-card">
+                        <div class="stat-label">Correct</div>
+                        <div class="stat-value correct" id="last-correct">0</div>
+                      </div>
+                      <div class="stat-card">
+                        <div class="stat-label">Incorrect</div>
+                        <div class="stat-value incorrect" id="last-incorrect">0</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
