@@ -13,30 +13,39 @@ document.addEventListener('DOMContentLoaded', () => {
   const auth = firebase.auth();
   const db = firebase.firestore();
 
-  // ==== F5 KEY HANDLER ====
-  let f5PressCount = 0;
-  let f5Timer = null;
-  
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'F5') {
-      e.preventDefault();
-      f5PressCount++;
-      
-      if (f5PressCount === 1) {
-        // First press - generate new passage
-        generatePassage();
-        
-        // Reset counter after 1 second
-        f5Timer = setTimeout(() => {
-          f5PressCount = 0;
-        }, 1000);
-      } else if (f5PressCount === 2) {
-        // Second press within 1 second - refresh page
-        clearTimeout(f5Timer);
-        location.reload();
+// ==== F5 KEY HANDLER ====
+let f5PressCount = 0;
+let f5Timer = null;
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'F5') {
+    e.preventDefault();
+    f5PressCount++;
+    
+    if (f5PressCount === 1) {
+      // First press - generate new test based on current mode
+      if (mode === 'quote') {
+        loadNewQuote();
+      } else if (mode === 'story') {
+        loadNewStory();
+      } else {
+        loadNewPassage();
       }
+      
+      // Add autofocus after loading new test
+      focusTypingInput();
+      
+      // Reset counter after 1 second
+      f5Timer = setTimeout(() => {
+        f5PressCount = 0;
+      }, 1000);
+    } else if (f5PressCount === 2) {
+      // Second press within 1 second - refresh page
+      clearTimeout(f5Timer);
+      location.reload();
     }
-  });
+  }
+});
 
   // ==== ELEMENTS (updated for new HTML structure) ====
   const loginTab = document.getElementById('tab-login');
@@ -611,98 +620,120 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ==== DIFFICULTY / DURATION ====
-  diffTabs.forEach(t => {
-    t.addEventListener('click', () => {
-      if (mode !== 'passage') return;
-      diffTabs.forEach(x => x.classList.remove('active'));
-      t.classList.add('active');
-      currentDifficulty = t.dataset.diff;
-      loadNewPassage();
-      if (currentUser) refreshDashboard();
-    });
-  });
-
-  durationSelect.addEventListener('change', () => {
-    duration = parseInt(durationSelect.value, 10);
-    if (mode === 'passage') loadNewPassage();
-    else if (mode === 'quote') loadNewQuote();
-    else loadNewStory();
+ // ==== DIFFICULTY / DURATION ====
+diffTabs.forEach(t => {
+  t.addEventListener('click', () => {
+    if (mode !== 'passage') return;
+    diffTabs.forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    currentDifficulty = t.dataset.diff;
+    loadNewPassage();
     if (currentUser) refreshDashboard();
+    
+    // Add autofocus after difficulty change
+    focusTypingInput();
   });
+});
+ durationSelect.addEventListener('change', () => {
+  duration = parseInt(durationSelect.value, 10);
+  if (mode === 'passage') loadNewPassage();
+  else if (mode === 'quote') loadNewQuote();
+  else loadNewStory();
+  if (currentUser) refreshDashboard();
+  
+  // Add autofocus after duration change
+  focusTypingInput();
+});
 
   // ==== MODE SWITCHING ====
-  modeSelect.addEventListener('change', () => {
-    mode = modeSelect.value;
+modeSelect.addEventListener('change', () => {
+  mode = modeSelect.value;
 
-    if (mode === 'quote') {
-      quoteControls.style.display = 'block';
-      storyControls.style.display = 'none';
-      diffTabs.forEach(t => t.style.display = 'none');
-      loadNewQuote();
-    } else if (mode === 'story') {
-      quoteControls.style.display = 'none';
-      storyControls.style.display = 'block';
-      diffTabs.forEach(t => t.style.display = 'none');
-      loadNewStory();
-    } else {
-      quoteControls.style.display = 'none';
-      storyControls.style.display = 'none';
-      diffTabs.forEach(t => t.style.display = '');
-      loadNewPassage();
-    }
-  });
+  if (mode === 'quote') {
+    quoteControls.style.display = 'block';
+    storyControls.style.display = 'none';
+    diffTabs.forEach(t => t.style.display = 'none');
+    loadNewQuote();
+  } else if (mode === 'story') {
+    quoteControls.style.display = 'none';
+    storyControls.style.display = 'block';
+    diffTabs.forEach(t => t.style.display = 'none');
+    loadNewStory();
+  } else {
+    quoteControls.style.display = 'none';
+    storyControls.style.display = 'none';
+    diffTabs.forEach(t => t.style.display = '');
+    loadNewPassage();
+  }
+  
+  // Add autofocus after mode change
+  focusTypingInput();
+});
 
-  quoteSelect.addEventListener('change', () => {
-    if (mode === 'quote') loadNewQuote();
-  });
+ quoteSelect.addEventListener('change', () => {
+  if (mode === 'quote') {
+    loadNewQuote();
+    // Add autofocus after quote change
+    focusTypingInput();
+  }
+});
 
-  storyChapterSelect.addEventListener('change', () => {
-    currentStoryIndex = parseInt(storyChapterSelect.value, 10) || 0;
-    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
-    if (mode === 'story') loadNewStory();
-  });
+ storyChapterSelect.addEventListener('change', () => {
+  currentStoryIndex = parseInt(storyChapterSelect.value, 10) || 0;
+  storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
+  if (mode === 'story') {
+    loadNewStory();
+    // Add autofocus after chapter change
+    focusTypingInput();
+  }
+});
 
   storyPartSelect.addEventListener('change', () => {
-    currentStoryPart = parseInt(storyPartSelect.value, 10) || 0;
-    storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
-    if (mode === 'story') loadNewStory();
-  });
+  currentStoryPart = parseInt(storyPartSelect.value, 10) || 0;
+  storyMetaEl.textContent = `${STORIES[currentStoryIndex].title} — Part ${Number(currentStoryPart)+1}`;
+  if (mode === 'story') {
+    loadNewStory();
+    // Add autofocus after part change
+    focusTypingInput();
+  }
+});
 
-  // ==== TYPING EVENT LISTENERS WITH FIXED ACCURACY ====
-  typingInput.addEventListener('input', (e) => {
-    if (!running) startTimer();
-    
-    const newTyped = typingInput.value;
-    
-    if (newTyped.length > targetText.length) {
-      typingInput.value = newTyped.slice(0, targetText.length);
-      return;
-    }
-    
- 
-    
-    lastTypedLength = newTyped.length;
-    typed = newTyped;
+ // ==== TYPING EVENT LISTENERS WITH FIXED ACCURACY ====
+typingInput.addEventListener('input', (e) => {
+  if (!running) startTimer();
+  
+  const newTyped = typingInput.value;
+  
+  // Check if user completed a word (typed a space)
+  if (newTyped.endsWith(' ')) {
+    // Add the completed word to our typed string
+    typed += newTyped;
+    // Clear the input box for the next word
+    typingInput.value = '';
     renderPassage();
     
+    // Check if test is complete
     if (typed.length >= targetText.length) {
       finalizeTest();
     }
-  });
-
-  typingInput.addEventListener('keydown', (e) => {
-    if (e.key.length > 1 && e.key !== ' ' && e.key !== 'Backspace' && e.key !== 'Delete') return;
-    
-    const currentPos = typingInput.selectionStart;
-    
-    if (currentPos >= targetText.length && e.key !== 'Backspace' && e.key !== 'Delete') {
-      e.preventDefault();
-      return;
-    }
-    
-   
-  });
+    return;
+  }
+  
+  // For typing in progress (no space yet)
+  if (newTyped.length > targetText.length - typed.length) {
+    typingInput.value = newTyped.slice(0, targetText.length - typed.length);
+    return;
+  }
+  
+  renderPassage();
+  
+  // Check if test is complete (in case no space at end)
+  if ((typed + newTyped).length >= targetText.length) {
+    typed += newTyped;
+    typingInput.value = '';
+    finalizeTest();
+  }
+});
 
   typingInput.addEventListener('paste', e => e.preventDefault());
  retryBtn.addEventListener('click', () => {
@@ -825,15 +856,20 @@ function resetTestState() {
   return { wpm, accuracy: Math.max(0, Math.min(100, accuracy)) };
 }
 
-  function renderPassage() {
-    const words = targetText.split(" ");
-    const typedWords = typed.trimEnd().split(" ");
+function renderPassage() {
+  const words = targetText.split(" ");
+  const currentWord = typingInput.value; // What's being typed right now
+  const completedTyped = typed; // What's already been typed
+  const fullTyped = completedTyped + currentWord; // Combine them
+  const typedWords = fullTyped.trimEnd().split(" ");
 
-    let currentWordIndex = typedWords.length - 1;
-    if (typed.endsWith(" ") && currentWordIndex < words.length - 1) {
-      currentWordIndex++;
-    }
-
+  // Calculate current word index - it should be the word we're actively typing
+  let currentWordIndex = typed.split(" ").filter(w => w !== '').length;
+  
+  // If we haven't typed anything yet, we're on word 0
+  if (typed === '' && currentWord === '') {
+    currentWordIndex = 0;
+  }
     const style = window.getComputedStyle(passageDisplay);
     const containerWidth = passageDisplay.clientWidth;
     const fontSize = parseInt(style.fontSize, 10);
