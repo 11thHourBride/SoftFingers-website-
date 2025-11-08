@@ -244,7 +244,7 @@
       border: 1px solid var(--border);
       background: var(--card-secondary);
       color: var(--text);
-      font-size: 0.875rem;
+      font-size: 0.975rem;
       outline: none;
       transition: border-color 0.2s ease;
     }
@@ -564,6 +564,28 @@
     .loading {
       opacity: 0.6;
       pointer-events: none;
+    }
+
+    /* Loader spinner */
+    .loader {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--border);
+      border-top: 4px solid var(--accent-solid);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: block;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loader-small {
+      width: 20px;
+      height: 20px;
+      border-width: 2px;
     }
 
     /* Responsive Design */
