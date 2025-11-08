@@ -93,9 +93,17 @@ document.addEventListener('keydown', (e) => {
   const quoteSelect = document.getElementById('quote-select');
   const quoteAuthorEl = document.getElementById('quote-author');
 
-  // Navigation tab switching
+ // Navigation tab switching
   const navTabs = document.querySelectorAll('.nav-tab');
   const sections = document.querySelectorAll('[id^="section-"]');
+  const dashboardSection = document.getElementById('section-dashboard');
+  const achievementsFullPage = document.getElementById('achievements-full-page');
+  
+  // Get references to all dashboard elements we need to hide
+  const typingCard = document.querySelector('.typing-card');
+  const sidebar = document.querySelector('.sidebar');
+  const recentTestsCard = recentSection; // Already defined earlier
+  const leaderboardCard = leaderboardSection; // Already defined earlier
   
   navTabs.forEach(tab => {
     tab.addEventListener('click', function() {
@@ -107,17 +115,51 @@ document.addEventListener('keydown', (e) => {
       navTabs.forEach(t => t.classList.remove('active'));
       this.classList.add('active');
       
-      // Show/hide sections
-      sections.forEach(section => {
-        if (section.id === `section-${feature}`) {
-          section.classList.remove('hidden');
-        } else {
+      // Handle achievements differently - show full page
+      if (feature === 'achievements') {
+        // Hide all dashboard elements
+        if (typingCard) typingCard.style.display = 'none';
+        if (sidebar) sidebar.style.display = 'none';
+        if (recentTestsCard) recentTestsCard.style.display = 'none';
+        if (leaderboardCard) leaderboardCard.style.display = 'none';
+        
+        // Show achievements full page
+        achievementsFullPage.classList.remove('hidden');
+        
+        if (currentUser) renderAchievements();
+      } else if (feature === 'dashboard') {
+        // Show all dashboard elements
+        if (typingCard) typingCard.style.display = 'block';
+        if (sidebar) sidebar.style.display = 'block';
+        if (recentTestsCard && currentUser) recentTestsCard.style.display = 'block';
+        if (leaderboardCard && currentUser) leaderboardCard.style.display = 'block';
+        
+        // Hide achievements full page
+        achievementsFullPage.classList.add('hidden');
+        
+        // Show/hide sidebar sections
+        sections.forEach(section => {
           section.classList.add('hidden');
-        }
-      });
+        });
+      } else {
+        // Show dashboard but manage sidebar sections for other features
+        if (typingCard) typingCard.style.display = 'block';
+        if (sidebar) sidebar.style.display = 'block';
+        if (recentTestsCard && currentUser) recentTestsCard.style.display = 'block';
+        if (leaderboardCard && currentUser) leaderboardCard.style.display = 'block';
+        
+        achievementsFullPage.classList.add('hidden');
+        
+        sections.forEach(section => {
+          if (section.id === `section-${feature}`) {
+            section.classList.remove('hidden');
+          } else {
+            section.classList.add('hidden');
+          }
+        });
+      }
     });
   });
-
   // ==== DYNAMIC Story controls (auto-injected; no HTML change needed) ====
   const storyControls = document.createElement('div');
   storyControls.id = 'story-controls';
@@ -134,6 +176,323 @@ document.addEventListener('keydown', (e) => {
     </div>
     <div class="text-xs text-muted" id="story-meta" style="margin-top:4px;"></div>
   `;
+  // ==== ACHIEVEMENTS SYSTEM ====
+  const ACHIEVEMENTS = {
+    speed: [
+      { id: 'speed_25', title: 'Typing Apprentice', description: 'Reach 25 WPM', icon: '🎯', requirement: 25 },
+      { id: 'speed_40', title: 'Steady Typist', description: 'Reach 40 WPM', icon: '⚡', requirement: 40 },
+      { id: 'speed_60', title: 'Fast Fingers', description: 'Reach 60 WPM', icon: '🚀', requirement: 60 },
+      { id: 'speed_80', title: 'Speed Demon', description: 'Reach 80 WPM', icon: '🔥', requirement: 80 },
+      { id: 'speed_100', title: 'Century Club', description: 'Reach 100 WPM', icon: '💯', requirement: 100 },
+      { id: 'speed_120', title: 'Elite Typist', description: 'Reach 120 WPM', icon: '👑', requirement: 120 }
+    ],
+    accuracy: [
+      { id: 'acc_90', title: 'Getting Accurate', description: 'Achieve 90% accuracy', icon: '🎪', requirement: 90 },
+      { id: 'acc_95', title: 'Precision Typist', description: 'Achieve 95% accuracy', icon: '🎯', requirement: 95 },
+      { id: 'acc_98', title: 'Near Perfect', description: 'Achieve 98% accuracy', icon: '💎', requirement: 98 },
+      { id: 'acc_100', title: 'Flawless', description: 'Achieve 100% accuracy', icon: '✨', requirement: 100 }
+    ],
+    consistency: [
+      { id: 'tests_10', title: 'Getting Started', description: 'Complete 10 tests', icon: '📝', requirement: 10 },
+      { id: 'tests_50', title: 'Dedicated Learner', description: 'Complete 50 tests', icon: '📚', requirement: 50 },
+      { id: 'tests_100', title: 'Century of Practice', description: 'Complete 100 tests', icon: '🏆', requirement: 100 },
+      { id: 'tests_250', title: 'Practice Master', description: 'Complete 250 tests', icon: '🎓', requirement: 250 },
+      { id: 'tests_500', title: 'Typing Legend', description: 'Complete 500 tests', icon: '⭐', requirement: 500 }
+    ],
+    difficulty: [
+      { id: 'beginner_master', title: 'Beginner Master', description: '25 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 25} },
+      { id: 'beginner_master', title: 'Beginner Master', description: '50 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 50 } },
+      { id: 'beginner_master', title: 'Beginner Master', description: '75 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 75 } },
+      { id: 'beginner_master', title: 'Beginner Master', description: '80 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 80 } },
+      { id: 'beginner_master', title: 'Beginner Master', description: '90 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 90 } },
+      { id: 'beginner_master', title: 'Beginner Master', description: '100 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 100 } },
+      { id: 'beginner_master', title: 'Beginner Master', description: '110 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 110 } },
+      { id: 'beginner_master', title: 'Beginner Master', description: '120 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 120 } },
+      { id: 'beginner_master', title: 'Beginner Master', description: '130 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 130 } },
+      { id: 'beginner_master', title: 'Beginner Master', description: '140 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 140 } },
+      { id: 'beginner_master', title: 'Beginner Master', description: '150 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 150 } },
+      { id: 'beginner_master', title: 'Beginner Master', description: '200 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 200 } },
+      { id: 'intermediate_master', title: 'Intermediate Master', description: '50 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 50 } },
+      { id: 'intermediate_master', title: 'Intermediate Master', description: '75 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 75 } },
+      { id: 'intermediate_master', title: 'Intermediate Master', description: '80 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 80 } },
+      { id: 'intermediate_master', title: 'Intermediate Master', description: '90 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 90 } },
+      { id: 'intermediate_master', title: 'Intermediate Master', description: '95 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 95 } },
+      { id: 'intermediate_master', title: 'Intermediate Master', description: '100 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 100 } },
+      { id: 'intermediate_master', title: 'Intermediate Master', description: '125 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 125 } },
+      { id: 'advanced_master', title: 'Advanced Master', description: '50 WPM on Advanced', icon: '🌳', requirement: { difficulty: 'Advanced', wpm: 50 } },
+      { id: 'all_rounder', title: 'All-Rounder', description: 'Master all difficulties', icon: '🌟', requirement: 'all_difficulties' }
+    ],
+    endurance: [
+      { id: 'marathon_3min', title: 'Short Sprint', description: 'Complete 3 min test at 40+ WPM', icon: '🏃', requirement: { duration: 180, wpm: 40 } },
+      { id: 'marathon_5min', title: 'Marathon Runner', description: 'Complete 5 min test at 40+ WPM', icon: '🏃‍♂️', requirement: { duration: 300, wpm: 40 } }
+    ],
+    special: [
+      { id: 'perfect_test', title: 'Perfect Performance', description: '100% accuracy & 60+ WPM', icon: '🌈', requirement: { accuracy: 100, wpm: 60 } },
+      { id: 'speed_accuracy', title: 'Speed & Precision', description: '80+ WPM & 95+ accuracy', icon: '💫', requirement: { wpm: 80, accuracy: 95 } },
+      { id: 'first_test', title: 'First Steps', description: 'Complete your first test', icon: '🎉', requirement: 'first_test' }
+    ]
+  };
+  // ==== ACHIEVEMENT FUNCTIONS ====
+  function checkAchievements(testResult) {
+    if (!currentUser) return;
+    
+    const newUnlocks = [];
+    
+    // Check each category
+    Object.keys(ACHIEVEMENTS).forEach(category => {
+      ACHIEVEMENTS[category].forEach(achievement => {
+        const unlocked = isAchievementUnlocked(achievement.id);
+        if (!unlocked && meetsRequirement(achievement, testResult)) {
+          unlockAchievement(achievement.id);
+          newUnlocks.push(achievement);
+        }
+      });
+    });
+    
+    // Show notifications for new unlocks
+    newUnlocks.forEach((ach, index) => {
+      setTimeout(() => showAchievementNotification(ach), index * 500);
+    });
+  }
+  
+  function meetsRequirement(achievement, testResult) {
+    const req = achievement.requirement;
+    
+    // Simple numeric requirements
+    if (typeof req === 'number') {
+      if (achievement.id.startsWith('speed_')) {
+        return testResult.wpm >= req;
+      }
+      if (achievement.id.startsWith('acc_')) {
+        return testResult.accuracy >= req;
+      }
+      if (achievement.id.startsWith('tests_')) {
+        return testResult.totalTests >= req;
+      }
+    }
+    
+    // Complex requirements
+    if (typeof req === 'object') {
+      if (req.difficulty && req.wpm) {
+        return testResult.difficulty === req.difficulty && testResult.wpm >= req.wpm;
+      }
+      if (req.duration && req.wpm) {
+        return testResult.duration === req.duration && testResult.wpm >= req.wpm;
+      }
+      if (req.accuracy && req.wpm) {
+        return testResult.accuracy >= req.accuracy && testResult.wpm >= req.wpm;
+      }
+    }
+    
+    // Special requirements
+    if (req === 'first_test') {
+      return testResult.totalTests >= 1;
+    }
+    if (req === 'all_difficulties') {
+      return testResult.hasMasteredAllDifficulties;
+    }
+    
+    return false;
+  }
+  
+  function isAchievementUnlocked(achievementId) {
+    const unlocked = localStorage.getItem(`achievement_${currentUser.uid}_${achievementId}`);
+    return unlocked === 'true';
+  }
+  
+  function unlockAchievement(achievementId) {
+    localStorage.setItem(`achievement_${currentUser.uid}_${achievementId}`, 'true');
+  }
+  
+  function showAchievementNotification(achievement) {
+    const banner = document.createElement('div');
+    banner.className = 'achievement-unlocked-banner';
+    banner.innerHTML = `
+      <div class="achievement-banner-header">
+        <div class="achievement-banner-icon">${achievement.icon}</div>
+        <div class="achievement-banner-text">
+          <h4>Achievement Unlocked!</h4>
+          <p><strong>${achievement.title}</strong></p>
+          <p class="text-small">${achievement.description}</p>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(banner);
+    
+    setTimeout(() => {
+      banner.remove();
+    }, 4000);
+  }
+  
+ async function renderAchievements() {
+    const container = document.getElementById('achievements-container');
+    if (!container) return;
+    
+    if (!currentUser) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 40px;">
+          <p class="text-muted">Sign in to track your achievements and unlock badges!</p>
+        </div>
+      `;
+      return;
+    }
+    
+    // Show loading state
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+        <div class="loader" style="margin: 0 auto;"></div>
+        <p class="text-muted" style="margin-top: 16px;">Loading achievements...</p>
+      </div>
+    `;
+    
+    try {
+      // Get user stats
+      const statsSnap = await db.collection('results')
+        .where('uid', '==', currentUser.uid)
+        .get();
+      
+      const totalTests = statsSnap.size;
+      let maxWPM = 0;
+      let maxAccuracy = 0;
+      const difficultyMastery = { Beginner: false, Intermediate: false, Advanced: false };
+      
+      statsSnap.forEach(doc => {
+        const data = doc.data();
+        if (data.wpm > maxWPM) maxWPM = data.wpm;
+        if (data.accuracy > maxAccuracy) maxAccuracy = data.accuracy;
+        
+        if (data.difficulty && data.wpm >= 50) {
+          difficultyMastery[data.difficulty] = true;
+        }
+      });
+      
+      const hasMasteredAllDifficulties = Object.values(difficultyMastery).every(v => v);
+      
+      // Count unlocked achievements
+      let totalUnlocked = 0;
+      let totalAchievements = 0;
+      
+      Object.keys(ACHIEVEMENTS).forEach(category => {
+        ACHIEVEMENTS[category].forEach(achievement => {
+          totalAchievements++;
+          if (isAchievementUnlocked(achievement.id)) {
+            totalUnlocked++;
+          }
+        });
+      });
+      
+      // Update summary stats
+      const totalAchievementsEl = document.getElementById('total-achievements');
+      const achievementPercentageEl = document.getElementById('achievement-percentage');
+      
+      if (totalAchievementsEl) {
+        totalAchievementsEl.textContent = `${totalUnlocked}/${totalAchievements}`;
+      }
+      if (achievementPercentageEl) {
+        const percentage = Math.round((totalUnlocked / totalAchievements) * 100);
+        achievementPercentageEl.textContent = `${percentage}%`;
+      }
+      
+      let html = '';
+      
+      Object.keys(ACHIEVEMENTS).forEach(category => {
+        const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+        
+        html += `
+          <div class="achievement-category">
+            <h3 class="achievement-category-title">${categoryName}</h3>
+            <div class="achievement-category-grid">
+        `;
+        
+        ACHIEVEMENTS[category].forEach(achievement => {
+          const unlocked = isAchievementUnlocked(achievement.id);
+          const progress = calculateProgress(achievement, {
+            totalTests,
+            maxWPM,
+            maxAccuracy,
+            hasMasteredAllDifficulties,
+            difficultyMastery
+          });
+          
+          html += `
+            <div class="achievement-badge ${unlocked ? 'unlocked' : 'locked'}">
+              <div class="achievement-header">
+                <div class="achievement-icon">${achievement.icon}</div>
+                <div class="achievement-info">
+                  <h5 class="achievement-title">${achievement.title}</h5>
+                  <p class="achievement-description">${achievement.description}</p>
+                </div>
+              </div>
+              ${!unlocked ? `
+                <div class="achievement-progress">
+                  <div class="achievement-progress-label">
+                    <span>Progress</span>
+                    <span>${Math.round(progress)}%</span>
+                  </div>
+                  <div class="achievement-progress-bar-container">
+                    <div class="achievement-progress-bar" style="width: ${progress}%"></div>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        });
+        
+        html += `
+            </div>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+      
+    } catch (error) {
+      console.error('Error loading achievements:', error);
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+          <p class="text-muted">Error loading achievements. Please try again.</p>
+        </div>
+      `;
+    }
+  }
+  
+  function calculateProgress(achievement, stats) {
+    const req = achievement.requirement;
+    
+    if (typeof req === 'number') {
+      if (achievement.id.startsWith('speed_')) {
+        return Math.min(100, (stats.maxWPM / req) * 100);
+      }
+      if (achievement.id.startsWith('acc_')) {
+        return Math.min(100, (stats.maxAccuracy / req) * 100);
+      }
+      if (achievement.id.startsWith('tests_')) {
+        return Math.min(100, (stats.totalTests / req) * 100);
+      }
+    }
+    
+    if (typeof req === 'object') {
+      if (req.difficulty && req.wpm) {
+        const hasMastered = stats.difficultyMastery[req.difficulty];
+        return hasMastered ? 100 : 0;
+      }
+      if (req.wpm && req.accuracy) {
+        const wpmProgress = (stats.maxWPM / req.wpm) * 50;
+        const accProgress = (stats.maxAccuracy / req.accuracy) * 50;
+        return Math.min(100, wpmProgress + accProgress);
+      }
+    }
+    
+    if (req === 'first_test') {
+      return stats.totalTests > 0 ? 100 : 0;
+    }
+    
+    if (req === 'all_difficulties') {
+      return stats.hasMasteredAllDifficulties ? 100 : 0;
+    }
+    
+    return 0;
+  }
   // insert after quote-controls
   quoteControls.parentNode.insertBefore(storyControls, quoteControls.nextSibling);
 
@@ -999,7 +1358,35 @@ function focusTypingInput() {
         
         // Simulate short delay for loader effect
         await new Promise(resolve => setTimeout(resolve, 800));
+        // Check for achievements
+        const statsSnap = await db.collection('results')
+          .where('uid', '==', currentUser.uid)
+          .get();
         
+        const totalTests = statsSnap.size;
+        let difficultyStats = { Beginner: 0, Intermediate: 0, Advanced: 0 };
+        
+        statsSnap.forEach(doc => {
+          const data = doc.data();
+          if (data.difficulty && data.wpm >= 50) {
+            difficultyStats[data.difficulty]++;
+          }
+        });
+        
+        const hasMasteredAllDifficulties = 
+          difficultyStats.Beginner > 0 && 
+          difficultyStats.Intermediate > 0 && 
+          difficultyStats.Advanced > 0;
+        
+        checkAchievements({
+          wpm: stats.wpm,
+          accuracy: stats.accuracy,
+          difficulty: currentDifficulty,
+          duration: duration,
+          totalTests: totalTests,
+          hasMasteredAllDifficulties: hasMasteredAllDifficulties
+        });
+
         // Update last test results
         lastWPMEl.textContent = stats.wpm;
         lastAccEl.textContent = stats.accuracy + '%';
@@ -1131,6 +1518,7 @@ function focusTypingInput() {
       }
       
       await refreshDashboard();
+      await renderAchievements();
       
       // Ensure focus after everything loads
       setTimeout(() => {
