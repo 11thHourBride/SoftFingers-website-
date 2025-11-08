@@ -62,8 +62,15 @@ document.addEventListener('keydown', (e) => {
   const sendVerifBtn = document.getElementById('send-verif-btn');
   const authSummary = document.getElementById('auth-summary');
 
-  const bestWPMEl = document.getElementById('best-wpm');
+ const bestWPMEl = document.getElementById('best-wpm');
   const bestAccEl = document.getElementById('best-acc');
+  const lastTestResults = document.getElementById('last-test-results');
+  const resultsLoader = document.getElementById('results-loader');
+  const resultsContent = document.getElementById('results-content');
+  const lastWPMEl = document.getElementById('last-wpm');
+  const lastAccEl = document.getElementById('last-acc');
+  const lastCorrectEl = document.getElementById('last-correct');
+  const lastIncorrectEl = document.getElementById('last-incorrect');
   const recentTableBody = document.querySelector('#recent-table tbody');
   const leaderboardBody = document.querySelector('#leaderboard-table tbody');
 
@@ -786,6 +793,14 @@ function resetTestState() {
   statWPM.textContent = '0';
   statAcc.textContent = '';
   typingInput.disabled = false;
+  
+  // Hide last test results when starting new test
+  if (lastTestResults) {
+    lastTestResults.classList.add('hidden');
+    resultsContent.classList.add('hidden');
+    resultsLoader.classList.add('hidden');
+  }
+  
   renderPassage();
 }
 // Only focus if input is enabled (not disabled after test completion)
@@ -841,11 +856,21 @@ function resetTestState() {
     }, 1000);
   }
 
-  function computeStats(typedStr, elapsedSec) {
-  if (elapsedSec <= 0) return { wpm: 0, accuracy: 100 };
+function computeStats(typedStr, elapsedSec) {
+  if (elapsedSec <= 0) return { wpm: 0, accuracy: 100, correct: 0, incorrect: 0 };
   
-  // Simple, accurate calculation: count correct characters vs total typed
-  const correctChars = [...typedStr].filter((ch, i) => ch === targetText[i]).length;
+  // Count correct and incorrect characters
+  let correctChars = 0;
+  let incorrectChars = 0;
+  
+  for (let i = 0; i < typedStr.length; i++) {
+    if (typedStr[i] === targetText[i]) {
+      correctChars++;
+    } else {
+      incorrectChars++;
+    }
+  }
+  
   const accuracy = typedStr.length > 0 ? Math.round((correctChars / typedStr.length) * 100) : 100;
   
   // WPM calculation
@@ -853,9 +878,13 @@ function resetTestState() {
   const grossWPM = (totalCharsTyped / 5) / (elapsedSec / 60);
   const wpm = Math.max(0, Math.round(grossWPM));
   
-  return { wpm, accuracy: Math.max(0, Math.min(100, accuracy)) };
+  return { 
+    wpm, 
+    accuracy: Math.max(0, Math.min(100, accuracy)),
+    correct: correctChars,
+    incorrect: incorrectChars
+  };
 }
-
 function renderPassage() {
   const words = targetText.split(" ");
   const currentWord = typingInput.value; // What's being typed right now
@@ -932,7 +961,7 @@ function focusTypingInput() {
   }, 100);
 }
 
-  async function finalizeTest() {
+ async function finalizeTest() {
     if (!running) return;
     running = false;
     clearInterval(timerInterval);
@@ -944,6 +973,13 @@ function focusTypingInput() {
     const stats = computeStats(typed, elapsed);
     statWPM.textContent = stats.wpm;
     statAcc.textContent = stats.accuracy + '%';
+
+    // Show loader in last test results
+    if (lastTestResults) {
+      lastTestResults.classList.remove('hidden');
+      resultsLoader.classList.remove('hidden');
+      resultsContent.classList.add('hidden');
+    }
 
     const user = firebase.auth().currentUser;
     
@@ -960,15 +996,42 @@ function focusTypingInput() {
         };
         
         await db.collection('results').add(payload);
+        
+        // Simulate short delay for loader effect
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        // Update last test results
+        lastWPMEl.textContent = stats.wpm;
+        lastAccEl.textContent = stats.accuracy + '%';
+        lastCorrectEl.textContent = stats.correct;
+        lastIncorrectEl.textContent = stats.incorrect;
+        
+        // Hide loader, show results
+        resultsLoader.classList.add('hidden');
+        resultsContent.classList.remove('hidden');
+        
         await refreshDashboard();
       } catch (e) {
-      console.error('Save failed:', e);
+        console.error('Save failed:', e);
+        // Hide loader on error
+        if (resultsLoader) resultsLoader.classList.add('hidden');
+      }
+    } else {
+      // For guests, just show the results without saving
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      lastWPMEl.textContent = stats.wpm;
+      lastAccEl.textContent = stats.accuracy + '%';
+      lastCorrectEl.textContent = stats.correct;
+      lastIncorrectEl.textContent = stats.incorrect;
+      
+      resultsLoader.classList.add('hidden');
+      resultsContent.classList.remove('hidden');
     }
-  }
   
-  // Keep input disabled after test completion
-  // User must click "New Test" to continue
-}
+    // Keep input disabled after test completion
+    // User must click "New Test" to continue
+  }
   async function refreshDashboard() {
     if (!currentUser) return;
     
