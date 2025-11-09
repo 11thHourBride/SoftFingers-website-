@@ -11,6 +11,7 @@
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <link rel="stylesheet" href="SoftFingers-Main.css">
   <link rel="stylesheet" href="achievements.css">
+  <link rel="stylesheet" href="competition.css">
 </head>
 <body>
   <!-- Header -->
@@ -336,6 +337,181 @@
                 <p class="text-muted text-center">Complete tests to unlock achievements!</p>
               </div>
             </div>
+            <!-- Competition Full Page (Hidden by default) -->
+      <div id="competition-full-page" class="hidden">
+        <!-- Competition Header -->
+        <div class="competition-header">
+          <div>
+            <h2 class="competition-page-title">Typing Competitions</h2>
+            <p class="competition-page-subtitle">Challenge friends and compete for the top spot</p>
+          </div>
+          <div class="competition-actions">
+            <button class="btn" id="create-competition-btn">Create Competition</button>
+            <button class="btn btn-secondary" id="join-competition-btn">Join with Code</button>
+          </div>
+        </div>
+
+        <!-- Competition Tabs -->
+        <div class="competition-tabs">
+          <div class="competition-tab active" data-tab="my-competitions">My Competitions</div>
+          <div class="competition-tab" data-tab="active-competitions">Active Competitions</div>
+          <div class="competition-tab" data-tab="completed-competitions">Completed</div>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="competition-content">
+          <!-- My Competitions -->
+          <div class="competition-tab-content active" id="my-competitions">
+            <div id="my-competitions-list" class="competitions-grid">
+              <p class="text-muted text-center">You haven't created or joined any competitions yet.</p>
+            </div>
+          </div>
+
+          <!-- Active Competitions -->
+          <div class="competition-tab-content" id="active-competitions">
+            <div id="active-competitions-list" class="competitions-grid">
+              <p class="text-muted text-center">No active competitions.</p>
+            </div>
+          </div>
+
+          <!-- Completed Competitions -->
+          <div class="competition-tab-content" id="completed-competitions">
+            <div id="completed-competitions-list" class="competitions-grid">
+              <p class="text-muted text-center">No completed competitions.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create Competition Modal -->
+      <div id="create-competition-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Create New Competition</h3>
+            <button class="modal-close" id="close-create-modal">×</button>
+          </div>
+          <div class="modal-body">
+            <form id="create-competition-form">
+              <div class="form-group">
+                <label class="form-label">Competition Name</label>
+                <input type="text" class="form-input" id="comp-name" placeholder="e.g., Friday Speed Challenge" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Target WPM</label>
+                <input type="number" class="form-input" id="comp-target-wpm" min="25" max="200" value="60" required>
+                <p class="form-help">First person to reach this speed wins</p>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Max Participants</label>
+                  <select class="form-input" id="comp-max-participants">
+                    <option value="2">2 Players</option>
+                    <option value="5">5 Players</option>
+                    <option value="10" selected>10 Players</option>
+                    <option value="20">20 Players</option>
+                    <option value="50">50 Players</option>
+                    <option value="100">100 Players</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Test Duration</label>
+                  <select class="form-input" id="comp-duration">
+                    <option value="60" selected>60 seconds</option>
+                    <option value="90">90 seconds</option>
+                    <option value="120">2 minutes</option>
+                    <option value="180">3 minutes</option>
+                    <option value="300">5 minutes</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Difficulty Level</label>
+                  <select class="form-input" id="comp-difficulty">
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate" selected>Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Competition Duration</label>
+                  <select class="form-input" id="comp-days">
+                    <option value="1">1 Day</option>
+                    <option value="3">3 Days</option>
+                    <option value="7" selected>7 Days</option>
+                    <option value="14">14 Days</option>
+                    <option value="30">30 Days</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Mode</label>
+                <select class="form-input" id="comp-mode">
+                  <option value="passage" selected>Random Words</option>
+                  <option value="quote">Quotes</option>
+                  <option value="story">Stories</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Description (Optional)</label>
+                <textarea class="form-input" id="comp-description" rows="3" placeholder="Add some details about your competition..."></textarea>
+              </div>
+
+              <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="cancel-create-comp">Cancel</button>
+                <button type="submit" class="btn">Create Competition</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Join Competition Modal -->
+      <div id="join-competition-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-small">
+          <div class="modal-header">
+            <h3 class="modal-title">Join Competition</h3>
+            <button class="modal-close" id="close-join-modal">×</button>
+          </div>
+          <div class="modal-body">
+            <form id="join-competition-form">
+              <div class="form-group">
+                <label class="form-label">Competition Code</label>
+                <input type="text" class="form-input" id="join-code" placeholder="Enter 6-digit code" maxlength="6" required>
+              </div>
+              <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="cancel-join-comp">Cancel</button>
+                <button type="submit" class="btn">Join Competition</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Competition Details Modal -->
+      <div id="competition-details-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-large">
+          <div class="modal-header">
+            <h3 class="modal-title" id="detail-comp-name">Competition Details</h3>
+            <button class="modal-close" id="close-details-modal">×</button>
+          </div>
+          <div class="modal-body">
+            <div id="competition-details-content">
+              <!-- Will be populated dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Authentication Card -->
       <div class="card" id="auth-card" style="margin: 64px auto; max-width: 500px;">
