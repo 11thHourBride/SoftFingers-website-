@@ -185,7 +185,7 @@ document.addEventListener('keydown', (e) => {
       }
     });
   }
-  function showCompetitionShareModal(competition) {
+ function showCompetitionShareModal(competition) {
     const shareURL = getCompetitionShareURL(competition.code);
     const shareText = `Join my typing competition "${competition.name}"! Target: ${competition.targetWPM} WPM. Use code: ${competition.code}`;
     
@@ -195,26 +195,29 @@ document.addEventListener('keydown', (e) => {
         <p class="text-muted" style="margin-bottom: 16px;">Share this code with your friends to invite them:</p>
         
         <div class="share-code-display">
-          <div class="share-code">${competition.code}</div>
-          <button class="copy-code-btn" onclick="copyToClipboard('${competition.code}')">Copy</button>
+          <div class="share-code" id="comp-code-display">${competition.code}</div>
+          <button class="copy-code-btn" id="copy-comp-code">Copy</button>
         </div>
         
         <h5 class="share-title" style="margin-top: 20px;">Share via:</h5>
         <div class="share-buttons">
-          <button class="share-btn whatsapp" onclick="shareViaWhatsApp('${shareText}', '${shareURL}')">
-            WhatsApp
+          <button class="share-btn whatsapp" data-share="whatsapp">
+            📱 WhatsApp
           </button>
-          <button class="share-btn facebook" onclick="shareViaFacebook('${shareURL}')">
-            Facebook
+          <button class="share-btn facebook" data-share="facebook">
+            👥 Facebook
           </button>
-          <button class="share-btn twitter" onclick="shareViaTwitter('${shareText}', '${shareURL}')">
-            Twitter
+          <button class="share-btn twitter" data-share="twitter">
+            🐦 Twitter
           </button>
-          <button class="share-btn telegram" onclick="shareViaTelegram('${shareText}', '${shareURL}')">
-            Telegram
+          <button class="share-btn telegram" data-share="telegram">
+            ✈️ Telegram
           </button>
-          <button class="share-btn copy-link" onclick="copyToClipboard('${shareURL}')">
-            Copy Link
+          <button class="share-btn copy-link" data-share="copylink">
+            🔗 Copy Link
+          </button>
+          <button class="share-btn copy-link" data-share="email">
+            📧 Email
           </button>
         </div>
       </div>
@@ -242,39 +245,45 @@ document.addEventListener('keydown', (e) => {
     document.getElementById('detail-comp-name').textContent = competition.name;
     document.getElementById('competition-details-content').innerHTML = content;
     detailsCompModal.classList.remove('hidden');
-  }
-  // Global share functions
-  window.copyToClipboard = function(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(() => {
-        // Create a temporary success message
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-          position: fixed;
-          top: 20px;
-          right: 20px;
-          background: var(--accent-solid);
-          color: white;
-          padding: 12px 20px;
-          border-radius: 8px;
-          z-index: 10001;
-          animation: slideIn 0.3s ease;
-        `;
-        toast.textContent = '✓ Copied to clipboard!';
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-          toast.remove();
-        }, 2000);
-      }).catch(err => {
-        console.error('Failed to copy:', err);
-        // Fallback method
-        fallbackCopy(text);
+    
+    // Add event listeners for share buttons
+    setTimeout(() => {
+      document.getElementById('copy-comp-code')?.addEventListener('click', () => {
+        copyToClipboard(competition.code);
       });
-    } else {
-      fallbackCopy(text);
+      
+      document.querySelectorAll('[data-share]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const shareType = this.dataset.share;
+          handleShare(shareType, shareText, shareURL, competition.name);
+        });
+      });
+    }, 100);
+  }
+  
+  // Unified share handler
+  function handleShare(type, text, url, title) {
+    switch(type) {
+      case 'whatsapp':
+        shareViaWhatsApp(text, url);
+        break;
+      case 'facebook':
+        shareViaFacebook(url);
+        break;
+      case 'twitter':
+        shareViaTwitter(text, url);
+        break;
+      case 'telegram':
+        shareViaTelegram(text, url);
+        break;
+      case 'copylink':
+        copyToClipboard(url);
+        break;
+      case 'email':
+        shareViaEmail(title || 'Join My Typing Competition', text + '\n\n' + url);
+        break;
     }
-  };
+  }
   
   function fallbackCopy(text) {
     const textarea = document.createElement('textarea');
@@ -902,7 +911,7 @@ document.addEventListener('keydown', (e) => {
       alert('Competition mode deactivated.');
     }
   };
-  window.viewCompetitionDetails = async function(compId) {
+window.viewCompetitionDetails = async function(compId) {
     try {
       const doc = await db.collection('competitions').doc(compId).get();
       if (!doc.exists) {
@@ -930,16 +939,16 @@ document.addEventListener('keydown', (e) => {
                     #${index + 1}
                   </div>
                   <div class="leaderboard-user">
-                    ${entry.email}
+                    ${entry.email || 'Anonymous'}
                   </div>
                   <div class="leaderboard-stats">
                     <div class="leaderboard-stat">
                       <div class="leaderboard-stat-label">WPM</div>
-                      <div class="leaderboard-stat-value">${entry.wpm}</div>
+                      <div class="leaderboard-stat-value">${entry.wpm || 0}</div>
                     </div>
                     <div class="leaderboard-stat">
                       <div class="leaderboard-stat-label">Accuracy</div>
-                      <div class="leaderboard-stat-value">${entry.accuracy}%</div>
+                      <div class="leaderboard-stat-value">${entry.accuracy || 0}%</div>
                     </div>
                   </div>
                 </div>
@@ -990,27 +999,25 @@ document.addEventListener('keydown', (e) => {
           <div class="share-section">
             <h4 class="share-title">Share Competition</h4>
             <div class="share-code-display">
-              <div class="share-code">${comp.code}</div>
-              <button class="copy-code-btn" onclick="copyToClipboard('${comp.code}')">Copy Code</button>
+              <div class="share-code" id="detail-comp-code">${comp.code}</div>
+              <button class="copy-code-btn" id="copy-detail-code">Copy Code</button>
             </div>
-          <div class="share-buttons">
-              <button class="share-btn whatsapp" onclick="shareViaWhatsApp('${shareText.replace(/'/g, "\\'")}', '${shareURL}')">
+            <div class="share-buttons" id="detail-share-buttons">
+              <button class="share-btn whatsapp" data-share="whatsapp">
                 📱 WhatsApp
               </button>
-              <button class="share-btn facebook" onclick="shareViaFacebook('${shareURL}')">
+              <button class="share-btn facebook" data-share="facebook">
                 👥 Facebook
               </button>
-              <button class="share-btn twitter" onclick="shareViaTwitter('${shareText.replace(/'/g, "\\'")}', '${shareURL}')">
+              <button class="share-btn twitter" data-share="twitter">
                 🐦 Twitter
               </button>
-              <button class="share-btn telegram" onclick="shareViaTelegram('${shareText.replace(/'/g, "\\'")}', '${shareURL}')">
+              <button class="share-btn telegram" data-share="telegram">
                 ✈️ Telegram
               </button>
-              <button class="share-btn copy-link" onclick="copyToClipboard('${shareURL}')">
+              <button class="share-btn copy-link" data-share="copylink">
                 🔗 Copy Link
               </button>
-            </div>
-        </div>
             </div>
           </div>
         ` : ''}
@@ -1020,13 +1027,27 @@ document.addEventListener('keydown', (e) => {
       document.getElementById('competition-details-content').innerHTML = content;
       detailsCompModal.classList.remove('hidden');
       
+      // Add event listeners
+      setTimeout(() => {
+        document.getElementById('copy-detail-code')?.addEventListener('click', () => {
+          copyToClipboard(comp.code);
+        });
+        
+        document.querySelectorAll('#detail-share-buttons [data-share]').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const shareType = this.dataset.share;
+            handleShare(shareType, shareText, shareURL, comp.name);
+          });
+        });
+      }, 100);
+      
     } catch (error) {
       console.error('Error loading competition details:', error);
       alert('Failed to load competition details');
     }
   };
   
-  window.shareCompetition = function(code, name, targetWPM) {
+ window.shareCompetition = function(code, name, targetWPM) {
     const shareURL = getCompetitionShareURL(code);
     const shareText = `Join my typing competition "${name}"! Target: ${targetWPM} WPM. Use code: ${code}`;
     
@@ -1034,24 +1055,24 @@ document.addEventListener('keydown', (e) => {
       <div class="share-section">
         <h4 class="share-title">Share Competition</h4>
         <div class="share-code-display">
-          <div class="share-code">${code}</div>
-          <button class="copy-code-btn" onclick="copyToClipboard('${code}')">Copy Code</button>
+          <div class="share-code" id="share-comp-code">${code}</div>
+          <button class="copy-code-btn" id="copy-share-code">Copy Code</button>
         </div>
-        <div class="share-buttons">
-          <button class="share-btn whatsapp" onclick="shareViaWhatsApp('${shareText}', '${shareURL}')">
-            WhatsApp
+        <div class="share-buttons" id="share-modal-buttons">
+          <button class="share-btn whatsapp" data-share="whatsapp">
+            📱 WhatsApp
           </button>
-          <button class="share-btn facebook" onclick="shareViaFacebook('${shareURL}')">
-            Facebook
+          <button class="share-btn facebook" data-share="facebook">
+            👥 Facebook
           </button>
-          <button class="share-btn twitter" onclick="shareViaTwitter('${shareText}', '${shareURL}')">
-            Twitter
+          <button class="share-btn twitter" data-share="twitter">
+            🐦 Twitter
           </button>
-          <button class="share-btn telegram" onclick="shareViaTelegram('${shareText}', '${shareURL}')">
-            Telegram
+          <button class="share-btn telegram" data-share="telegram">
+            ✈️ Telegram
           </button>
-          <button class="share-btn copy-link" onclick="copyToClipboard('${shareURL}')">
-            Copy Link
+          <button class="share-btn copy-link" data-share="copylink">
+            🔗 Copy Link
           </button>
         </div>
       </div>
@@ -1060,6 +1081,20 @@ document.addEventListener('keydown', (e) => {
     document.getElementById('detail-comp-name').textContent = name;
     document.getElementById('competition-details-content').innerHTML = content;
     detailsCompModal.classList.remove('hidden');
+    
+    // Add event listeners
+    setTimeout(() => {
+      document.getElementById('copy-share-code')?.addEventListener('click', () => {
+        copyToClipboard(code);
+      });
+      
+      document.querySelectorAll('#share-modal-buttons [data-share]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const shareType = this.dataset.share;
+          handleShare(shareType, shareText, shareURL, name);
+        });
+      });
+    }, 100);
   };
 
   // ==== ELEMENTS (updated for new HTML structure) ====
@@ -1725,6 +1760,8 @@ document.addEventListener('keydown', (e) => {
 // Quote bank (from user)
       const QUOTES = [
         {"quote": "Be the change that you wish to see in the world.", "author": "Mahatma Gandhi"},
+        {"quote": "When you stop telling your friends all about yourself, your enemies will stop knowing much about you.", "author": "Anonymous"},
+        {"quote": "One step that falls you down doesn't make you a cripple, just stand on your feet and continue your journey.", "author": "Godfred Mensah"},
         {"quote": "In the middle of every difficulty lies opportunity.", "author": "Albert Einstein"},
         {"quote": "Success is not final, failure is not fatal: It is the courage to continue that counts.", "author": "Winston Churchill"},
         {"quote": "The only thing we have to fear is fear itself.", "author": "Franklin D. Roosevelt"},
@@ -2787,8 +2824,8 @@ function focusTypingInput() {
       
       await refreshDashboard();
       await renderAchievements();
-      await checkCompetitionStatus();
-      await renderCompetitionLeaderboard();
+      
+     
       
       // Ensure focus after everything loads
       setTimeout(() => {
