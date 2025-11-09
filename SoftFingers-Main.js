@@ -152,6 +152,7 @@ document.addEventListener('keydown', (e) => {
           description: document.getElementById('comp-description').value,
           creatorId: currentUser.uid,
           creatorEmail: currentUser.email,
+          participantIds: [currentUser.uid],  // CHANGED: Array of UIDs only
           participants: [{
             uid: currentUser.uid,
             email: currentUser.email,
@@ -244,15 +245,71 @@ document.addEventListener('keydown', (e) => {
   }
   // Global share functions
   window.copyToClipboard = function(text) {
-    navigator.clipboard.writeText(text).then(() => {
-      alert('Copied to clipboard!');
-    }).catch(err => {
-      console.error('Failed to copy:', err);
-    });
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        // Create a temporary success message
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: var(--accent-solid);
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          z-index: 10001;
+          animation: slideIn 0.3s ease;
+        `;
+        toast.textContent = '✓ Copied to clipboard!';
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.remove();
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        // Fallback method
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
   };
   
+  function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    
+    try {
+      document.execCommand('copy');
+      alert('Copied to clipboard!');
+    } catch (err) {
+      alert('Failed to copy. Please copy manually: ' + text);
+    }
+    
+    document.body.removeChild(textarea);
+  }
+  
   window.shareViaWhatsApp = function(text, url) {
-    const whatsappURL = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`;
+    // WhatsApp sharing
+    const message = encodeURIComponent(`${text}\n\n${url}`);
+    
+    // Detect if mobile or desktop
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    let whatsappURL;
+    if (isMobile) {
+      // Mobile: use whatsapp:// protocol
+      whatsappURL = `whatsapp://send?text=${message}`;
+    } else {
+      // Desktop: use web.whatsapp.com
+      whatsappURL = `https://web.whatsapp.com/send?text=${message}`;
+    }
+    
     window.open(whatsappURL, '_blank');
   };
   
@@ -262,13 +319,39 @@ document.addEventListener('keydown', (e) => {
   };
   
   window.shareViaTwitter = function(text, url) {
-    const twitterURL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    // Twitter has character limits, so keep text concise
+    const tweetText = encodeURIComponent(text);
+    const tweetURL = encodeURIComponent(url);
+    const twitterURL = `https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetURL}`;
+    
     window.open(twitterURL, '_blank', 'width=600,height=400');
   };
   
   window.shareViaTelegram = function(text, url) {
+    const message = encodeURIComponent(`${text}\n${url}`);
     const telegramURL = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
-    window.open(telegramURL, '_blank');
+    
+    window.open(telegramURL, '_blank', 'width=600,height=400');
+  };
+  
+  window.shareViaEmail = function(subject, body) {
+    const mailtoURL = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoURL;
+  };
+  // Web Share API (works on mobile and some desktop browsers)
+  window.shareCompetitionNative = function(title, text, url) {
+    if (navigator.share) {
+      navigator.share({
+        title: title,
+        text: text,
+        url: url
+      })
+      .then(() => console.log('Shared successfully'))
+      .catch((error) => console.log('Error sharing:', error));
+    } else {
+      // Fallback: show share modal with all options
+      console.log('Web Share API not supported');
+    }
   };
 
   // ==== JOIN COMPETITION ====
@@ -315,7 +398,7 @@ document.addEventListener('keydown', (e) => {
         }
         
         // Check if user already joined
-        const alreadyJoined = competition.participants.some(p => p.uid === currentUser.uid);
+        const alreadyJoined = competition.participantIds.includes(currentUser.uid);  // CHANGED
         if (alreadyJoined) {
           alert('You have already joined this competition!');
           joinCompModal.classList.add('hidden');
@@ -336,6 +419,7 @@ document.addEventListener('keydown', (e) => {
         
         // Add user to participants
         await compDoc.ref.update({
+          participantIds: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),  // CHANGED
           participants: firebase.firestore.FieldValue.arrayUnion({
             uid: currentUser.uid,
             email: currentUser.email,
@@ -359,39 +443,58 @@ document.addEventListener('keydown', (e) => {
       }
     });
   }
-
-  // ==== LOAD COMPETITIONS ====
+// ==== LOAD COMPETITIONS ====
   async function loadCompetitions() {
     if (!currentUser) return;
+    
+    console.log('Loading competitions for user:', currentUser.uid);
     
     try {
       // Load user's competitions (created or joined)
       const myCompsSnap = await db.collection('competitions')
-        .where('participants', 'array-contains', {
-          uid: currentUser.uid,
-          email: currentUser.email
-        })
+        .where('participantIds', 'array-contains', currentUser.uid)
         .orderBy('createdAt', 'desc')
         .get();
+      
+      console.log('Found my competitions:', myCompsSnap.size);
+      
+      // Load ALL active competitions for discovery
+      const allActiveSnap = await db.collection('competitions')
+        .where('status', '==', 'active')
+        .orderBy('createdAt', 'desc')
+        .limit(50)
+        .get();
+      
+      console.log('Found all active competitions:', allActiveSnap.size);
       
       const myCompsList = document.getElementById('my-competitions-list');
       const activeCompsList = document.getElementById('active-competitions-list');
       const completedCompsList = document.getElementById('completed-competitions-list');
       
+      const now = new Date();
+      let myCompsHTML = '';
+      let myActiveCompsHTML = '';
+      let completedCompsHTML = '';
+      
+      // Process user's competitions
       if (myCompsSnap.empty) {
-        myCompsList.innerHTML = '<p class="text-muted text-center">You haven\'t created or joined any competitions yet.</p>';
+        myCompsList.innerHTML = '<p class="text-muted text-center" style="grid-column: 1 / -1; padding: 40px;">You haven\'t created or joined any competitions yet.</p>';
       } else {
-        const now = new Date();
-        let myCompsHTML = '';
-        let activeCompsHTML = '';
-        let completedCompsHTML = '';
-        
         for (const doc of myCompsSnap.docs) {
           const comp = doc.data();
           const compId = doc.id;
+          
+          // Ensure participantIds exists (migration for old competitions)
+          if (!comp.participantIds) {
+            const participantIds = comp.participants ? comp.participants.map(p => p.uid) : [comp.creatorId];
+            await doc.ref.update({ participantIds: participantIds });
+            comp.participantIds = participantIds;
+          }
+          
           const endDate = comp.endsAt.toDate();
           const isActive = endDate > now && comp.status === 'active';
           const isCreator = comp.creatorId === currentUser.uid;
+          const isParticipant = true; // They're in this list because they're a participant
           
           // Update status if needed
           if (!isActive && comp.status === 'active') {
@@ -399,39 +502,87 @@ document.addEventListener('keydown', (e) => {
             comp.status = 'completed';
           }
           
-          const card = createCompetitionCard(comp, compId, isCreator);
+          const card = createCompetitionCard(comp, compId, isCreator, isParticipant);
           
           myCompsHTML += card;
           
           if (isActive) {
-            activeCompsHTML += card;
+            myActiveCompsHTML += card;
           } else {
             completedCompsHTML += card;
           }
         }
         
         myCompsList.innerHTML = myCompsHTML;
-        activeCompsList.innerHTML = activeCompsHTML || '<p class="text-muted text-center">No active competitions.</p>';
-        completedCompsList.innerHTML = completedCompsHTML || '<p class="text-muted text-center">No completed competitions.</p>';
       }
+      
+      // Process ALL active competitions for discovery
+      let allActiveCompsHTML = '';
+      const userCompIds = new Set();
+      myCompsSnap.forEach(doc => userCompIds.add(doc.id));
+      
+      for (const doc of allActiveSnap.docs) {
+        const comp = doc.data();
+        const compId = doc.id;
+        
+        // Ensure participantIds exists (migration for old competitions)
+        if (!comp.participantIds) {
+          const participantIds = comp.participants ? comp.participants.map(p => p.uid) : [comp.creatorId];
+          await doc.ref.update({ participantIds: participantIds });
+          comp.participantIds = participantIds;
+        }
+        
+        const endDate = comp.endsAt.toDate();
+        const isActive = endDate > now;
+        const isCreator = comp.creatorId === currentUser.uid;
+        const isParticipant = comp.participantIds && comp.participantIds.includes(currentUser.uid);
+        
+        if (isActive) {
+          // Update status if needed
+          if (comp.status !== 'active') {
+            await doc.ref.update({ status: 'active' });
+            comp.status = 'active';
+          }
+          
+          const card = createCompetitionCard(comp, compId, isCreator, isParticipant);
+          allActiveCompsHTML += card;
+        } else {
+          // Competition has ended
+          if (comp.status === 'active') {
+            await doc.ref.update({ status: 'completed' });
+          }
+        }
+      }
+      
+      activeCompsList.innerHTML = allActiveCompsHTML || '<p class="text-muted text-center" style="grid-column: 1 / -1; padding: 40px;">No active competitions available.</p>';
+      completedCompsList.innerHTML = completedCompsHTML || '<p class="text-muted text-center" style="grid-column: 1 / -1; padding: 40px;">No completed competitions.</p>';
       
     } catch (error) {
       console.error('Error loading competitions:', error);
+      const myCompsList = document.getElementById('my-competitions-list');
+      if (myCompsList) {
+        myCompsList.innerHTML = `<p class="text-muted text-center" style="grid-column: 1 / -1; padding: 40px;">Error loading competitions: ${error.message}</p>`;
+      }
     }
   }
-  function createCompetitionCard(comp, compId, isCreator) {
+
+ function createCompetitionCard(comp, compId, isCreator, isParticipant) {
     const now = new Date();
     const endDate = comp.endsAt.toDate();
     const isActive = endDate > now && comp.status === 'active';
     const timeRemaining = formatTimeRemaining(comp.endsAt);
     
-    const participantCount = comp.participants.length;
-    const spotsLeft = comp.maxParticipants - participantCount;
+    // Safety checks for participants
+    const participants = comp.participants || [];
+    const participantCount = participants.length;
+    const maxParticipants = comp.maxParticipants || 10;
+    const spotsLeft = maxParticipants - participantCount;
+    const isFull = participantCount >= maxParticipants;
     
     // Generate participant avatars
     let avatarsHTML = '';
-    comp.participants.slice(0, 5).forEach(participant => {
-      const initial = participant.email.charAt(0).toUpperCase();
+    participants.slice(0, 5).forEach(participant => {
+      const initial = participant.email ? participant.email.charAt(0).toUpperCase() : '?';
       avatarsHTML += `<div class="participant-avatar">${initial}</div>`;
     });
     if (participantCount > 5) {
@@ -439,7 +590,73 @@ document.addEventListener('keydown', (e) => {
     }
     
     // Get top 3 from leaderboard
-    const sortedLeaderboard = (comp.leaderboard || []).sort((a, b) => b.wpm - a.wpm).slice(0, 3);
+    const leaderboard = comp.leaderboard || [];
+    const sortedLeaderboard = leaderboard.sort((a, b) => b.wpm - a.wpm).slice(0, 3);
+    
+    // Determine action buttons based on participation status
+    let actionButtonsHTML = '';
+    
+    if (isParticipant) {
+      // User is already a participant
+      if (isActive) {
+        actionButtonsHTML = `
+          <button class="btn" onclick="startCompetitionTest('${compId}', '${comp.difficulty}', ${comp.duration}, '${comp.mode}')">
+            Start Test
+          </button>
+          <button class="btn-secondary" onclick="viewCompetitionDetails('${compId}')">
+            View Details
+          </button>
+        `;
+      } else {
+        actionButtonsHTML = `
+          <button class="btn-secondary" onclick="viewCompetitionDetails('${compId}')">
+            View Results
+          </button>
+        `;
+      }
+      
+      if (isCreator) {
+        actionButtonsHTML += `
+          <button class="btn-secondary" onclick="shareCompetition('${comp.code}', '${comp.name.replace(/'/g, "\\'")}', ${comp.targetWPM})">
+            Share
+          </button>
+        `;
+      }
+    } else {
+      // User is NOT a participant - show join button
+      if (isActive && !isFull) {
+        actionButtonsHTML = `
+          <button class="btn" onclick="quickJoinCompetition('${compId}')">
+            🎯 Join Competition
+          </button>
+          <button class="btn-secondary" onclick="viewCompetitionDetails('${compId}')">
+            View Details
+          </button>
+        `;
+      } else if (isFull) {
+        actionButtonsHTML = `
+          <button class="btn" disabled style="opacity: 0.5; cursor: not-allowed;">
+            Competition Full
+          </button>
+          <button class="btn-secondary" onclick="viewCompetitionDetails('${compId}')">
+            View Details
+          </button>
+        `;
+      } else {
+        actionButtonsHTML = `
+          <button class="btn-secondary" onclick="viewCompetitionDetails('${compId}')">
+            View Details
+          </button>
+        `;
+      }
+    }
+    
+    const compName = comp.name || 'Untitled Competition';
+    const compDescription = comp.description || '';
+    const compTargetWPM = comp.targetWPM || 60;
+    const compDuration = comp.duration || 60;
+    const compDifficulty = comp.difficulty || 'Intermediate';
+    const compMode = comp.mode || 'passage';
     
     return `
       <div class="competition-card ${isActive ? 'active' : 'completed'}">
@@ -447,41 +664,47 @@ document.addEventListener('keydown', (e) => {
           ${isActive ? 'Active' : 'Completed'}
         </div>
         
+        ${!isParticipant && isActive ? `
+          <div style="position: absolute; top: 12px; left: 12px; background: rgba(81, 207, 102, 0.2); color: #51cf66; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+            JOIN NOW
+          </div>
+        ` : ''}
+        
         <div class="competition-card-header">
-          <h4 class="competition-card-title">${comp.name}</h4>
+          <h4 class="competition-card-title">${compName}</h4>
           <div class="competition-card-meta">
             <span>⏱️ ${timeRemaining}</span>
-            <span>🎯 ${comp.targetWPM} WPM</span>
-            <span>👥 ${participantCount}/${comp.maxParticipants}</span>
+            <span>🎯 ${compTargetWPM} WPM</span>
+            <span>👥 ${participantCount}/${maxParticipants}</span>
           </div>
         </div>
         
         <div class="competition-card-body">
-          ${comp.description ? `<p class="text-small text-muted" style="margin-bottom: 12px;">${comp.description}</p>` : ''}
+          ${compDescription ? `<p class="text-small text-muted" style="margin-bottom: 12px;">${compDescription}</p>` : ''}
           
           <div class="competition-info-grid">
             <div class="competition-info-item">
               <div class="competition-info-label">Duration</div>
-              <div class="competition-info-value">${comp.duration}s</div>
+              <div class="competition-info-value">${compDuration}s</div>
             </div>
             <div class="competition-info-item">
               <div class="competition-info-label">Difficulty</div>
-              <div class="competition-info-value">${comp.difficulty}</div>
+              <div class="competition-info-value">${compDifficulty}</div>
             </div>
             <div class="competition-info-item">
               <div class="competition-info-label">Mode</div>
-              <div class="competition-info-value">${comp.mode}</div>
+              <div class="competition-info-value">${compMode}</div>
             </div>
             <div class="competition-info-item">
               <div class="competition-info-label">Spots Left</div>
-              <div class="competition-info-value">${spotsLeft}</div>
+              <div class="competition-info-value ${spotsLeft === 0 ? 'incorrect' : spotsLeft <= 3 ? '' : 'correct'}">${spotsLeft}</div>
             </div>
           </div>
           
           ${sortedLeaderboard.length > 0 ? `
             <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
               <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
-                Top Performers
+                🏆 Top Performers
               </div>
               ${sortedLeaderboard.map((entry, index) => `
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0;">
@@ -489,9 +712,9 @@ document.addEventListener('keydown', (e) => {
                     <span style="color: ${index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : '#CD7F32'}; font-weight: 700; margin-right: 8px;">
                       ${index + 1}.
                     </span>
-                    ${entry.email.split('@')[0]}
+                    ${entry.email ? entry.email.split('@')[0] : 'Anonymous'}
                   </span>
-                  <span style="font-weight: 600; color: var(--accent-solid);">${entry.wpm} WPM</span>
+                  <span style="font-weight: 600; color: var(--accent-solid);">${entry.wpm || 0} WPM</span>
                 </div>
               `).join('')}
             </div>
@@ -500,36 +723,98 @@ document.addEventListener('keydown', (e) => {
           <div class="competition-participants">
             <div class="competition-participants-header">
               <span class="competition-participants-title">Participants</span>
-              <span class="competition-participants-count">${participantCount}/${comp.maxParticipants}</span>
+              <span class="competition-participants-count">${participantCount}/${maxParticipants}</span>
             </div>
             <div class="participants-avatars">
-              ${avatarsHTML}
+              ${avatarsHTML || '<div class="participant-avatar">?</div>'}
             </div>
           </div>
         </div>
         
         <div class="competition-card-footer">
-          ${isActive ? `
-            <button class="btn" onclick="startCompetitionTest('${compId}', '${comp.difficulty}', ${comp.duration}, '${comp.mode}')">
-              Start Test
-            </button>
-          ` : ''}
-          <button class="btn-secondary" onclick="viewCompetitionDetails('${compId}')">
-            View Details
-          </button>
-          ${isCreator ? `
-            <button class="btn-secondary" onclick="shareCompetition('${comp.code}', '${comp.name}', ${comp.targetWPM})">
-              Share
-            </button>
-          ` : ''}
+          ${actionButtonsHTML}
         </div>
       </div>
     `;
   }
-  // Global competition functions
+
+ // Quick join competition from card
+  window.quickJoinCompetition = async function(compId) {
+    if (!currentUser) {
+      alert('Please sign in to join competitions');
+      return;
+    }
+    
+    if (!confirm('Do you want to join this competition?')) {
+      return;
+    }
+    
+    try {
+      const compDoc = await db.collection('competitions').doc(compId).get();
+      
+      if (!compDoc.exists) {
+        alert('Competition not found');
+        return;
+      }
+      
+      const competition = compDoc.data();
+      
+      // Ensure participantIds exists
+      if (!competition.participantIds) {
+        const participantIds = competition.participants ? competition.participants.map(p => p.uid) : [competition.creatorId];
+        await compDoc.ref.update({ participantIds: participantIds });
+        competition.participantIds = participantIds;
+      }
+      
+      // Check if competition is still active
+      if (competition.status !== 'active') {
+        alert('This competition has ended.');
+        return;
+      }
+      
+      // Check if user already joined
+      const alreadyJoined = competition.participantIds.includes(currentUser.uid);
+      if (alreadyJoined) {
+        alert('You have already joined this competition!');
+        await loadCompetitions();
+        return;
+      }
+      
+      // Check if competition is full
+      const participants = competition.participants || [];
+      const maxParticipants = competition.maxParticipants || 10;
+      if (participants.length >= maxParticipants) {
+        alert('This competition is full.');
+        await loadCompetitions();
+        return;
+      }
+      
+      // Add user to participants
+      await compDoc.ref.update({
+        participantIds: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
+        participants: firebase.firestore.FieldValue.arrayUnion({
+          uid: currentUser.uid,
+          email: currentUser.email,
+          joinedAt: firebase.firestore.Timestamp.now()
+        })
+      });
+      
+      alert('Successfully joined the competition! 🎉');
+      
+      // Reload competitions
+      await loadCompetitions();
+      
+    } catch (error) {
+      console.error('Error joining competition:', error);
+      alert('Failed to join competition. Please try again.');
+    }
+  };
+
+// Global competition functions
   window.startCompetitionTest = function(compId, difficulty, duration, mode) {
-    // Store competition info
+    // Store competition info - this will persist across multiple tests
     localStorage.setItem('activeCompetition', compId);
+    localStorage.setItem('competitionMode', 'active'); // Flag that we're in competition mode
     
     // Switch to dashboard
     document.querySelector('[data-feature="dashboard"]').click();
@@ -554,9 +839,69 @@ document.addEventListener('keydown', (e) => {
     // Focus input
     focusTypingInput();
     
-    alert('Competition test loaded! Complete the test to submit your score.');
+    // Show competition indicator
+    showCompetitionIndicator(compId);
+    
+    alert('Competition mode activated! All tests will count until you leave the dashboard.');
   };
   
+  // Show competition indicator
+  function showCompetitionIndicator(compId) {
+    // Remove existing indicator if any
+    const existing = document.getElementById('competition-indicator');
+    if (existing) existing.remove();
+    
+    // Create indicator
+    const indicator = document.createElement('div');
+    indicator.id = 'competition-indicator';
+    indicator.style.cssText = `
+      position: fixed;
+      top: 80px;
+      right: 24px;
+      background: linear-gradient(135deg, #51cf66, #37b24d);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      z-index: 9999;
+      box-shadow: 0 4px 16px rgba(81, 207, 102, 0.4);
+      font-weight: 600;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: slideIn 0.3s ease;
+    `;
+    indicator.innerHTML = `
+      <span>🏆</span>
+      <span>Competition Mode Active</span>
+      <button onclick="exitCompetitionMode()" style="
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 8px;
+      ">Exit</button>
+    `;
+    
+    document.body.appendChild(indicator);
+  }
+  
+  // Exit competition mode
+  window.exitCompetitionMode = function() {
+    if (confirm('Are you sure you want to exit competition mode? Future tests won\'t count towards the competition.')) {
+      localStorage.removeItem('activeCompetition');
+      localStorage.removeItem('competitionMode');
+      
+      const indicator = document.getElementById('competition-indicator');
+      if (indicator) indicator.remove();
+      
+      alert('Competition mode deactivated.');
+    }
+  };
   window.viewCompetitionDetails = async function(compId) {
     try {
       const doc = await db.collection('competitions').doc(compId).get();
@@ -648,22 +993,24 @@ document.addEventListener('keydown', (e) => {
               <div class="share-code">${comp.code}</div>
               <button class="copy-code-btn" onclick="copyToClipboard('${comp.code}')">Copy Code</button>
             </div>
-            <div class="share-buttons">
-              <button class="share-btn whatsapp" onclick="shareViaWhatsApp('${shareText}', '${shareURL}')">
-                WhatsApp
+          <div class="share-buttons">
+              <button class="share-btn whatsapp" onclick="shareViaWhatsApp('${shareText.replace(/'/g, "\\'")}', '${shareURL}')">
+                📱 WhatsApp
               </button>
               <button class="share-btn facebook" onclick="shareViaFacebook('${shareURL}')">
-                Facebook
+                👥 Facebook
               </button>
-              <button class="share-btn twitter" onclick="shareViaTwitter('${shareText}', '${shareURL}')">
-                Twitter
+              <button class="share-btn twitter" onclick="shareViaTwitter('${shareText.replace(/'/g, "\\'")}', '${shareURL}')">
+                🐦 Twitter
               </button>
-              <button class="share-btn telegram" onclick="shareViaTelegram('${shareText}', '${shareURL}')">
-                Telegram
+              <button class="share-btn telegram" onclick="shareViaTelegram('${shareText.replace(/'/g, "\\'")}', '${shareURL}')">
+                ✈️ Telegram
               </button>
               <button class="share-btn copy-link" onclick="copyToClipboard('${shareURL}')">
-                Copy Link
+                🔗 Copy Link
               </button>
+            </div>
+        </div>
             </div>
           </div>
         ` : ''}
@@ -761,7 +1108,7 @@ document.addEventListener('keydown', (e) => {
   const quoteSelect = document.getElementById('quote-select');
   const quoteAuthorEl = document.getElementById('quote-author');
 
- // Navigation tab switching
+// Navigation tab switching
   const navTabs = document.querySelectorAll('.nav-tab');
   const sections = document.querySelectorAll('[id^="section-"]');
   const dashboardSection = document.getElementById('section-dashboard');
@@ -783,6 +1130,26 @@ document.addEventListener('keydown', (e) => {
       // Update active nav tab
       navTabs.forEach(t => t.classList.remove('active'));
       this.classList.add('active');
+      
+      // Clear competition mode if leaving dashboard (except when going to competition page)
+      if (feature !== 'dashboard' && feature !== 'competition') {
+        const competitionMode = localStorage.getItem('competitionMode');
+        if (competitionMode === 'active') {
+          if (confirm('You are in competition mode. Leaving will deactivate it. Continue?')) {
+            localStorage.removeItem('activeCompetition');
+            localStorage.removeItem('competitionMode');
+            const indicator = document.getElementById('competition-indicator');
+            if (indicator) indicator.remove();
+          } else {
+            // User cancelled, reactivate dashboard tab
+            setTimeout(() => {
+              navTabs.forEach(t => t.classList.remove('active'));
+              document.querySelector('[data-feature="dashboard"]').classList.add('active');
+            }, 0);
+            return;
+          }
+        }
+      }
       
       // Handle achievements differently - show full page
       if (feature === 'achievements') {
@@ -847,6 +1214,13 @@ document.addEventListener('keydown', (e) => {
         sections.forEach(section => {
           section.classList.add('hidden');
         });
+        
+       // Restore competition indicator if in competition mode
+  const competitionMode = localStorage.getItem('competitionMode');
+  const activeCompId = localStorage.getItem('activeCompetition');
+  if (competitionMode === 'active' && activeCompId && currentUser) {
+    showCompetitionIndicator(activeCompId);
+  }
       } else {
         // Show dashboard but manage sidebar sections for other features
         if (typingCard) typingCard.style.display = 'block';
@@ -867,6 +1241,7 @@ document.addEventListener('keydown', (e) => {
       }
     });
   });
+
   // Competition tab switching
   const competitionTabs = document.querySelectorAll('.competition-tab');
   const competitionTabContents = document.querySelectorAll('.competition-tab-content');
@@ -1405,13 +1780,12 @@ document.addEventListener('keydown', (e) => {
         {"quote": "It's the way out of all troubles. It's the way to peace. It's the way to success. It's the way to Life, itself, is to follow this Star, the Lord Jesus. And now, if you are tied to that Star, the Holy Spirit is the Compass that'll only point to the Star.", "author": "Rev. William Marrion Branham - 63-0304 - A Absolute"},
         {"quote": "We are saved by grace, that through faith, not by works. Works shows that you have been saved. But what saves you is the grace of God. Grace saves you. Grace is what God does for you. Works is what you do for God, to show appreciation of what God did for you. But by grace are you saved!", "author": "Rev. William Marrion Branham - 61-0827 - The Message Of Grace"},
         {"quote": "Now, when God makes His ways, just wonder why He feels when He makes a way for us, for our healing, for our salvation, for our comfort, for our peace, and all these things, and we just walk away and leave them. Must make Him feel terribly bad.", "author": "Rev. William Marrion Branham - 61-0125 - Why?"},
-        {"quote": "And faith always admits the Word is right. Amen. If your faith don't punctuate every Word of God's Word, with an amen, there is something wrong with your experience. The Bible said, 'He is the same yesterday, today, and forever.” If it don't say amen to that, then there is something wrong. Jesus said, 'The works that I do shall you do also.' If it don't say amen to that, then there is something wrong. If it don't punctuate every Word of God's promise, with an amen, there is something wrong.", "author": "Rev. William Marrion Branham - 64-0305 - Perseverant"},
+        {"quote": "And faith always admits the Word is right. Amen. If your faith don't punctuate every Word of God's Word, with an amen, there is something wrong with your experience. The Bible said, 'He is the same yesterday, today, and forever.” If it don't say amen to that, then there is something wrong. Jesus said, \"The works that I do shall you do also.\" If it don't say amen to that, then there is something wrong. If it don't punctuate every Word of God's promise, with an amen, there is something wrong.", "author": "Rev. William Marrion Branham - 64-0305 - Perseverant"},
         {"quote": "The true evidence of being baptized with the Holy Ghost is for the believer to receive the Word for the age in which he lives.", "author": "Rev. William Marrion Branham - An Exposition Of The Seven Church Ages(4-The Smyrnaean Church Age)"},
         {"quote": "Just keep away...You just be a real, sweet, humble, Christian, live the life, and then God will take of the rest of it.", "author": "Rev. William Marrion Branham - 64-0830E - Questions And Answers #4"},
         {"quote": "Greatness is humility. Don't forget that, Church. Greatness is expressed in humility, not how fine you can be.", "author": "Rev. William Marrion Branham - 63-0825M - How Can I Overcome?"},
 
         {"quote": "Not always prosperity is a sign of a spiritual blessings, but sometimes on the contrary. People think maybe you have to own a lot of worldly goods, and shows that God is a blessing you. That's not true. Sometimes it's the other way.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
-        {"quote": "This little, unknown fellow was Amos the prophet. And now we don't know very much about him. We don't know where he come from. Prophets usually come on the scene, unknown, leave the same way. We don't know where they come from, where they go, don't know about their backgrounds. God just raises them up. He wasn't much to look at, but he had THUS SAITH THE LORD. That's the main thing I see. ", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
         {"quote": "There is no excuse. It's just what's in the heart. That's what shows out. It identifies itself. ", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
         {"quote": "And now we find, in this city, it become morally decayed. The preachers was afraid to say anything about it. And, but they had a little, this little old fellow coming up over the hill, was coming to tell them THUS SAITH THE LORD, 'Clean this thing up, or you're going to go into captivity.” And he lived to see the days of his prophecy fulfilled.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
         {"quote": "You see, when people get away from God and won't listen to the Word, have no more desire for the Word, then there is one diagnoses to it, 'The soul that sinneth, that soul shall die.' Unbelief shall separate you from God.” That's exactly right.", "author": "Rev. William Marrion Branham - 64-0411 - Spiritual Amnesia"},
@@ -1433,7 +1807,7 @@ document.addEventListener('keydown', (e) => {
   {"quote": "The harder I work, the luckier I get.", "author": "Samuel Goldwyn"},
   {"quote": "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", "author": "Aristotle"},
   {"quote": "Dreams don't work unless you do.", "author": "John C. Maxwell"},
-  {"quote": "Limit your 'always' and your 'nevers'.", "author": "Amy Poehler"},
+  {"quote": "Limit your \"always\" and your \"nevers.\"", "author": "Amy Poehler"},
   {"quote": "Perseverance is not a long race; it is many short races one after another.", "author": "Walter Elliot"},
   {"quote": "A room without books is like a body without a soul.", "author": "Marcus Tullius Cicero"},
   {"quote": "Turn your wounds into wisdom.", "author": "Oprah Winfrey"},
@@ -1532,7 +1906,6 @@ document.addEventListener('keydown', (e) => {
   {"quote": "Doubt kills more dreams than failure ever will.", "author": "Suzy Kassem"},
   {"quote": "Act as though it is impossible to fail.", "author": "Dorothea Brande"},
   {"quote": "If you're going through hell, keep going.", "author": "Winston Churchill"},
-  {"quote": "Limit your 'always' and your 'nevers'.", "author": "Amy Poehler"},
   {"quote": "Do something today that your future self will thank you for.", "author": "Unknown"},
   {"quote": "Discipline is the bridge between goals and accomplishment.", "author": "Jim Rohn"},
   {"quote": "Perfection is not attainable, but if we chase perfection we can catch excellence.", "author": "Vince Lombardi"},
@@ -2163,9 +2536,11 @@ function focusTypingInput() {
           totalTests: totalTests,
           hasMasteredAllDifficulties: hasMasteredAllDifficulties
         });
-        // Submit score to active competition if any
+       // Submit score to active competition if in competition mode
+        const competitionMode = localStorage.getItem('competitionMode');
         const activeCompId = localStorage.getItem('activeCompetition');
-        if (activeCompId) {
+        
+        if (competitionMode === 'active' && activeCompId) {
           try {
             const compDoc = await db.collection('competitions').doc(activeCompId).get();
             if (compDoc.exists) {
@@ -2173,21 +2548,60 @@ function focusTypingInput() {
               
               // Check if competition is still active
               if (comp.status === 'active') {
+                const leaderboard = comp.leaderboard || [];
+                
                 // Update or add to leaderboard
-                const existingEntryIndex = comp.leaderboard.findIndex(e => e.uid === currentUser.uid);
+                const existingEntryIndex = leaderboard.findIndex(e => e.uid === currentUser.uid);
                 
                 if (existingEntryIndex >= 0) {
                   // Update if new score is better
-                  if (stats.wpm > comp.leaderboard[existingEntryIndex].wpm) {
-                    comp.leaderboard[existingEntryIndex] = {
+                  if (stats.wpm > leaderboard[existingEntryIndex].wpm) {
+                    leaderboard[existingEntryIndex] = {
                       uid: currentUser.uid,
                       email: currentUser.email,
                       wpm: stats.wpm,
                       accuracy: stats.accuracy,
                       submittedAt: firebase.firestore.Timestamp.now()
                     };
-                    await compDoc.ref.update({ leaderboard: comp.leaderboard });
-                    alert('New personal best submitted to competition! 🎉');
+                    await compDoc.ref.update({ leaderboard: leaderboard });
+                    
+                    // Show better score notification
+                    const toast = document.createElement('div');
+                    toast.style.cssText = `
+                      position: fixed;
+                      top: 140px;
+                      right: 24px;
+                      background: linear-gradient(135deg, #FFD700, #FFA500);
+                      color: white;
+                      padding: 16px 24px;
+                      border-radius: 12px;
+                      z-index: 10000;
+                      box-shadow: 0 4px 16px rgba(255, 215, 0, 0.4);
+                      font-weight: 600;
+                      animation: slideIn 0.3s ease;
+                    `;
+                    toast.textContent = '🎉 New personal best in competition!';
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 3000);
+                  } else {
+                    // Score not better, but still submitted
+                    const toast = document.createElement('div');
+                    toast.style.cssText = `
+                      position: fixed;
+                      top: 140px;
+                      right: 24px;
+                      background: var(--accent-solid);
+                      color: white;
+                      padding: 16px 24px;
+                      border-radius: 12px;
+                      z-index: 10000;
+                      box-shadow: 0 4px 16px rgba(159, 124, 255, 0.4);
+                      font-weight: 600;
+                      animation: slideIn 0.3s ease;
+                    `;
+                    toast.textContent = '📊 Score submitted to competition';
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 3000);
                   }
                 } else {
                   // Add new entry
@@ -2200,13 +2614,41 @@ function focusTypingInput() {
                       submittedAt: firebase.firestore.Timestamp.now()
                     })
                   });
-                  alert('Score submitted to competition! 🎉');
+                  
+                  const toast = document.createElement('div');
+                  toast.style.cssText = `
+                    position: fixed;
+                    top: 140px;
+                    right: 24px;
+                    background: linear-gradient(135deg, #51cf66, #37b24d);
+                    color: white;
+                    padding: 16px 24px;
+                    border-radius: 12px;
+                    z-index: 10000;
+                    box-shadow: 0 4px 16px rgba(81, 207, 102, 0.4);
+                    font-weight: 600;
+                    animation: slideIn 0.3s ease;
+                  `;
+                  toast.textContent = '🎉 First score submitted to competition!';
+                  document.body.appendChild(toast);
+                  setTimeout(() => toast.remove(), 3000);
                 }
+              } else {
+                // Competition ended
+                localStorage.removeItem('activeCompetition');
+                localStorage.removeItem('competitionMode');
+                const indicator = document.getElementById('competition-indicator');
+                if (indicator) indicator.remove();
+                
+                alert('This competition has ended. Your score was not submitted.');
               }
+            } else {
+              // Competition not found
+              localStorage.removeItem('activeCompetition');
+              localStorage.removeItem('competitionMode');
+              const indicator = document.getElementById('competition-indicator');
+              if (indicator) indicator.remove();
             }
-            
-            // Clear active competition
-            localStorage.removeItem('activeCompetition');
             
           } catch (error) {
             console.error('Error submitting to competition:', error);
