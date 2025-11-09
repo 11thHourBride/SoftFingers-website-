@@ -13,6 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const auth = firebase.auth();
   const db = firebase.firestore();
 
+  // Check for competition code in URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const compCode = urlParams.get('comp');
+  if (compCode && currentUser) {
+    document.getElementById('join-code').value = compCode;
+    joinCompBtn.click();
+  }
+
 // ==== F5 KEY HANDLER ====
 let f5PressCount = 0;
 let f5Timer = null;
@@ -46,6 +54,666 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
+// ==== COMPETITION MODALS ====
+  const createCompModal = document.getElementById('create-competition-modal');
+  const joinCompModal = document.getElementById('join-competition-modal');
+  const detailsCompModal = document.getElementById('competition-details-modal');
+  
+  const createCompBtn = document.getElementById('create-competition-btn');
+  const joinCompBtn = document.getElementById('join-competition-btn');
+  
+  const closeCreateModal = document.getElementById('close-create-modal');
+  const closeJoinModal = document.getElementById('close-join-modal');
+  const closeDetailsModal = document.getElementById('close-details-modal');
+  
+  const cancelCreateComp = document.getElementById('cancel-create-comp');
+  const cancelJoinComp = document.getElementById('cancel-join-comp');
+  
+  // Open modals
+  if (createCompBtn) {
+    createCompBtn.addEventListener('click', () => {
+      if (!currentUser) {
+        alert('Please sign in to create a competition');
+        return;
+      }
+      createCompModal.classList.remove('hidden');
+    });
+  }
+  
+  if (joinCompBtn) {
+    joinCompBtn.addEventListener('click', () => {
+      if (!currentUser) {
+        alert('Please sign in to join a competition');
+        return;
+      }
+      joinCompModal.classList.remove('hidden');
+    });
+  }
+  
+  // Close modals
+  [closeCreateModal, cancelCreateComp].forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', () => {
+        createCompModal.classList.add('hidden');
+      });
+    }
+  });
+  
+  [closeJoinModal, cancelJoinComp].forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', () => {
+        joinCompModal.classList.add('hidden');
+      });
+    }
+  });
+  
+  if (closeDetailsModal) {
+    closeDetailsModal.addEventListener('click', () => {
+      detailsCompModal.classList.add('hidden');
+    });
+  }
+  
+  // Close on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function() {
+      this.parentElement.classList.add('hidden');
+    });
+  });
+  // ==== CREATE COMPETITION ====
+  const createCompForm = document.getElementById('create-competition-form');
+  
+  if (createCompForm) {
+    createCompForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (!currentUser) {
+        alert('Please sign in to create a competition');
+        return;
+      }
+      
+      const submitBtn = createCompForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating...';
+      
+      try {
+        const code = generateCompetitionCode();
+        const now = new Date();
+        const daysToAdd = parseInt(document.getElementById('comp-days').value);
+        const endDate = new Date(now.getTime() + (daysToAdd * 24 * 60 * 60 * 1000));
+        
+        const competition = {
+          code: code,
+          name: document.getElementById('comp-name').value,
+          targetWPM: parseInt(document.getElementById('comp-target-wpm').value),
+          maxParticipants: parseInt(document.getElementById('comp-max-participants').value),
+          duration: parseInt(document.getElementById('comp-duration').value),
+          difficulty: document.getElementById('comp-difficulty').value,
+          mode: document.getElementById('comp-mode').value,
+          description: document.getElementById('comp-description').value,
+          creatorId: currentUser.uid,
+          creatorEmail: currentUser.email,
+          participants: [{
+            uid: currentUser.uid,
+            email: currentUser.email,
+            joinedAt: firebase.firestore.Timestamp.now()
+          }],
+          leaderboard: [],
+          status: 'active',
+          createdAt: firebase.firestore.Timestamp.now(),
+          endsAt: firebase.firestore.Timestamp.fromDate(endDate),
+          winner: null
+        };
+        
+        await db.collection('competitions').add(competition);
+        
+        createCompModal.classList.add('hidden');
+        createCompForm.reset();
+        
+        // Show share modal
+        showCompetitionShareModal(competition);
+        
+        // Reload competitions
+        await loadCompetitions();
+        
+      } catch (error) {
+        console.error('Error creating competition:', error);
+        alert('Failed to create competition. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Competition';
+      }
+    });
+  }
+  function showCompetitionShareModal(competition) {
+    const shareURL = getCompetitionShareURL(competition.code);
+    const shareText = `Join my typing competition "${competition.name}"! Target: ${competition.targetWPM} WPM. Use code: ${competition.code}`;
+    
+    const content = `
+      <div class="share-section">
+        <h4 class="share-title">Competition Created! 🎉</h4>
+        <p class="text-muted" style="margin-bottom: 16px;">Share this code with your friends to invite them:</p>
+        
+        <div class="share-code-display">
+          <div class="share-code">${competition.code}</div>
+          <button class="copy-code-btn" onclick="copyToClipboard('${competition.code}')">Copy</button>
+        </div>
+        
+        <h5 class="share-title" style="margin-top: 20px;">Share via:</h5>
+        <div class="share-buttons">
+          <button class="share-btn whatsapp" onclick="shareViaWhatsApp('${shareText}', '${shareURL}')">
+            WhatsApp
+          </button>
+          <button class="share-btn facebook" onclick="shareViaFacebook('${shareURL}')">
+            Facebook
+          </button>
+          <button class="share-btn twitter" onclick="shareViaTwitter('${shareText}', '${shareURL}')">
+            Twitter
+          </button>
+          <button class="share-btn telegram" onclick="shareViaTelegram('${shareText}', '${shareURL}')">
+            Telegram
+          </button>
+          <button class="share-btn copy-link" onclick="copyToClipboard('${shareURL}')">
+            Copy Link
+          </button>
+        </div>
+      </div>
+      
+      <div class="competition-info-grid" style="margin-top: 24px;">
+        <div class="competition-info-item">
+          <div class="competition-info-label">Target WPM</div>
+          <div class="competition-info-value">${competition.targetWPM}</div>
+        </div>
+        <div class="competition-info-item">
+          <div class="competition-info-label">Duration</div>
+          <div class="competition-info-value">${competition.duration}s</div>
+        </div>
+        <div class="competition-info-item">
+          <div class="competition-info-label">Max Players</div>
+          <div class="competition-info-value">${competition.maxParticipants}</div>
+        </div>
+        <div class="competition-info-item">
+          <div class="competition-info-label">Ends In</div>
+          <div class="competition-info-value">${formatTimeRemaining(competition.endsAt)}</div>
+        </div>
+      </div>
+    `;
+    
+    document.getElementById('detail-comp-name').textContent = competition.name;
+    document.getElementById('competition-details-content').innerHTML = content;
+    detailsCompModal.classList.remove('hidden');
+  }
+  // Global share functions
+  window.copyToClipboard = function(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy:', err);
+    });
+  };
+  
+  window.shareViaWhatsApp = function(text, url) {
+    const whatsappURL = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`;
+    window.open(whatsappURL, '_blank');
+  };
+  
+  window.shareViaFacebook = function(url) {
+    const facebookURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    window.open(facebookURL, '_blank', 'width=600,height=400');
+  };
+  
+  window.shareViaTwitter = function(text, url) {
+    const twitterURL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    window.open(twitterURL, '_blank', 'width=600,height=400');
+  };
+  
+  window.shareViaTelegram = function(text, url) {
+    const telegramURL = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+    window.open(telegramURL, '_blank');
+  };
+
+  // ==== JOIN COMPETITION ====
+  const joinCompForm = document.getElementById('join-competition-form');
+  
+  if (joinCompForm) {
+    joinCompForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (!currentUser) {
+        alert('Please sign in to join a competition');
+        return;
+      }
+      
+      const submitBtn = joinCompForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Joining...';
+      
+      try {
+        const code = document.getElementById('join-code').value.toUpperCase().trim();
+        
+        // Find competition by code
+        const compSnap = await db.collection('competitions')
+          .where('code', '==', code)
+          .limit(1)
+          .get();
+        
+        if (compSnap.empty) {
+          alert('Competition not found. Please check the code.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Join Competition';
+          return;
+        }
+        
+        const compDoc = compSnap.docs[0];
+        const competition = compDoc.data();
+        
+        // Check if competition is still active
+        if (competition.status !== 'active') {
+          alert('This competition has ended.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Join Competition';
+          return;
+        }
+        
+        // Check if user already joined
+        const alreadyJoined = competition.participants.some(p => p.uid === currentUser.uid);
+        if (alreadyJoined) {
+          alert('You have already joined this competition!');
+          joinCompModal.classList.add('hidden');
+          joinCompForm.reset();
+          await loadCompetitions();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Join Competition';
+          return;
+        }
+        
+        // Check if competition is full
+        if (competition.participants.length >= competition.maxParticipants) {
+          alert('This competition is full.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Join Competition';
+          return;
+        }
+        
+        // Add user to participants
+        await compDoc.ref.update({
+          participants: firebase.firestore.FieldValue.arrayUnion({
+            uid: currentUser.uid,
+            email: currentUser.email,
+            joinedAt: firebase.firestore.Timestamp.now()
+          })
+        });
+        
+        alert('Successfully joined the competition!');
+        joinCompModal.classList.add('hidden');
+        joinCompForm.reset();
+        
+        // Reload competitions
+        await loadCompetitions();
+        
+      } catch (error) {
+        console.error('Error joining competition:', error);
+        alert('Failed to join competition. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Join Competition';
+      }
+    });
+  }
+
+  // ==== LOAD COMPETITIONS ====
+  async function loadCompetitions() {
+    if (!currentUser) return;
+    
+    try {
+      // Load user's competitions (created or joined)
+      const myCompsSnap = await db.collection('competitions')
+        .where('participants', 'array-contains', {
+          uid: currentUser.uid,
+          email: currentUser.email
+        })
+        .orderBy('createdAt', 'desc')
+        .get();
+      
+      const myCompsList = document.getElementById('my-competitions-list');
+      const activeCompsList = document.getElementById('active-competitions-list');
+      const completedCompsList = document.getElementById('completed-competitions-list');
+      
+      if (myCompsSnap.empty) {
+        myCompsList.innerHTML = '<p class="text-muted text-center">You haven\'t created or joined any competitions yet.</p>';
+      } else {
+        const now = new Date();
+        let myCompsHTML = '';
+        let activeCompsHTML = '';
+        let completedCompsHTML = '';
+        
+        for (const doc of myCompsSnap.docs) {
+          const comp = doc.data();
+          const compId = doc.id;
+          const endDate = comp.endsAt.toDate();
+          const isActive = endDate > now && comp.status === 'active';
+          const isCreator = comp.creatorId === currentUser.uid;
+          
+          // Update status if needed
+          if (!isActive && comp.status === 'active') {
+            await doc.ref.update({ status: 'completed' });
+            comp.status = 'completed';
+          }
+          
+          const card = createCompetitionCard(comp, compId, isCreator);
+          
+          myCompsHTML += card;
+          
+          if (isActive) {
+            activeCompsHTML += card;
+          } else {
+            completedCompsHTML += card;
+          }
+        }
+        
+        myCompsList.innerHTML = myCompsHTML;
+        activeCompsList.innerHTML = activeCompsHTML || '<p class="text-muted text-center">No active competitions.</p>';
+        completedCompsList.innerHTML = completedCompsHTML || '<p class="text-muted text-center">No completed competitions.</p>';
+      }
+      
+    } catch (error) {
+      console.error('Error loading competitions:', error);
+    }
+  }
+  function createCompetitionCard(comp, compId, isCreator) {
+    const now = new Date();
+    const endDate = comp.endsAt.toDate();
+    const isActive = endDate > now && comp.status === 'active';
+    const timeRemaining = formatTimeRemaining(comp.endsAt);
+    
+    const participantCount = comp.participants.length;
+    const spotsLeft = comp.maxParticipants - participantCount;
+    
+    // Generate participant avatars
+    let avatarsHTML = '';
+    comp.participants.slice(0, 5).forEach(participant => {
+      const initial = participant.email.charAt(0).toUpperCase();
+      avatarsHTML += `<div class="participant-avatar">${initial}</div>`;
+    });
+    if (participantCount > 5) {
+      avatarsHTML += `<div class="participant-avatar">+${participantCount - 5}</div>`;
+    }
+    
+    // Get top 3 from leaderboard
+    const sortedLeaderboard = (comp.leaderboard || []).sort((a, b) => b.wpm - a.wpm).slice(0, 3);
+    
+    return `
+      <div class="competition-card ${isActive ? 'active' : 'completed'}">
+        <div class="competition-status ${isActive ? 'active' : 'completed'}">
+          ${isActive ? 'Active' : 'Completed'}
+        </div>
+        
+        <div class="competition-card-header">
+          <h4 class="competition-card-title">${comp.name}</h4>
+          <div class="competition-card-meta">
+            <span>⏱️ ${timeRemaining}</span>
+            <span>🎯 ${comp.targetWPM} WPM</span>
+            <span>👥 ${participantCount}/${comp.maxParticipants}</span>
+          </div>
+        </div>
+        
+        <div class="competition-card-body">
+          ${comp.description ? `<p class="text-small text-muted" style="margin-bottom: 12px;">${comp.description}</p>` : ''}
+          
+          <div class="competition-info-grid">
+            <div class="competition-info-item">
+              <div class="competition-info-label">Duration</div>
+              <div class="competition-info-value">${comp.duration}s</div>
+            </div>
+            <div class="competition-info-item">
+              <div class="competition-info-label">Difficulty</div>
+              <div class="competition-info-value">${comp.difficulty}</div>
+            </div>
+            <div class="competition-info-item">
+              <div class="competition-info-label">Mode</div>
+              <div class="competition-info-value">${comp.mode}</div>
+            </div>
+            <div class="competition-info-item">
+              <div class="competition-info-label">Spots Left</div>
+              <div class="competition-info-value">${spotsLeft}</div>
+            </div>
+          </div>
+          
+          ${sortedLeaderboard.length > 0 ? `
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+              <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">
+                Top Performers
+              </div>
+              ${sortedLeaderboard.map((entry, index) => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0;">
+                  <span style="font-size: 0.875rem;">
+                    <span style="color: ${index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : '#CD7F32'}; font-weight: 700; margin-right: 8px;">
+                      ${index + 1}.
+                    </span>
+                    ${entry.email.split('@')[0]}
+                  </span>
+                  <span style="font-weight: 600; color: var(--accent-solid);">${entry.wpm} WPM</span>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          
+          <div class="competition-participants">
+            <div class="competition-participants-header">
+              <span class="competition-participants-title">Participants</span>
+              <span class="competition-participants-count">${participantCount}/${comp.maxParticipants}</span>
+            </div>
+            <div class="participants-avatars">
+              ${avatarsHTML}
+            </div>
+          </div>
+        </div>
+        
+        <div class="competition-card-footer">
+          ${isActive ? `
+            <button class="btn" onclick="startCompetitionTest('${compId}', '${comp.difficulty}', ${comp.duration}, '${comp.mode}')">
+              Start Test
+            </button>
+          ` : ''}
+          <button class="btn-secondary" onclick="viewCompetitionDetails('${compId}')">
+            View Details
+          </button>
+          ${isCreator ? `
+            <button class="btn-secondary" onclick="shareCompetition('${comp.code}', '${comp.name}', ${comp.targetWPM})">
+              Share
+            </button>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }
+  // Global competition functions
+  window.startCompetitionTest = function(compId, difficulty, duration, mode) {
+    // Store competition info
+    localStorage.setItem('activeCompetition', compId);
+    
+    // Switch to dashboard
+    document.querySelector('[data-feature="dashboard"]').click();
+    
+    // Set test parameters
+    currentDifficulty = difficulty;
+    document.querySelector(`[data-diff="${difficulty}"]`)?.click();
+    
+    durationSelect.value = duration;
+    modeSelect.value = mode;
+    
+    // Trigger mode change
+    const event = new Event('change');
+    durationSelect.dispatchEvent(event);
+    modeSelect.dispatchEvent(event);
+    
+    // Load new test
+    if (mode === 'quote') loadNewQuote();
+    else if (mode === 'story') loadNewStory();
+    else loadNewPassage();
+    
+    // Focus input
+    focusTypingInput();
+    
+    alert('Competition test loaded! Complete the test to submit your score.');
+  };
+  
+  window.viewCompetitionDetails = async function(compId) {
+    try {
+      const doc = await db.collection('competitions').doc(compId).get();
+      if (!doc.exists) {
+        alert('Competition not found');
+        return;
+      }
+      
+      const comp = doc.data();
+      const isCreator = comp.creatorId === currentUser.uid;
+      const shareURL = getCompetitionShareURL(comp.code);
+      const shareText = `Join my typing competition "${comp.name}"! Target: ${comp.targetWPM} WPM. Use code: ${comp.code}`;
+      
+      // Sort leaderboard
+      const sortedLeaderboard = (comp.leaderboard || []).sort((a, b) => b.wpm - a.wpm);
+      
+      let leaderboardHTML = '';
+      if (sortedLeaderboard.length > 0) {
+        leaderboardHTML = `
+          <div class="competition-leaderboard">
+            <h4 class="leaderboard-title">Leaderboard</h4>
+            <div class="leaderboard-list">
+              ${sortedLeaderboard.map((entry, index) => `
+                <div class="leaderboard-item ${index === 0 ? 'winner' : ''}">
+                  <div class="leaderboard-rank ${index === 0 ? 'first' : index === 1 ? 'second' : index === 2 ? 'third' : ''}">
+                    #${index + 1}
+                  </div>
+                  <div class="leaderboard-user">
+                    ${entry.email}
+                  </div>
+                  <div class="leaderboard-stats">
+                    <div class="leaderboard-stat">
+                      <div class="leaderboard-stat-label">WPM</div>
+                      <div class="leaderboard-stat-value">${entry.wpm}</div>
+                    </div>
+                    <div class="leaderboard-stat">
+                      <div class="leaderboard-stat-label">Accuracy</div>
+                      <div class="leaderboard-stat-value">${entry.accuracy}%</div>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+      
+      const content = `
+        <div class="competition-info-grid">
+          <div class="competition-info-item">
+            <div class="competition-info-label">Target WPM</div>
+            <div class="competition-info-value">${comp.targetWPM}</div>
+          </div>
+          <div class="competition-info-item">
+            <div class="competition-info-label">Duration</div>
+            <div class="competition-info-value">${comp.duration}s</div>
+          </div>
+          <div class="competition-info-item">
+            <div class="competition-info-label">Difficulty</div>
+            <div class="competition-info-value">${comp.difficulty}</div>
+          </div>
+          <div class="competition-info-item">
+            <div class="competition-info-label">Mode</div>
+            <div class="competition-info-value">${comp.mode}</div>
+          </div>
+          <div class="competition-info-item">
+            <div class="competition-info-label">Participants</div>
+            <div class="competition-info-value">${comp.participants.length}/${comp.maxParticipants}</div>
+          </div>
+          <div class="competition-info-item">
+            <div class="competition-info-label">Time Left</div>
+            <div class="competition-info-value">${formatTimeRemaining(comp.endsAt)}</div>
+          </div>
+        </div>
+        
+        ${comp.description ? `
+          <div style="margin-top: 20px; padding: 16px; background: var(--card-secondary); border-radius: 8px;">
+            <h4 style="margin: 0 0 8px; font-size: 0.875rem; color: var(--text-secondary);">Description</h4>
+            <p style="margin: 0; color: var(--text);">${comp.description}</p>
+          </div>
+        ` : ''}
+        
+        ${leaderboardHTML}
+        
+        ${isCreator ? `
+          <div class="share-section">
+            <h4 class="share-title">Share Competition</h4>
+            <div class="share-code-display">
+              <div class="share-code">${comp.code}</div>
+              <button class="copy-code-btn" onclick="copyToClipboard('${comp.code}')">Copy Code</button>
+            </div>
+            <div class="share-buttons">
+              <button class="share-btn whatsapp" onclick="shareViaWhatsApp('${shareText}', '${shareURL}')">
+                WhatsApp
+              </button>
+              <button class="share-btn facebook" onclick="shareViaFacebook('${shareURL}')">
+                Facebook
+              </button>
+              <button class="share-btn twitter" onclick="shareViaTwitter('${shareText}', '${shareURL}')">
+                Twitter
+              </button>
+              <button class="share-btn telegram" onclick="shareViaTelegram('${shareText}', '${shareURL}')">
+                Telegram
+              </button>
+              <button class="share-btn copy-link" onclick="copyToClipboard('${shareURL}')">
+                Copy Link
+              </button>
+            </div>
+          </div>
+        ` : ''}
+      `;
+      
+      document.getElementById('detail-comp-name').textContent = comp.name;
+      document.getElementById('competition-details-content').innerHTML = content;
+      detailsCompModal.classList.remove('hidden');
+      
+    } catch (error) {
+      console.error('Error loading competition details:', error);
+      alert('Failed to load competition details');
+    }
+  };
+  
+  window.shareCompetition = function(code, name, targetWPM) {
+    const shareURL = getCompetitionShareURL(code);
+    const shareText = `Join my typing competition "${name}"! Target: ${targetWPM} WPM. Use code: ${code}`;
+    
+    const content = `
+      <div class="share-section">
+        <h4 class="share-title">Share Competition</h4>
+        <div class="share-code-display">
+          <div class="share-code">${code}</div>
+          <button class="copy-code-btn" onclick="copyToClipboard('${code}')">Copy Code</button>
+        </div>
+        <div class="share-buttons">
+          <button class="share-btn whatsapp" onclick="shareViaWhatsApp('${shareText}', '${shareURL}')">
+            WhatsApp
+          </button>
+          <button class="share-btn facebook" onclick="shareViaFacebook('${shareURL}')">
+            Facebook
+          </button>
+          <button class="share-btn twitter" onclick="shareViaTwitter('${shareText}', '${shareURL}')">
+            Twitter
+          </button>
+          <button class="share-btn telegram" onclick="shareViaTelegram('${shareText}', '${shareURL}')">
+            Telegram
+          </button>
+          <button class="share-btn copy-link" onclick="copyToClipboard('${shareURL}')">
+            Copy Link
+          </button>
+        </div>
+      </div>
+    `;
+    
+    document.getElementById('detail-comp-name').textContent = name;
+    document.getElementById('competition-details-content').innerHTML = content;
+    detailsCompModal.classList.remove('hidden');
+  };
 
   // ==== ELEMENTS (updated for new HTML structure) ====
   const loginTab = document.getElementById('tab-login');
@@ -98,6 +766,7 @@ document.addEventListener('keydown', (e) => {
   const sections = document.querySelectorAll('[id^="section-"]');
   const dashboardSection = document.getElementById('section-dashboard');
   const achievementsFullPage = document.getElementById('achievements-full-page');
+  const competitionFullPage = document.getElementById('competition-full-page');
   
   // Get references to all dashboard elements we need to hide
   const typingCard = document.querySelector('.typing-card');
@@ -117,6 +786,8 @@ document.addEventListener('keydown', (e) => {
       
       // Handle achievements differently - show full page
       if (feature === 'achievements') {
+        console.log('Achievements clicked');
+        
         // Hide all dashboard elements
         if (typingCard) typingCard.style.display = 'none';
         if (sidebar) sidebar.style.display = 'none';
@@ -125,8 +796,42 @@ document.addEventListener('keydown', (e) => {
         
         // Show achievements full page
         achievementsFullPage.classList.remove('hidden');
+        competitionFullPage.classList.add('hidden');
         
-        if (currentUser) renderAchievements();
+        if (currentUser) {
+          renderAchievements();
+        } else {
+          const container = document.getElementById('achievements-container');
+          if (container) {
+            container.innerHTML = `
+              <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                <p class="text-muted">Sign in to track your achievements and unlock badges!</p>
+              </div>
+            `;
+          }
+        }
+      } else if (feature === 'competition') {
+        console.log('Competition clicked');
+        
+        // Hide all dashboard elements
+        if (typingCard) typingCard.style.display = 'none';
+        if (sidebar) sidebar.style.display = 'none';
+        if (recentTestsCard) recentTestsCard.style.display = 'none';
+        if (leaderboardCard) leaderboardCard.style.display = 'none';
+        
+        // Show competition full page
+        competitionFullPage.classList.remove('hidden');
+        achievementsFullPage.classList.add('hidden');
+        
+        if (currentUser) {
+          loadCompetitions();
+        } else {
+          document.getElementById('my-competitions-list').innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+              <p class="text-muted">Sign in to create and join competitions!</p>
+            </div>
+          `;
+        }
       } else if (feature === 'dashboard') {
         // Show all dashboard elements
         if (typingCard) typingCard.style.display = 'block';
@@ -134,8 +839,9 @@ document.addEventListener('keydown', (e) => {
         if (recentTestsCard && currentUser) recentTestsCard.style.display = 'block';
         if (leaderboardCard && currentUser) leaderboardCard.style.display = 'block';
         
-        // Hide achievements full page
+        // Hide achievements and competition full pages
         achievementsFullPage.classList.add('hidden');
+        competitionFullPage.classList.add('hidden');
         
         // Show/hide sidebar sections
         sections.forEach(section => {
@@ -149,6 +855,7 @@ document.addEventListener('keydown', (e) => {
         if (leaderboardCard && currentUser) leaderboardCard.style.display = 'block';
         
         achievementsFullPage.classList.add('hidden');
+        competitionFullPage.classList.add('hidden');
         
         sections.forEach(section => {
           if (section.id === `section-${feature}`) {
@@ -158,6 +865,26 @@ document.addEventListener('keydown', (e) => {
           }
         });
       }
+    });
+  });
+  // Competition tab switching
+  const competitionTabs = document.querySelectorAll('.competition-tab');
+  const competitionTabContents = document.querySelectorAll('.competition-tab-content');
+  
+  competitionTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const targetTab = this.dataset.tab;
+      
+      competitionTabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      
+      competitionTabContents.forEach(content => {
+        if (content.id === targetTab) {
+          content.classList.add('active');
+        } else {
+          content.classList.remove('active');
+        }
+      });
     });
   });
   // ==== DYNAMIC Story controls (auto-injected; no HTML change needed) ====
@@ -177,6 +904,7 @@ document.addEventListener('keydown', (e) => {
     <div class="text-xs text-muted" id="story-meta" style="margin-top:4px;"></div>
   `;
   // ==== ACHIEVEMENTS SYSTEM ====
+ // ==== ACHIEVEMENTS SYSTEM ====
   const ACHIEVEMENTS = {
     speed: [
       { id: 'speed_25', title: 'Typing Apprentice', description: 'Reach 25 WPM', icon: '🎯', requirement: 25 },
@@ -184,52 +912,72 @@ document.addEventListener('keydown', (e) => {
       { id: 'speed_60', title: 'Fast Fingers', description: 'Reach 60 WPM', icon: '🚀', requirement: 60 },
       { id: 'speed_80', title: 'Speed Demon', description: 'Reach 80 WPM', icon: '🔥', requirement: 80 },
       { id: 'speed_100', title: 'Century Club', description: 'Reach 100 WPM', icon: '💯', requirement: 100 },
-      { id: 'speed_120', title: 'Elite Typist', description: 'Reach 120 WPM', icon: '👑', requirement: 120 }
+      { id: 'speed_120', title: 'Elite Typist', description: 'Reach 120 WPM', icon: '👑', requirement: 120 },
+      { id: 'speed_150', title: 'Lightning Hands', description: 'Reach 150 WPM', icon: '⚡', requirement: 150 },
+      { id: 'speed_180', title: 'Superhuman', description: 'Reach 180 WPM', icon: '🦸', requirement: 180 }
     ],
     accuracy: [
+      { id: 'acc_85', title: 'Improving', description: 'Achieve 85% accuracy', icon: '📈', requirement: 85 },
       { id: 'acc_90', title: 'Getting Accurate', description: 'Achieve 90% accuracy', icon: '🎪', requirement: 90 },
       { id: 'acc_95', title: 'Precision Typist', description: 'Achieve 95% accuracy', icon: '🎯', requirement: 95 },
       { id: 'acc_98', title: 'Near Perfect', description: 'Achieve 98% accuracy', icon: '💎', requirement: 98 },
       { id: 'acc_100', title: 'Flawless', description: 'Achieve 100% accuracy', icon: '✨', requirement: 100 }
     ],
     consistency: [
+      { id: 'tests_5', title: 'First Steps', description: 'Complete 5 tests', icon: '👣', requirement: 5 },
       { id: 'tests_10', title: 'Getting Started', description: 'Complete 10 tests', icon: '📝', requirement: 10 },
+      { id: 'tests_25', title: 'Committed Learner', description: 'Complete 25 tests', icon: '📖', requirement: 25 },
       { id: 'tests_50', title: 'Dedicated Learner', description: 'Complete 50 tests', icon: '📚', requirement: 50 },
       { id: 'tests_100', title: 'Century of Practice', description: 'Complete 100 tests', icon: '🏆', requirement: 100 },
       { id: 'tests_250', title: 'Practice Master', description: 'Complete 250 tests', icon: '🎓', requirement: 250 },
-      { id: 'tests_500', title: 'Typing Legend', description: 'Complete 500 tests', icon: '⭐', requirement: 500 }
+      { id: 'tests_500', title: 'Typing Legend', description: 'Complete 500 tests', icon: '⭐', requirement: 500 },
+      { id: 'tests_1000', title: 'Typing God', description: 'Complete 1000 tests', icon: '👑', requirement: 1000 }
     ],
     difficulty: [
-      { id: 'beginner_master', title: 'Beginner Master', description: '25 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 25} },
       { id: 'beginner_master', title: 'Beginner Master', description: '50 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 50 } },
-      { id: 'beginner_master', title: 'Beginner Master', description: '75 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 75 } },
-      { id: 'beginner_master', title: 'Beginner Master', description: '80 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 80 } },
-      { id: 'beginner_master', title: 'Beginner Master', description: '90 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 90 } },
-      { id: 'beginner_master', title: 'Beginner Master', description: '100 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 100 } },
-      { id: 'beginner_master', title: 'Beginner Master', description: '110 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 110 } },
-      { id: 'beginner_master', title: 'Beginner Master', description: '120 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 120 } },
-      { id: 'beginner_master', title: 'Beginner Master', description: '130 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 130 } },
-      { id: 'beginner_master', title: 'Beginner Master', description: '140 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 140 } },
-      { id: 'beginner_master', title: 'Beginner Master', description: '150 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 150 } },
-      { id: 'beginner_master', title: 'Beginner Master', description: '200 WPM on Beginner', icon: '🌱', requirement: { difficulty: 'Beginner', wpm: 200 } },
       { id: 'intermediate_master', title: 'Intermediate Master', description: '50 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 50 } },
-      { id: 'intermediate_master', title: 'Intermediate Master', description: '75 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 75 } },
-      { id: 'intermediate_master', title: 'Intermediate Master', description: '80 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 80 } },
-      { id: 'intermediate_master', title: 'Intermediate Master', description: '90 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 90 } },
-      { id: 'intermediate_master', title: 'Intermediate Master', description: '95 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 95 } },
-      { id: 'intermediate_master', title: 'Intermediate Master', description: '100 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 100 } },
-      { id: 'intermediate_master', title: 'Intermediate Master', description: '125 WPM on Intermediate', icon: '🌿', requirement: { difficulty: 'Intermediate', wpm: 125 } },
       { id: 'advanced_master', title: 'Advanced Master', description: '50 WPM on Advanced', icon: '🌳', requirement: { difficulty: 'Advanced', wpm: 50 } },
+      { id: 'beginner_expert', title: 'Beginner Expert', description: '80 WPM on Beginner', icon: '🌟', requirement: { difficulty: 'Beginner', wpm: 80 } },
+      { id: 'intermediate_expert', title: 'Intermediate Expert', description: '80 WPM on Intermediate', icon: '💫', requirement: { difficulty: 'Intermediate', wpm: 80 } },
+      { id: 'advanced_expert', title: 'Advanced Expert', description: '80 WPM on Advanced', icon: '✨', requirement: { difficulty: 'Advanced', wpm: 80 } },
       { id: 'all_rounder', title: 'All-Rounder', description: 'Master all difficulties', icon: '🌟', requirement: 'all_difficulties' }
     ],
     endurance: [
-      { id: 'marathon_3min', title: 'Short Sprint', description: 'Complete 3 min test at 40+ WPM', icon: '🏃', requirement: { duration: 180, wpm: 40 } },
-      { id: 'marathon_5min', title: 'Marathon Runner', description: 'Complete 5 min test at 40+ WPM', icon: '🏃‍♂️', requirement: { duration: 300, wpm: 40 } }
+      { id: 'sprint_30', title: 'Quick Sprint', description: 'Complete 30s test at 40+ WPM', icon: '🏃', requirement: { duration: 30, wpm: 40 } },
+      { id: 'sprint_60', title: 'Minute Master', description: 'Complete 60s test at 50+ WPM', icon: '⏱️', requirement: { duration: 60, wpm: 50 } },
+      { id: 'marathon_3min', title: 'Short Marathon', description: 'Complete 3 min test at 40+ WPM', icon: '🏃‍♂️', requirement: { duration: 180, wpm: 40 } },
+      { id: 'marathon_5min', title: 'Marathon Runner', description: 'Complete 5 min test at 40+ WPM', icon: '🏅', requirement: { duration: 300, wpm: 40 } },
+      { id: 'ultra_5min', title: 'Ultra Marathoner', description: 'Complete 5 min test at 60+ WPM', icon: '🥇', requirement: { duration: 300, wpm: 60 } }
     ],
     special: [
+      { id: 'first_test', title: 'Welcome Aboard', description: 'Complete your first test', icon: '🎉', requirement: 'first_test' },
       { id: 'perfect_test', title: 'Perfect Performance', description: '100% accuracy & 60+ WPM', icon: '🌈', requirement: { accuracy: 100, wpm: 60 } },
       { id: 'speed_accuracy', title: 'Speed & Precision', description: '80+ WPM & 95+ accuracy', icon: '💫', requirement: { wpm: 80, accuracy: 95 } },
-      { id: 'first_test', title: 'First Steps', description: 'Complete your first test', icon: '🎉', requirement: 'first_test' }
+      { id: 'elite_combo', title: 'Elite Performance', description: '100+ WPM & 98+ accuracy', icon: '👑', requirement: { wpm: 100, accuracy: 98 } },
+      { id: 'night_owl', title: 'Night Owl', description: 'Complete 10 tests after 10 PM', icon: '🦉', requirement: 'night_owl' },
+      { id: 'early_bird', title: 'Early Bird', description: 'Complete 10 tests before 6 AM', icon: '🌅', requirement: 'early_bird' },
+      { id: 'weekend_warrior', title: 'Weekend Warrior', description: 'Complete 20 tests on weekends', icon: '🎮', requirement: 'weekend_warrior' }
+    ],
+    streaks: [
+      { id: 'streak_3', title: 'On a Roll', description: 'Complete tests 3 days in a row', icon: '🔥', requirement: { streak: 3 } },
+      { id: 'streak_7', title: 'Week Warrior', description: 'Complete tests 7 days in a row', icon: '📅', requirement: { streak: 7 } },
+      { id: 'streak_30', title: 'Monthly Champion', description: 'Complete tests 30 days in a row', icon: '📆', requirement: { streak: 30 } },
+      { id: 'daily_grind', title: 'Daily Grinder', description: 'Complete 5 tests in one day', icon: '💪', requirement: 'daily_5_tests' },
+      { id: 'productive_day', title: 'Productive Day', description: 'Complete 10 tests in one day', icon: '🚀', requirement: 'daily_10_tests' }
+    ],
+    modes: [
+      { id: 'quote_master', title: 'Quote Master', description: 'Complete 20 quote tests', icon: '💬', requirement: { mode: 'quote', count: 20 } },
+      { id: 'story_lover', title: 'Story Lover', description: 'Complete 20 story tests', icon: '📚', requirement: { mode: 'story', count: 20 } },
+      { id: 'passage_expert', title: 'Passage Expert', description: 'Complete 50 random word tests', icon: '📝', requirement: { mode: 'passage', count: 50 } },
+      { id: 'jack_of_all', title: 'Jack of All Trades', description: 'Complete 10 tests in each mode', icon: '🎭', requirement: 'all_modes' }
+    ],
+    milestones: [
+      { id: 'total_words_1k', title: 'Wordsmith', description: 'Type 1,000 words total', icon: '✍️', requirement: { totalWords: 1000 } },
+      { id: 'total_words_10k', title: 'Author', description: 'Type 10,000 words total', icon: '📖', requirement: { totalWords: 10000 } },
+      { id: 'total_words_50k', title: 'Novelist', description: 'Type 50,000 words total', icon: '📚', requirement: { totalWords: 50000 } },
+      { id: 'total_words_100k', title: 'Epic Writer', description: 'Type 100,000 words total', icon: '🏆', requirement: { totalWords: 100000 } },
+      { id: 'error_free_10', title: 'Careful Typist', description: 'Complete 10 tests with 100% accuracy', icon: '✅', requirement: { perfectTests: 10 } },
+      { id: 'error_free_50', title: 'Perfectionist', description: 'Complete 50 tests with 100% accuracy', icon: '💎', requirement: { perfectTests: 50 } }
     ]
   };
   // ==== ACHIEVEMENT FUNCTIONS ====
@@ -492,6 +1240,35 @@ document.addEventListener('keydown', (e) => {
     }
     
     return 0;
+  }
+  // ==== COMPETITION SYSTEM ====
+  
+  // Generate random 6-digit competition code
+  function generateCompetitionCode() {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  }
+  
+  // Get competition share URL
+  function getCompetitionShareURL(code) {
+    return `${window.location.origin}${window.location.pathname}?comp=${code}`;
+  }
+  
+  // Format time remaining
+  function formatTimeRemaining(endDate) {
+    const now = new Date();
+    const end = endDate.toDate ? endDate.toDate() : new Date(endDate);
+    const diff = end - now;
+    
+    if (diff <= 0) return 'Ended';
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    
+    if (days > 0) return `${days}d ${hours}h left`;
+    if (hours > 0) return `${hours}h left`;
+    
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    return `${minutes}m left`;
   }
   // insert after quote-controls
   quoteControls.parentNode.insertBefore(storyControls, quoteControls.nextSibling);
@@ -1386,6 +2163,55 @@ function focusTypingInput() {
           totalTests: totalTests,
           hasMasteredAllDifficulties: hasMasteredAllDifficulties
         });
+        // Submit score to active competition if any
+        const activeCompId = localStorage.getItem('activeCompetition');
+        if (activeCompId) {
+          try {
+            const compDoc = await db.collection('competitions').doc(activeCompId).get();
+            if (compDoc.exists) {
+              const comp = compDoc.data();
+              
+              // Check if competition is still active
+              if (comp.status === 'active') {
+                // Update or add to leaderboard
+                const existingEntryIndex = comp.leaderboard.findIndex(e => e.uid === currentUser.uid);
+                
+                if (existingEntryIndex >= 0) {
+                  // Update if new score is better
+                  if (stats.wpm > comp.leaderboard[existingEntryIndex].wpm) {
+                    comp.leaderboard[existingEntryIndex] = {
+                      uid: currentUser.uid,
+                      email: currentUser.email,
+                      wpm: stats.wpm,
+                      accuracy: stats.accuracy,
+                      submittedAt: firebase.firestore.Timestamp.now()
+                    };
+                    await compDoc.ref.update({ leaderboard: comp.leaderboard });
+                    alert('New personal best submitted to competition! 🎉');
+                  }
+                } else {
+                  // Add new entry
+                  await compDoc.ref.update({
+                    leaderboard: firebase.firestore.FieldValue.arrayUnion({
+                      uid: currentUser.uid,
+                      email: currentUser.email,
+                      wpm: stats.wpm,
+                      accuracy: stats.accuracy,
+                      submittedAt: firebase.firestore.Timestamp.now()
+                    })
+                  });
+                  alert('Score submitted to competition! 🎉');
+                }
+              }
+            }
+            
+            // Clear active competition
+            localStorage.removeItem('activeCompetition');
+            
+          } catch (error) {
+            console.error('Error submitting to competition:', error);
+          }
+        }
 
         // Update last test results
         lastWPMEl.textContent = stats.wpm;
@@ -1417,7 +2243,7 @@ function focusTypingInput() {
     }
   
     // Keep input disabled after test completion
-    // User must click "New Test" to continue
+   
   }
   async function refreshDashboard() {
     if (!currentUser) return;
@@ -1519,6 +2345,8 @@ function focusTypingInput() {
       
       await refreshDashboard();
       await renderAchievements();
+      await checkCompetitionStatus();
+      await renderCompetitionLeaderboard();
       
       // Ensure focus after everything loads
       setTimeout(() => {
