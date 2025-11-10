@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="SoftFingers-Main.css">
   <link rel="stylesheet" href="achievements.css">
   <link rel="stylesheet" href="competition.css">
+  <link rel="stylesheet" href="lessons.css">
 </head>
 <body>
   <!-- Header -->
@@ -45,7 +46,7 @@
     <div class="container">
       <div class="nav-tabs" id="feature-tabs">
         <div class="nav-tab active" data-feature="dashboard">Dashboard</div>
-        <div class="nav-tab" data-feature="lessons" onclick="window.location.href='lessons.html'">Lessons</div>
+        <div class="nav-tab" data-feature="lessons">Lessons</div>
         <div class="nav-tab" data-feature="achievements">Achievements</div>
         <div class="nav-tab" data-feature="competition">Competition</div>
         <div class="nav-tab" data-feature="darkroom">Darkroom</div>
@@ -512,6 +513,158 @@
           </div>
         </div>
       </div>
+      <!-- Lessons Full Page (Hidden by default) -->
+      <div id="lessons-full-page" class="hidden">
+        <!-- Lessons Header -->
+        <div class="lessons-header">
+          <div>
+            <h2 class="lessons-page-title">Typing Lessons</h2>
+            <p class="lessons-page-subtitle">Master touch typing from basics to advanced</p>
+          </div>
+          <div class="lessons-progress-summary">
+            <div class="progress-pill">
+              <span class="progress-pill-value" id="total-lessons-completed">0</span>
+              <span class="progress-pill-label">Lessons Completed</span>
+            </div>
+            <div class="progress-pill">
+              <span class="progress-pill-value" id="overall-progress">0%</span>
+              <span class="progress-pill-label">Overall Progress</span>
+            </div>
+            <div class="progress-pill">
+              <span class="progress-pill-value" id="current-wpm-avg">0</span>
+              <span class="progress-pill-label">Avg WPM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lesson Categories -->
+        <div class="lesson-categories">
+          <div class="lesson-category-card active" data-category="beginner">
+            <div class="category-icon">🌱</div>
+            <h3 class="category-title">Beginner</h3>
+            <p class="category-description">Start from scratch with home row keys</p>
+            <div class="category-progress">
+              <div class="category-progress-bar" id="beginner-progress"></div>
+            </div>
+          </div>
+          
+          <div class="lesson-category-card locked" data-category="intermediate">
+            <div class="category-icon">🌿</div>
+            <h3 class="category-title">Intermediate</h3>
+            <p class="category-description">Build speed and accuracy</p>
+            <div class="category-progress">
+              <div class="category-progress-bar" id="intermediate-progress"></div>
+            </div>
+            <div class="lock-badge">🔒</div>
+          </div>
+          
+          <div class="lesson-category-card locked" data-category="advanced">
+            <div class="category-icon">🌳</div>
+            <h3 class="category-title">Advanced</h3>
+            <p class="category-description">Master complex patterns and speed</p>
+            <div class="category-progress">
+              <div class="category-progress-bar" id="advanced-progress"></div>
+            </div>
+            <div class="lock-badge">🔒</div>
+          </div>
+          
+          <div class="lesson-category-card locked" data-category="games">
+            <div class="category-icon">🎮</div>
+            <h3 class="category-title">Games</h3>
+            <p class="category-description">Fun typing games and challenges</p>
+            <div class="category-progress">
+              <div class="category-progress-bar" id="games-progress"></div>
+            </div>
+            <div class="lock-badge">🔒</div>
+          </div>
+          
+          <div class="lesson-category-card locked" data-category="challenges">
+            <div class="category-icon">⚡</div>
+            <h3 class="category-title">Challenges</h3>
+            <p class="category-description">Speed and accuracy challenges</p>
+            <div class="category-progress">
+              <div class="category-progress-bar" id="challenges-progress"></div>
+            </div>
+            <div class="lock-badge">🔒</div>
+          </div>
+        </div>
+
+        <!-- Lessons List Container -->
+        <div id="lessons-list-container" class="lessons-list-container">
+          <!-- Will be populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Lesson Practice Modal -->
+      <div id="lesson-practice-modal" class="modal modal-lesson hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-lesson-content">
+          <div class="modal-header">
+            <div>
+              <h3 class="modal-title" id="lesson-practice-title">Lesson Practice</h3>
+              <p class="text-small text-muted" id="lesson-practice-subtitle"></p>
+            </div>
+            <button class="modal-close" id="close-lesson-modal">×</button>
+          </div>
+          <div class="modal-body">
+            <!-- Virtual Keyboard -->
+            <div id="virtual-keyboard" class="virtual-keyboard">
+              <!-- Will be generated dynamically -->
+            </div>
+
+            <!-- Tutorial Instructions -->
+            <div id="tutorial-instructions" class="tutorial-instructions hidden">
+              <h4>📚 Tutorial</h4>
+              <p id="tutorial-text"></p>
+            </div>
+
+            <!-- Lesson Stats -->
+            <div class="lesson-stats">
+              <div class="lesson-stat-item">
+                <div class="lesson-stat-label">WPM</div>
+                <div class="lesson-stat-value" id="lesson-wpm">0</div>
+              </div>
+              <div class="lesson-stat-item">
+                <div class="lesson-stat-label">Accuracy</div>
+                <div class="lesson-stat-value" id="lesson-accuracy">100%</div>
+              </div>
+              <div class="lesson-stat-item">
+                <div class="lesson-stat-label">Target WPM</div>
+                <div class="lesson-stat-value" id="lesson-target-wpm">--</div>
+              </div>
+              <div class="lesson-stat-item">
+                <div class="lesson-stat-label">Target Accuracy</div>
+                <div class="lesson-stat-value" id="lesson-target-accuracy">--</div>
+              </div>
+              <div class="lesson-stat-item">
+                <div class="lesson-stat-label">Progress</div>
+                <div class="lesson-stat-value" id="lesson-progress">0/10</div>
+              </div>
+            </div>
+
+            <!-- Lesson Text Display -->
+            <div class="lesson-text-container">
+              <div id="lesson-text-display"></div>
+            </div>
+
+            <!-- Lesson Input -->
+            <textarea 
+              id="lesson-input" 
+              class="lesson-input"
+              placeholder="Start typing..."
+              autocomplete="off" 
+              spellcheck="false"
+            ></textarea>
+
+            <!-- Lesson Actions -->
+            <div class="lesson-actions">
+              <button class="btn btn-secondary" id="restart-lesson-btn">Restart</button>
+              <button class="btn" id="next-exercise-btn" disabled>Next Exercise</button>
+              <button class="btn btn-secondary" id="exit-lesson-btn">Exit Lesson</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Authentication Card -->
       <div class="card" id="auth-card" style="margin: 64px auto; max-width: 500px;">
@@ -595,9 +748,6 @@
     </div>
   </main>
 
-  <!-- Include the integrated JavaScript -->
   <script src="SoftFingers-Main.js"></script>
-</body>
-</html>
 </body>
 </html>
