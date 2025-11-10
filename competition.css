@@ -2,8 +2,8 @@
 #competition-full-page {
   min-height: 60vh;
   padding: 32px 40px;
-  border-radius: 50px;
   background-color: black;
+  border-radius: 50px;
 }
 
 .competition-header {
