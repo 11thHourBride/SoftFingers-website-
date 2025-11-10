@@ -1299,15 +1299,72 @@ window.viewCompetitionDetails = async function(compId) {
     // Start time tracking
     window.currentLesson.exerciseStartTime = Date.now();
   }
-  // ==== VIRTUAL KEYBOARD ====
+ // ==== VIRTUAL KEYBOARD ====
   function renderVirtualKeyboard(highlightKeys = []) {
     const keyboard = document.getElementById('virtual-keyboard');
     
     const keyboardLayout = [
-      ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
-      ['Tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'],
-      ['Caps', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'", 'Enter'],
-      ['Shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'Shift'],
+      [
+        { main: '`', shift: '~' },
+        { main: '1', shift: '!' },
+        { main: '2', shift: '@' },
+        { main: '3', shift: '#' },
+        { main: '4', shift: '$' },
+        { main: '5', shift: '%' },
+        { main: '6', shift: '^' },
+        { main: '7', shift: '&' },
+        { main: '8', shift: '*' },
+        { main: '9', shift: '(' },
+        { main: '0', shift: ')' },
+        { main: '-', shift: '_' },
+        { main: '=', shift: '+' },
+        'Backspace'
+      ],
+      [
+        'Tab',
+        { main: 'q', shift: 'Q' },
+        { main: 'w', shift: 'W' },
+        { main: 'e', shift: 'E' },
+        { main: 'r', shift: 'R' },
+        { main: 't', shift: 'T' },
+        { main: 'y', shift: 'Y' },
+        { main: 'u', shift: 'U' },
+        { main: 'i', shift: 'I' },
+        { main: 'o', shift: 'O' },
+        { main: 'p', shift: 'P' },
+        { main: '[', shift: '{' },
+        { main: ']', shift: '}' },
+        { main: '\\', shift: '|' }
+      ],
+      [
+        'Caps',
+        { main: 'a', shift: 'A' },
+        { main: 's', shift: 'S' },
+        { main: 'd', shift: 'D' },
+        { main: 'f', shift: 'F' },
+        { main: 'g', shift: 'G' },
+        { main: 'h', shift: 'H' },
+        { main: 'j', shift: 'J' },
+        { main: 'k', shift: 'K' },
+        { main: 'l', shift: 'L' },
+        { main: ';', shift: ':' },
+        { main: "'", shift: '"' },
+        'Enter'
+      ],
+      [
+        'Shift',
+        { main: 'z', shift: 'Z' },
+        { main: 'x', shift: 'X' },
+        { main: 'c', shift: 'C' },
+        { main: 'v', shift: 'V' },
+        { main: 'b', shift: 'B' },
+        { main: 'n', shift: 'N' },
+        { main: 'm', shift: 'M' },
+        { main: ',', shift: '<' },
+        { main: '.', shift: '>' },
+        { main: '/', shift: '?' },
+        'Shift'
+      ],
       ['Space']
     ];
     
@@ -1329,27 +1386,43 @@ window.viewCompetitionDetails = async function(compId) {
       html += '<div class="keyboard-row">';
       
       row.forEach(key => {
-        const isHomeRow = homeRowKeys.includes(key.toLowerCase());
-        const isHighlighted = highlightKeys && highlightKeys.includes(key.toLowerCase());
-        const fingerHint = fingerHints[key.toLowerCase()] || '';
-        
-        let keyClass = 'key';
-        if (key === 'Backspace' || key === 'Enter' || key === 'Tab' || key === 'Caps') {
-          keyClass += ' wide';
-        } else if (key === 'Shift') {
-          keyClass += ' wider';
-        } else if (key === 'Space') {
-          keyClass += ' space';
+        // Handle string keys (special keys like Backspace, Shift, etc.)
+        if (typeof key === 'string') {
+          let keyClass = 'key';
+          if (key === 'Backspace' || key === 'Enter' || key === 'Tab' || key === 'Caps') {
+            keyClass += ' wide';
+          } else if (key === 'Shift') {
+            keyClass += ' wider';
+          } else if (key === 'Space') {
+            keyClass += ' space';
+          }
+          
+          html += `
+            <div class="${keyClass}" data-key="${key.toLowerCase()}">
+              ${key === 'Space' ? 'Space' : key}
+            </div>
+          `;
+        } else {
+          // Handle object keys (keys with shift alternatives)
+          const mainKey = key.main;
+          const shiftKey = key.shift;
+          const isHomeRow = homeRowKeys.includes(mainKey.toLowerCase());
+          const isHighlighted = highlightKeys && highlightKeys.includes(mainKey.toLowerCase());
+          const fingerHint = fingerHints[mainKey.toLowerCase()] || '';
+          
+          let keyClass = 'key';
+          if (isHomeRow) keyClass += ' home-row';
+          
+          html += `
+            <div class="${keyClass}" data-key="${mainKey.toLowerCase()}">
+              <div class="key-main">
+                <span class="key-shift">${shiftKey}</span>
+                <span class="key-normal">${mainKey}</span>
+              </div>
+              ${fingerHint ? `<span class="finger-hint">${fingerHint}</span>` : ''}
+            </div>
+          `;
         }
-        
-        if (isHomeRow) keyClass += ' home-row';
-        
-        html += `
-          <div class="${keyClass}" data-key="${key.toLowerCase()}">
-            ${key === 'Space' ? 'Space' : key}
-            ${fingerHint ? `<span class="finger-hint">${fingerHint}</span>` : ''}
-          </div>
-        `;
       });
       
       html += '</div>';
@@ -1357,7 +1430,6 @@ window.viewCompetitionDetails = async function(compId) {
     
     keyboard.innerHTML = html;
   }
-  
   // Highlight next key on keyboard
   function highlightNextKey(nextChar) {
     // Remove all highlights
