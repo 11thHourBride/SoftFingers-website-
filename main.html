@@ -606,12 +606,8 @@
             </div>
             <button class="modal-close" id="close-lesson-modal">×</button>
           </div>
-          <div class="modal-body">
-            <!-- Virtual Keyboard -->
-            <div id="virtual-keyboard" class="virtual-keyboard">
-              <!-- Will be generated dynamically -->
-            </div>
-
+         
+           <div class="modal-body">
             <!-- Tutorial Instructions -->
             <div id="tutorial-instructions" class="tutorial-instructions hidden">
               <h4>📚 Tutorial</h4>
@@ -656,6 +652,13 @@
               spellcheck="false"
             ></textarea>
 
+             <div class="modal-body">
+            <!-- Virtual Keyboard -->
+            <div id="virtual-keyboard" class="virtual-keyboard">
+              <!-- Will be generated dynamically -->
+            </div>
+
+
             <!-- Lesson Actions -->
             <div class="lesson-actions">
               <button class="btn btn-secondary" id="restart-lesson-btn">Restart</button>
@@ -663,8 +666,6 @@
               <button class="btn btn-secondary" id="exit-lesson-btn">Exit Lesson</button>
             </div>
           </div>
-        </div>
-      </div>
 
       <!-- Authentication Card -->
       <div class="card" id="auth-card" style="margin: 64px auto; max-width: 500px;">
@@ -748,6 +749,7 @@
     </div>
   </main>
 
+  <!-- Include the integrated JavaScript -->
   <script src="SoftFingers-Main.js"></script>
 </body>
 </html>
