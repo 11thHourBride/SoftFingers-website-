@@ -635,3 +635,13 @@
         padding: 20px;
       }
     }
+/* Hide WPM and Accuracy during test */
+    #stat-wpm, #stat-acc {
+      display: none !important;
+    }
+    
+    .stat-card:has(#stat-wpm),
+    .stat-card:has(#stat-acc) {
+      display: none !important;
+    }
+
