@@ -1097,7 +1097,7 @@ window.viewCompetitionDetails = async function(compId) {
     }, 100);
   };
   // ==== LOAD LESSONS PAGE ====
-  function loadLessonsPage() {
+ function loadLessonsPage() {
     if (!currentUser) return;
     
     // Update progress summary
@@ -1126,12 +1126,76 @@ window.viewCompetitionDetails = async function(compId) {
     document.getElementById('overall-progress').textContent = `${Math.round((totalCompleted / totalLessons) * 100)}%`;
     document.getElementById('current-wpm-avg').textContent = wpmCount > 0 ? Math.round(totalWPM / wpmCount) : 0;
     
+    // Check if advanced is completed and show certificate button
+    if (checkAdvancedCompletion()) {
+      const headerActions = document.querySelector('.lessons-header > div:last-child');
+      if (headerActions && !document.getElementById('view-certificate-btn')) {
+        const certBtn = document.createElement('div');
+        certBtn.innerHTML = `
+          <button class="btn" id="view-certificate-btn" style="margin-top: 12px;">
+            🏆 View My Certificate
+          </button>
+        `;
+        headerActions.appendChild(certBtn);
+        
+        document.getElementById('view-certificate-btn').addEventListener('click', () => {
+          // Recalculate stats and show certificate
+          const lessons = LESSON_DATA.advanced.lessons;
+          let totalWPM = 0;
+          let maxWPM = 0;
+          let totalAccuracy = 0;
+          let count = 0;
+          
+          lessons.forEach(lesson => {
+            const progress = getLessonProgress(lesson.id);
+            if (progress) {
+              if (progress.bestWPM) {
+                totalWPM += progress.bestWPM;
+                if (progress.bestWPM > maxWPM) maxWPM = progress.bestWPM;
+              }
+              if (progress.bestAccuracy) {
+                totalAccuracy += progress.bestAccuracy;
+              }
+              count++;
+            }
+          });
+          
+          const stats = {
+            avgWPM: count > 0 ? Math.round(totalWPM / count) : 0,
+            maxWPM: maxWPM,
+            avgAccuracy: count > 0 ? Math.round(totalAccuracy / count) : 0
+          };
+          
+          const userName = currentUser.email.split('@')[0];
+          const completionDate = new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+          
+          generateCertificate(userName, completionDate, stats);
+        });
+      }
+    }
+    
     // Update category progress bars
     Object.keys(LESSON_DATA).forEach(category => {
       const progress = getCategoryProgress(category);
       const progressBar = document.getElementById(`${category}-progress`);
       if (progressBar) {
         progressBar.style.width = `${progress}%`;
+      }
+    });
+    
+    // Update category unlock states
+    document.querySelectorAll('.lesson-category-card').forEach(card => {
+      const category = card.dataset.category;
+      const isUnlocked = isCategoryUnlocked(category);
+      
+      if (isUnlocked) {
+        card.classList.remove('locked');
+      } else {
+        card.classList.add('locked');
       }
     });
     
@@ -1298,6 +1362,231 @@ window.viewCompetitionDetails = async function(compId) {
     
     // Start time tracking
     window.currentLesson.exerciseStartTime = Date.now();
+  }
+  // ==== CERTIFICATE GENERATION SYSTEM ====
+  
+  function generateCertificate(userName, completionDate, stats) {
+    const modal = document.createElement('div');
+    modal.className = 'certificate-modal';
+    modal.innerHTML = `
+      <div class="certificate-overlay"></div>
+      <div class="certificate-container">
+        <button class="certificate-close" onclick="this.parentElement.parentElement.remove()">×</button>
+        
+        <div class="certificate" id="certificate-content">
+          <!-- Decorative Border -->
+          <div class="certificate-border">
+            <div class="certificate-border-inner">
+              
+              <!-- Header -->
+              <div class="certificate-header">
+                <div class="certificate-logo">🏆</div>
+                <h1 class="certificate-title">Certificate of Excellence</h1>
+                <p class="certificate-subtitle">Touch Typing Mastery</p>
+              </div>
+              
+              <!-- Body -->
+              <div class="certificate-body">
+                <p class="certificate-text">This is to certify that</p>
+                <h2 class="certificate-name">${userName}</h2>
+                <p class="certificate-text">has successfully completed the</p>
+                <h3 class="certificate-course">Advanced Touch Typing Course</h3>
+                <p class="certificate-text">demonstrating exceptional skill and dedication</p>
+                
+                <!-- Stats -->
+                <div class="certificate-stats">
+                  <div class="certificate-stat">
+                    <div class="certificate-stat-value">${stats.avgWPM}</div>
+                    <div class="certificate-stat-label">Average WPM</div>
+                  </div>
+                  <div class="certificate-stat">
+                    <div class="certificate-stat-value">${stats.maxWPM}</div>
+                    <div class="certificate-stat-label">Peak WPM</div>
+                  </div>
+                  <div class="certificate-stat">
+                    <div class="certificate-stat-value">${stats.avgAccuracy}%</div>
+                    <div class="certificate-stat-label">Accuracy</div>
+                  </div>
+                  <div class="certificate-stat">
+                    <div class="certificate-stat-value">50</div>
+                    <div class="certificate-stat-label">Lessons</div>
+                  </div>
+                </div>
+                
+                <!-- Skills Achieved -->
+                <div class="certificate-skills">
+                  <h4 class="certificate-skills-title">Skills Mastered</h4>
+                  <div class="certificate-skills-grid">
+                    <span class="certificate-skill">✓ Touch Typing</span>
+                    <span class="certificate-skill">✓ Speed Typing</span>
+                    <span class="certificate-skill">✓ Audio Transcription</span>
+                    <span class="certificate-skill">✓ Code Typing</span>
+                    <span class="certificate-skill">✓ Professional Documents</span>
+                    <span class="certificate-skill">✓ Complex Patterns</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Footer -->
+              <div class="certificate-footer">
+                <div class="certificate-signature-section">
+                  <div class="certificate-signature">
+                    <div class="certificate-signature-line"></div>
+                    <p class="certificate-signature-name">SoftFingers Pro</p>
+                    <p class="certificate-signature-title">Typing Platform</p>
+                  </div>
+                  <div class="certificate-date-section">
+                    <p class="certificate-date-label">Date of Completion</p>
+                    <p class="certificate-date">${completionDate}</p>
+                  </div>
+                </div>
+                
+                <!-- Certificate ID -->
+                <div class="certificate-id">
+                  <p>Certificate ID: SF-${generateCertificateID()}</p>
+                </div>
+              </div>
+              
+              <!-- Seal -->
+              <div class="certificate-seal">
+                <div class="certificate-seal-inner">
+                  <div class="certificate-seal-text">
+                    <div>CERTIFIED</div>
+                    <div class="certificate-seal-year">${new Date().getFullYear()}</div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="certificate-actions">
+          <button class="btn" onclick="downloadCertificateFunc()">
+            📥 Download Certificate
+          </button>
+          <button class="btn btn-secondary" onclick="printCertificateFunc()">
+            🖨️ Print Certificate
+          </button>
+          <button class="btn btn-secondary" onclick="shareCertificateFunc()">
+            🔗 Share Certificate
+          </button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Trigger celebration animation
+    celebrateCertificate();
+  }
+  
+  function generateCertificateID() {
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substring(2, 8);
+    return `${timestamp}-${random}`.toUpperCase();
+  }
+  
+  window.downloadCertificateFunc = function() {
+    alert('Certificate download feature coming soon! You can print this certificate using the Print button.');
+  };
+  
+  window.printCertificateFunc = function() {
+    window.print();
+  };
+  
+  window.shareCertificateFunc = function() {
+    const shareText = `I just completed the Advanced Touch Typing Course on SoftFingers Pro! 🎉`;
+    const shareURL = window.location.href;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'SoftFingers Certificate',
+        text: shareText,
+        url: shareURL
+      }).catch(err => console.log('Error sharing:', err));
+    } else {
+      navigator.clipboard.writeText(`${shareText}\n${shareURL}`).then(() => {
+        alert('Certificate link copied to clipboard!');
+      });
+    }
+  };
+  
+  function celebrateCertificate() {
+    const colors = ['#9f7cff', '#6b4eff', '#51cf66', '#ffc107', '#ff6b6b'];
+    const confettiCount = 100;
+    
+    for (let i = 0; i < confettiCount; i++) {
+      setTimeout(() => {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 3 + 's';
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 5000);
+      }, i * 30);
+    }
+  }
+  
+  function checkAdvancedCompletion() {
+    if (!currentUser || !LESSON_DATA.advanced) return false;
+    
+    const lessons = LESSON_DATA.advanced.lessons;
+    const lastLesson = lessons[lessons.length - 1];
+    const progress = getLessonProgress(lastLesson.id);
+    
+    return progress && progress.completed;
+  }
+  
+  function checkAndShowCertificate() {
+    if (checkAdvancedCompletion()) {
+      const certificateShown = localStorage.getItem(`certificate_shown_${currentUser.uid}`);
+      
+      if (!certificateShown) {
+        // Calculate stats
+        const lessons = LESSON_DATA.advanced.lessons;
+        let totalWPM = 0;
+        let maxWPM = 0;
+        let totalAccuracy = 0;
+        let count = 0;
+        
+        lessons.forEach(lesson => {
+          const progress = getLessonProgress(lesson.id);
+          if (progress) {
+            if (progress.bestWPM) {
+              totalWPM += progress.bestWPM;
+              if (progress.bestWPM > maxWPM) maxWPM = progress.bestWPM;
+            }
+            if (progress.bestAccuracy) {
+              totalAccuracy += progress.bestAccuracy;
+            }
+            count++;
+          }
+        });
+        
+        const stats = {
+          avgWPM: count > 0 ? Math.round(totalWPM / count) : 0,
+          maxWPM: maxWPM,
+          avgAccuracy: count > 0 ? Math.round(totalAccuracy / count) : 0
+        };
+        
+        const userName = currentUser.email.split('@')[0];
+        const completionDate = new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        
+        setTimeout(() => {
+          generateCertificate(userName, completionDate, stats);
+          localStorage.setItem(`certificate_shown_${currentUser.uid}`, 'true');
+        }, 1000);
+      }
+    }
   }
  // ==== VIRTUAL KEYBOARD ====
   function renderVirtualKeyboard(highlightKeys = []) {
@@ -1631,7 +1920,7 @@ window.viewCompetitionDetails = async function(compId) {
     }
   }
   
-  function completeLessonProgress(category, lessonIndex, exerciseResults) {
+ function completeLessonProgress(category, lessonIndex, exerciseResults) {
     const lesson = LESSON_DATA[category].lessons[lessonIndex];
     
     // Calculate best stats
@@ -1649,10 +1938,26 @@ window.viewCompetitionDetails = async function(compId) {
     
     saveLessonProgress(lesson.id, progress);
     
-    // Show completion message
-    setTimeout(() => {
-      alert(`🎉 Lesson completed!\n\nBest WPM: ${bestWPM}\nAverage Accuracy: ${avgAccuracy}%\n\n${lessonIndex + 1 < LESSON_DATA[category].lessons.length ? 'Next lesson unlocked!' : 'Category completed! 🏆'}`);
-    }, 500);
+    // Check if this is the final lesson with certificate
+    const isFinalLesson = lessonIndex === LESSON_DATA[category].lessons.length - 1;
+    const isAdvancedFinal = category === 'advanced' && lesson.isFinalExam;
+    
+    if (isAdvancedFinal || (isFinalLesson && category === 'advanced')) {
+      // Show completion message
+      setTimeout(() => {
+        alert(`🎉 Congratulations! You've completed the ${category} level!\n\nBest WPM: ${bestWPM}\nAverage Accuracy: ${avgAccuracy}%\n\nPreparing your certificate...`);
+        
+        // Show certificate after a delay
+        setTimeout(() => {
+          checkAndShowCertificate();
+        }, 1000);
+      }, 500);
+    } else {
+      // Regular lesson completion
+      setTimeout(() => {
+        alert(`🎉 Lesson completed!\n\nBest WPM: ${bestWPM}\nAverage Accuracy: ${avgAccuracy}%\n\n${lessonIndex + 1 < LESSON_DATA[category].lessons.length ? 'Next lesson unlocked!' : 'Category completed! 🏆'}`);
+      }, 500);
+    }
   }
   // ==== LESSON MODAL BUTTON HANDLERS ====
   const closeLessonModal = document.getElementById('close-lesson-modal');
@@ -1702,6 +2007,197 @@ window.viewCompetitionDetails = async function(compId) {
         setupLessonPractice();
       }
     });
+  }
+  function setupLessonPractice() {
+    const { lesson, currentExercise } = window.currentLesson;
+    
+    // Update modal title
+    document.getElementById('lesson-practice-title').textContent = lesson.title;
+    document.getElementById('lesson-practice-subtitle').textContent = 
+      `${lesson.type === 'tutorial' ? 'Tutorial' : lesson.type === 'audio' ? 'Audio Transcription' : 'Exercise'} ${currentExercise + 1} of ${lesson.exercises || 1}`;
+    
+    // Show/hide tutorial instructions
+    const tutorialBox = document.getElementById('tutorial-instructions');
+    if (lesson.type === 'tutorial' && lesson.instructions) {
+      tutorialBox.classList.remove('hidden');
+      document.getElementById('tutorial-text').textContent = lesson.instructions;
+    } else if (lesson.type === 'audio') {
+      // Show audio-specific instructions
+      tutorialBox.classList.remove('hidden');
+      document.getElementById('tutorial-text').innerHTML = `
+        <strong>🎧 Audio Transcription Exercise</strong><br>
+        Click the "Play Audio" button below to hear the text. Listen carefully and type exactly what you hear.
+        <br><br>
+        <button class="btn" id="play-audio-btn" style="margin-top: 12px;">
+          ▶️ Play Audio
+        </button>
+        <button class="btn btn-secondary" id="replay-audio-btn" style="margin-top: 12px; display: none;">
+          🔄 Replay Audio
+        </button>
+      `;
+      
+      // Set up audio playback
+      setTimeout(() => {
+        setupAudioPlayback(lesson);
+      }, 100);
+    } else {
+      tutorialBox.classList.add('hidden');
+    }
+    
+    // Update target stats
+    document.getElementById('lesson-target-wpm').textContent = lesson.targetWPM || '--';
+    document.getElementById('lesson-target-accuracy').textContent = lesson.targetAccuracy ? `${lesson.targetAccuracy}%` : '--';
+    document.getElementById('lesson-progress').textContent = `${currentExercise + 1}/${lesson.exercises || 1}`;
+    
+    // For audio lessons, hide the text initially
+    if (lesson.type === 'audio') {
+      window.currentLesson.exerciseText = lesson.audioText || generateLessonText(lesson, currentExercise);
+      window.currentLesson.exerciseTyped = '';
+      window.currentLesson.audioPlayed = false;
+      
+      // Hide keyboard for audio lessons
+      document.getElementById('virtual-keyboard').style.display = 'none';
+      
+      // Show placeholder text
+      const display = document.getElementById('lesson-text-display');
+      display.innerHTML = '<span style="color: #adb5bd; font-style: italic;">Click "Play Audio" to begin transcription...</span>';
+      
+      // Disable input until audio is played
+      const input = document.getElementById('lesson-input');
+      input.disabled = true;
+      input.placeholder = 'Listen to the audio first...';
+    } else {
+      // Generate exercise text
+      window.currentLesson.exerciseText = generateLessonText(lesson, currentExercise);
+      window.currentLesson.exerciseTyped = '';
+      
+      // Show keyboard
+      document.getElementById('virtual-keyboard').style.display = 'block';
+      
+      // Render virtual keyboard
+      renderVirtualKeyboard(lesson.keys);
+      
+      // Render lesson text
+      renderLessonText();
+      
+      // Setup input
+      const input = document.getElementById('lesson-input');
+      input.value = '';
+      input.disabled = false;
+      input.placeholder = 'Start typing...';
+      input.focus();
+    }
+    
+    // Reset stats
+    document.getElementById('lesson-wpm').textContent = '0';
+    document.getElementById('lesson-accuracy').textContent = '100%';
+    
+    // Update buttons
+    document.getElementById('next-exercise-btn').disabled = true;
+    
+    // Start time tracking
+    window.currentLesson.exerciseStartTime = null; // Will start when user begins typing
+  }
+  // ==== AUDIO LESSON FUNCTIONS ====
+  function setupAudioPlayback(lesson) {
+    const playBtn = document.getElementById('play-audio-btn');
+    const replayBtn = document.getElementById('replay-audio-btn');
+    
+    if (!playBtn) return;
+    
+    playBtn.addEventListener('click', () => {
+      playAudioLesson(lesson);
+      playBtn.style.display = 'none';
+      replayBtn.style.display = 'inline-block';
+    });
+    
+    if (replayBtn) {
+      replayBtn.addEventListener('click', () => {
+        playAudioLesson(lesson);
+      });
+    }
+  }
+  
+  function playAudioLesson(lesson) {
+    const text = lesson.audioText || window.currentLesson.exerciseText;
+    
+    // Use Web Speech API for text-to-speech
+    if ('speechSynthesis' in window) {
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      
+      // Set speech rate based on lesson speed
+      if (lesson.audioSpeed === 'slow') {
+        utterance.rate = 0.7;
+      } else if (lesson.audioSpeed === 'medium') {
+        utterance.rate = 0.9;
+      } else if (lesson.audioSpeed === 'fast') {
+        utterance.rate = 1.1;
+      } else {
+        utterance.rate = 1.0;
+      }
+      
+      // Set other properties
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+      
+      // Show visual feedback during speech
+      utterance.onstart = () => {
+        const display = document.getElementById('lesson-text-display');
+        display.innerHTML = '<span style="color: #9f7cff; font-style: italic;">🎧 Playing audio... Listen carefully!</span>';
+      };
+      
+      utterance.onend = () => {
+        // Enable input and show the text after audio finishes
+        window.currentLesson.audioPlayed = true;
+        
+        // Show the actual text now
+        renderLessonText();
+        
+        // Enable input
+        const input = document.getElementById('lesson-input');
+        input.disabled = false;
+        input.placeholder = 'Type what you heard...';
+        input.focus();
+        
+        // Start timer
+        window.currentLesson.exerciseStartTime = Date.now();
+        
+        // Show completion message
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+          position: fixed;
+          top: 100px;
+          right: 24px;
+          background: linear-gradient(135deg, #51cf66, #37b24d);
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          z-index: 10002;
+          font-weight: 600;
+          animation: slideIn 0.3s ease;
+        `;
+        toast.textContent = '✅ Audio complete! Now type what you heard.';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+      };
+      
+      // Speak the text
+      window.speechSynthesis.speak(utterance);
+    } else {
+      // Fallback: show text immediately if speech API not available
+      alert('Audio playback is not supported in your browser. The text will be shown instead.');
+      window.currentLesson.audioPlayed = true;
+      renderLessonText();
+      
+      const input = document.getElementById('lesson-input');
+      input.disabled = false;
+      input.placeholder = 'Type the text...';
+      input.focus();
+      window.currentLesson.exerciseStartTime = Date.now();
+    }
   }
 
   // ==== ELEMENTS (updated for new HTML structure) ====
@@ -2029,642 +2525,13 @@ window.viewCompetitionDetails = async function(compId) {
   };
   // ==== LESSONS SYSTEM ====
   
-  const LESSON_DATA = {
-    beginner: {
-      name: "Beginner Lessons",
-      description: "Master the fundamentals of touch typing",
-      icon: "🌱",
-      lessons: [
-        // Home Row - Left Hand (Tutorials)
-        {
-          id: "b1",
-          number: 1,
-          title: "Home Row Tutorial - F & J",
-          description: "Learn the home position with index fingers",
-          type: "tutorial",
-          keys: ["f", "j"],
-          text: "fff jjj fff jjj fjf jfj fjf jfj",
-          instructions: "Place your left index finger on 'F' and right index finger on 'J'. These keys have small bumps to help you find them without looking. Practice typing these keys alternately.",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b2",
-          number: 2,
-          title: "Home Row Tutorial - D & K",
-          description: "Add middle fingers to home row",
-          type: "tutorial",
-          keys: ["f", "j", "d", "k"],
-          text: "ddd kkk ddd kkk dkd kdk fjd kfj",
-          instructions: "Keep your index fingers on F and J. Place your left middle finger on 'D' and right middle finger on 'K'. Practice all four keys together.",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b3",
-          number: 3,
-          title: "Home Row Tutorial - S & L",
-          description: "Add ring fingers to home row",
-          type: "tutorial",
-          keys: ["f", "j", "d", "k", "s", "l"],
-          text: "sss lll sss lll sls lsl fds jkl",
-          instructions: "Place your left ring finger on 'S' and right ring finger on 'L'. Now you have six home row keys!",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b4",
-          number: 4,
-          title: "Home Row Tutorial - A & ;",
-          description: "Complete the home row",
-          type: "tutorial",
-          keys: ["f", "j", "d", "k", "s", "l", "a", ";"],
-          text: "aaa ;;; aaa ;;; a;a ;a; asd jkl; asdf jkl;",
-          instructions: "Place your left pinky on 'A' and right pinky on ';'. You've now learned all home row keys! This is your base position.",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        
-        // Home Row Exercises
-        {
-          id: "b5",
-          number: 5,
-          title: "Home Row Practice - Left Hand",
-          description: "Practice left hand home row keys",
-          type: "exercise",
-          keys: ["a", "s", "d", "f"],
-          targetWPM: 20,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b6",
-          number: 6,
-          title: "Home Row Practice - Right Hand",
-          description: "Practice right hand home row keys",
-          type: "exercise",
-          keys: ["j", "k", "l", ";"],
-          targetWPM: 20,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b7",
-          number: 7,
-          title: "Home Row - Mixed Practice",
-          description: "Combine both hands on home row",
-          type: "exercise",
-          keys: ["a", "s", "d", "f", "j", "k", "l", ";"],
-          targetWPM: 25,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b8",
-          number: 8,
-          title: "Home Row Words - Simple",
-          description: "Type simple words using home row",
-          type: "exercise",
-          keys: ["a", "s", "d", "f", "j", "k", "l", ";"],
-          targetWPM: 25,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["lad", "dad", "sad", "lass", "fall", "all", "ask", "flask", "salad", "lass"]
-        },
-        {
-          id: "b9",
-          number: 9,
-          title: "Home Row Words - Advanced",
-          description: "More complex home row words",
-          type: "exercise",
-          keys: ["a", "s", "d", "f", "j", "k", "l", ";"],
-          targetWPM: 30,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["adds", "falls", "lass", "dads", "salads", "asks", "flasks", "fad", "lads", "lass"]
-        },
-        
-        // Upper Row - Tutorials
-        {
-          id: "b10",
-          number: 10,
-          title: "Upper Row Tutorial - R & U",
-          description: "Learn upper row with index fingers",
-          type: "tutorial",
-          keys: ["r", "u"],
-          text: "rrr uuu rrr uuu rur uru frj juf",
-          instructions: "From home position (F and J), reach up with your index fingers to press 'R' and 'U'. Return to home position after each keystroke.",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b11",
-          number: 11,
-          title: "Upper Row Tutorial - E & I",
-          description: "Add middle fingers to upper row",
-          type: "tutorial",
-          keys: ["e", "i"],
-          text: "eee iii eee iii eie iei der kik",
-          instructions: "Reach up with your middle fingers from D and K to press 'E' and 'I'. Always return to home position.",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b12",
-          number: 12,
-          title: "Upper Row Tutorial - W & O",
-          description: "Add ring fingers to upper row",
-          type: "tutorial",
-          keys: ["w", "o"],
-          text: "www ooo www ooo wow owo sws lol",
-          instructions: "Reach up with your ring fingers from S and L to press 'W' and 'O'.",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b13",
-          number: 13,
-          title: "Upper Row Tutorial - Q & P",
-          description: "Complete the upper row",
-          type: "tutorial",
-          keys: ["q", "p"],
-          text: "qqq ppp qqq ppp qpq pqp aqa ;p;",
-          instructions: "Reach up with your pinkies from A and ; to press 'Q' and 'P'. You've learned the entire upper row!",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        
-        // Upper Row Exercises
-        {
-          id: "b14",
-          number: 14,
-          title: "Upper Row - Left Hand",
-          description: "Practice left hand upper row",
-          type: "exercise",
-          keys: ["q", "w", "e", "r"],
-          targetWPM: 20,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b15",
-          number: 15,
-          title: "Upper Row - Right Hand",
-          description: "Practice right hand upper row",
-          type: "exercise",
-          keys: ["u", "i", "o", "p"],
-          targetWPM: 20,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b16",
-          number: 16,
-          title: "Upper Row - Mixed",
-          description: "Combine both hands upper row",
-          type: "exercise",
-          keys: ["q", "w", "e", "r", "u", "i", "o", "p"],
-          targetWPM: 25,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b17",
-          number: 17,
-          title: "Home + Upper Row - Combined",
-          description: "Mix home and upper row keys",
-          type: "exercise",
-          keys: ["a", "s", "d", "f", "j", "k", "l", "q", "w", "e", "r", "u", "i", "o", "p"],
-          targetWPM: 30,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b18",
-          number: 18,
-          title: "Upper Row Words - Simple",
-          description: "Type words using upper row",
-          type: "exercise",
-          keys: ["q", "w", "e", "r", "u", "i", "o", "p", "a", "s", "d", "f", "j", "k", "l"],
-          targetWPM: 30,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["read", "peer", "reap", "pear", "wear", "were", "ease", "ears", "pour", "power"]
-        },
-        {
-          id: "b19",
-          number: 19,
-          title: "Upper Row Words - Advanced",
-          description: "Complex upper row words",
-          type: "exercise",
-          keys: ["q", "w", "e", "r", "u", "i", "o", "p", "a", "s", "d", "f", "j", "k", "l"],
-          targetWPM: 35,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["quake", "equip", "powers", "require", "inspire", "explore", "proper", "prepare", "appear", "weaker"]
-        },
-        
-        // Bottom Row - Tutorials
-        {
-          id: "b20",
-          number: 20,
-          title: "Bottom Row Tutorial - V & M",
-          description: "Learn bottom row with index fingers",
-          type: "tutorial",
-          keys: ["v", "m"],
-          text: "vvv mmm vvv mmm vmv mvm fvf jmj",
-          instructions: "From home position, reach down with your index fingers to press 'V' and 'M'. Return to F and J after each key.",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b21",
-          number: 21,
-          title: "Bottom Row Tutorial - C & ,",
-          description: "Add middle fingers to bottom row",
-          type: "tutorial",
-          keys: ["c", ","],
-          text: "ccc ,,, ccc ,,, c,c ,c, dcd k,k",
-          instructions: "Reach down with your middle fingers from D and K to press 'C' and ',' (comma).",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b22",
-          number: 22,
-          title: "Bottom Row Tutorial - X & .",
-          description: "Add ring fingers to bottom row",
-          type: "tutorial",
-          keys: ["x", "."],
-          text: "xxx ... xxx ... x.x .x. sxs l.l",
-          instructions: "Reach down with your ring fingers from S and L to press 'X' and '.' (period).",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b23",
-          number: 23,
-          title: "Bottom Row Tutorial - Z & /",
-          description: "Complete the bottom row",
-          type: "tutorial",
-          keys: ["z", "/"],
-          text: "zzz /// zzz /// z/z /z/ aza ;/;",
-          instructions: "Reach down with your pinkies from A and ; to press 'Z' and '/' (slash). You've mastered all three rows!",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        
-        // Bottom Row Exercises
-        {
-          id: "b24",
-          number: 24,
-          title: "Bottom Row - Left Hand",
-          description: "Practice left hand bottom row",
-          type: "exercise",
-          keys: ["z", "x", "c", "v"],
-          targetWPM: 20,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b25",
-          number: 25,
-          title: "Bottom Row - Right Hand",
-          description: "Practice right hand bottom row",
-          type: "exercise",
-          keys: ["m", ",", ".", "/"],
-          targetWPM: 20,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b26",
-          number: 26,
-          title: "Bottom Row - Mixed",
-          description: "Combine both hands bottom row",
-          type: "exercise",
-          keys: ["z", "x", "c", "v", "m", ",", ".", "/"],
-          targetWPM: 25,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b27",
-          number: 27,
-          title: "All Three Rows - Combined",
-          description: "Practice all keyboard rows together",
-          type: "exercise",
-          keys: ["a", "s", "d", "f", "j", "k", "l", "q", "w", "e", "r", "u", "i", "o", "p", "z", "x", "c", "v", "m"],
-          targetWPM: 30,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b28",
-          number: 28,
-          title: "Bottom Row Words - Simple",
-          description: "Type words using bottom row",
-          type: "exercise",
-          keys: ["z", "x", "c", "v", "m", "a", "s", "d", "f", "j", "k", "l"],
-          targetWPM: 30,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["maze", "cave", "vase", "zone", "calm", "came", "move", "make", "voice", "axe"]
-        },
-        {
-          id: "b29",
-          number: 29,
-          title: "Bottom Row Words - Advanced",
-          description: "Complex bottom row words",
-          type: "exercise",
-          keys: ["z", "x", "c", "v", "m", "a", "s", "d", "f", "j", "k", "l"],
-          targetWPM: 35,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["maximize", "complex", "vaccine", "canvas", "exam", "civic", "music", "cosmic", "volume", "example"]
-        },
-        
-        // Full Alphabet Practice
-        {
-          id: "b30",
-          number: 30,
-          title: "Full Alphabet - Letters Only",
-          description: "Practice all letter keys",
-          type: "exercise",
-          keys: ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"],
-          targetWPM: 35,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b31",
-          number: 31,
-          title: "Common Words - Level 1",
-          description: "Type frequently used words",
-          type: "exercise",
-          targetWPM: 35,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["the", "and", "for", "are", "but", "not", "you", "all", "can", "her", "was", "one", "our", "out", "day"]
-        },
-        {
-          id: "b32",
-          number: 32,
-          title: "Common Words - Level 2",
-          description: "More frequently used words",
-          type: "exercise",
-          targetWPM: 40,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["get", "has", "him", "his", "how", "man", "new", "now", "old", "see", "time", "two", "way", "who", "boy"]
-        },
-        {
-          id: "b33",
-          number: 33,
-          title: "Common Words - Level 3",
-          description: "Build vocabulary speed",
-          type: "exercise",
-          targetWPM: 40,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["did", "its", "let", "put", "say", "she", "too", "use", "each", "make", "many", "over", "such", "them", "well"]
-        },
-        
-        // Numbers Row Tutorials
-        {
-          id: "b34",
-          number: 34,
-          title: "Numbers Tutorial - 4 & 7",
-          description: "Learn number keys with index fingers",
-          type: "tutorial",
-          keys: ["4", "7"],
-          text: "444 777 444 777 474 747 f4f j7j",
-          instructions: "Reach up from F to press '4' and from J to press '7'. Numbers are typed with the same fingers as their letter keys below.",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b35",
-          number: 35,
-          title: "Numbers Tutorial - 3 & 8",
-          description: "Add middle fingers to numbers",
-          type: "tutorial",
-          keys: ["3", "8"],
-          text: "333 888 333 888 383 838 d3d k8k",
-          instructions: "Reach up from D to press '3' and from K to press '8'.",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b36",
-          number: 36,
-          title: "Numbers Tutorial - 2 & 9",
-          description: "Add ring fingers to numbers",
-          type: "tutorial",
-          keys: ["2", "9"],
-          text: "222 999 222 999 292 929 s2s l9l",
-          instructions: "Reach up from S to press '2' and from L to press '9'.",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b37",
-          number: 37,
-          title: "Numbers Tutorial - 1 & 0",
-          description: "Complete the number row",
-          type: "tutorial",
-          keys: ["1", "0"],
-          text: "111 000 111 000 101 010 a1a ;0;",
-          instructions: "Reach up from A to press '1' and from ; to press '0'. You've learned all number keys!",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b38",
-          number: 38,
-          title: "Numbers Tutorial - 5 & 6",
-          description: "Center number keys",
-          type: "tutorial",
-          keys: ["5", "6"],
-          text: "555 666 555 666 565 656 f5f j6j",
-          instructions: "Press '5' with your left index finger (F) and '6' with your right index finger (J).",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        
-        // Number Exercises
-        {
-          id: "b39",
-          number: 39,
-          title: "Numbers Practice - 1-5",
-          description: "Practice numbers 1 through 5",
-          type: "exercise",
-          keys: ["1", "2", "3", "4", "5"],
-          targetWPM: 25,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b40",
-          number: 40,
-          title: "Numbers Practice - 6-0",
-          description: "Practice numbers 6 through 0",
-          type: "exercise",
-          keys: ["6", "7", "8", "9", "0"],
-          targetWPM: 25,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b41",
-          number: 41,
-          title: "Numbers Practice - All Numbers",
-          description: "Practice all number keys",
-          type: "exercise",
-          keys: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-          targetWPM: 30,
-          targetAccuracy: 95,
-          exercises: 5
-        },
-        {
-          id: "b42",
-          number: 42,
-          title: "Mixed Letters and Numbers",
-          description: "Combine letters and numbers",
-          type: "exercise",
-          targetWPM: 35,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["word1", "test2", "code3", "file4", "page5", "line6", "item7", "step8", "task9", "rule0"]
-        },
-        
-        // Capital Letters
-        {
-          id: "b43",
-          number: 43,
-          title: "Capital Letters Tutorial",
-          description: "Learn to use Shift key",
-          type: "tutorial",
-          keys: ["shift"],
-          text: "Aa Ss Dd Ff Jj Kk Ll",
-          instructions: "Hold Shift with your pinky while pressing letter keys to make capital letters. Use left Shift for right hand keys and right Shift for left hand keys.",
-          targetWPM: null,
-          targetAccuracy: null,
-          exercises: 1
-        },
-        {
-          id: "b44",
-          number: 44,
-          title: "Capital Letters Practice",
-          description: "Practice capital letters",
-          type: "exercise",
-          targetWPM: 30,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["The", "And", "For", "Are", "But", "Not", "You", "All", "Can", "Her", "Was", "One", "Our", "Day", "Get"]
-        },
-        {
-          id: "b45",
-          number: 45,
-          title: "Sentences with Capitals",
-          description: "Type proper sentences",
-          type: "exercise",
-          targetWPM: 35,
-          targetAccuracy: 95,
-          exercises: 5,
-          useSentences: true
-        },
-        
-        // Final Beginner Lessons
-        {
-          id: "b46",
-          number: 46,
-          title: "Speed Building - Level 1",
-          description: "Focus on increasing speed",
-          type: "exercise",
-          targetWPM: 40,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["quick", "brown", "jumps", "over", "lazy", "where", "there", "their", "would", "could", "should", "about", "which", "people", "think"]
-        },
-        {
-          id: "b47",
-          number: 47,
-          title: "Speed Building - Level 2",
-          description: "Increase typing speed further",
-          type: "exercise",
-          targetWPM: 45,
-          targetAccuracy: 95,
-          exercises: 5,
-          useWords: true,
-          wordList: ["because", "through", "another", "between", "important", "different", "however", "without", "something", "everything", "nothing", "someone", "everyone", "anyone", "always"]
-        },
-        {
-          id: "b48",
-          number: 48,
-          title: "Accuracy Challenge",
-          description: "Focus on perfect accuracy",
-          type: "exercise",
-          targetWPM: 40,
-          targetAccuracy: 98,
-          exercises: 5,
-          useWords: true,
-          wordList: ["accuracy", "precision", "perfect", "careful", "exactly", "correct", "proper", "precise", "flawless", "excellent"]
-        },
-        {
-          id: "b49",
-          number: 49,
-          title: "Final Review - All Skills",
-          description: "Review everything you've learned",
-          type: "exercise",
-          targetWPM: 50,
-          targetAccuracy: 95,
-          exercises: 5,
-          useSentences: true
-        },
-        {
-          id: "b50",
-          number: 50,
-          title: "Beginner Graduation Test",
-          description: "Final test to complete beginner level",
-          type: "exercise",
-          targetWPM: 60,
-          targetAccuracy: 95,
-          exercises: 10,
-          useSentences: true
-        }
-      ]
+ // Merge intermediate lessons when loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof INTERMEDIATE_LESSONS !== 'undefined') {
+      Object.assign(LESSON_DATA, INTERMEDIATE_LESSONS);
+      console.log('Intermediate lessons loaded successfully');
     }
-  };
+  });
   // ==== ACHIEVEMENT FUNCTIONS ====
   function checkAchievements(testResult) {
     if (!currentUser) return;
@@ -2929,26 +2796,58 @@ window.viewCompetitionDetails = async function(compId) {
   // ==== LESSON HELPER FUNCTIONS ====
   
   // Generate text for lesson based on keys or word list
-  function generateLessonText(lesson, exerciseNum = 0) {
+function generateLessonText(lesson, exerciseNum = 0) {
     if (lesson.useSentences) {
-      // Generate sentences for sentence-based exercises
-      const sentences = [
-        "The quick brown fox jumps over the lazy dog.",
-        "Practice makes perfect when learning to type.",
-        "Touch typing is an essential skill for everyone.",
-        "Keep your fingers on the home row position.",
-        "Speed and accuracy improve with regular practice.",
-        "Every day brings new opportunities to learn.",
-        "Focus on your goals and stay determined.",
-        "The journey of typing mastery begins today.",
-        "Success comes from consistent effort over time.",
-        "Believe in yourself and your ability to improve."
-      ];
+      const sentenceType = lesson.sentenceType || 'basic';
+      
+      const sentenceBank = {
+        basic: [
+          "The quick brown fox jumps over the lazy dog.",
+          "Practice makes perfect when learning to type.",
+          "Touch typing is an essential skill for everyone."
+        ],
+        commas: [
+          "Today, we will learn, practice, and master typing.",
+          "First, place your fingers on the home row, then begin typing.",
+          "Accuracy, speed, and consistency are important skills."
+        ],
+        questions: [
+          "What is your typing speed?",
+          "Can you type without looking at the keyboard?",
+          "How long have you been practicing?"
+        ],
+        exclamations: [
+          "Great job on completing this lesson!",
+          "You're making excellent progress!",
+          "Keep up the fantastic work!"
+        ],
+        business: [
+          "Dear Sir or Madam, I am writing to inquire about your services.",
+          "Please find attached the quarterly report for your review.",
+          "We would like to schedule a meeting at your earliest convenience."
+        ],
+        formal: [
+          "It is with great pleasure that I extend this invitation.",
+          "Kindly acknowledge receipt of this correspondence.",
+          "We respectfully request your prompt attention to this matter."
+        ],
+        advanced: [
+          "The implementation of advanced algorithms significantly improved system performance.",
+          "Comprehensive analysis revealed several opportunities for optimization.",
+          "Strategic planning and meticulous execution are essential for project success."
+        ],
+        professional: [
+          "Pursuant to our previous discussion, I am forwarding the requested documentation.",
+          "The board of directors has approved the proposed strategic initiative.",
+          "We appreciate your continued partnership and look forward to future collaboration."
+        ]
+      };
+      
+      const sentences = sentenceBank[sentenceType] || sentenceBank.basic;
       return sentences[exerciseNum % sentences.length];
     }
     
     if (lesson.useWords && lesson.wordList) {
-      // Use provided word list
       const words = [];
       for (let i = 0; i < 15; i++) {
         words.push(lesson.wordList[Math.floor(Math.random() * lesson.wordList.length)]);
@@ -2957,12 +2856,10 @@ window.viewCompetitionDetails = async function(compId) {
     }
     
     if (lesson.text) {
-      // Use predefined text (for tutorials)
       return lesson.text;
     }
     
     if (lesson.keys) {
-      // Generate random text from keys
       const chars = lesson.keys;
       let text = '';
       for (let i = 0; i < 50; i++) {
@@ -2974,7 +2871,6 @@ window.viewCompetitionDetails = async function(compId) {
     
     return "practice typing exercise";
   }
-  
   // Get lesson progress from localStorage
   function getLessonProgress(lessonId) {
     if (!currentUser) return null;
@@ -3002,9 +2898,11 @@ window.viewCompetitionDetails = async function(compId) {
     return progress && progress.completed;
   }
   
-  // Check if category is unlocked
+ // Check if category is unlocked
   function isCategoryUnlocked(category) {
+    if (!currentUser) return false;
     if (category === 'beginner') return true;
+    
     if (category === 'intermediate') {
       // Check if beginner is completed
       const beginnerLessons = LESSON_DATA.beginner.lessons;
@@ -3012,7 +2910,25 @@ window.viewCompetitionDetails = async function(compId) {
       const progress = getLessonProgress(lastLesson.id);
       return progress && progress.completed;
     }
-    // Add similar checks for other categories
+    
+    if (category === 'advanced') {
+      // Check if intermediate is completed
+      if (!LESSON_DATA.intermediate) return false;
+      const intermediateLessons = LESSON_DATA.intermediate.lessons;
+      const lastLesson = intermediateLessons[intermediateLessons.length - 1];
+      const progress = getLessonProgress(lastLesson.id);
+      return progress && progress.completed;
+    }
+    
+    // Games and challenges unlock after advanced
+    if (category === 'games' || category === 'challenges') {
+      if (!LESSON_DATA.advanced) return false;
+      const advancedLessons = LESSON_DATA.advanced.lessons;
+      const lastLesson = advancedLessons[advancedLessons.length - 1];
+      const progress = getLessonProgress(lastLesson.id);
+      return progress && progress.completed;
+    }
+    
     return false;
   }
   
