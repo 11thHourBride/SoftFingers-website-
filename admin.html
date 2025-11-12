@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - SoftFingers Pro</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  
+  <!-- Firebase compat SDKs -->
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="admin-container">
+      <div class="admin-header-content">
+        <div class="admin-logo">
+          <h1>SoftFingers Pro</h1>
+          <span class="admin-badge">Admin Dashboard</span>
+        </div>
+        
+        <div class="admin-user-info">
+          <div id="admin-user-display">
+            <div class="admin-user-badge" id="admin-email">Not signed in</div>
+            <div id="admin-role-badge"></div>
+          </div>
+          <div class="admin-actions">
+            <a href="main.html" class="btn btn-secondary btn-small">← Back to App</a>
+            <button class="btn btn-secondary btn-small" id="admin-logout-btn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="admin-nav">
+    <div class="admin-container">
+      <div class="admin-nav-tabs">
+        <div class="admin-nav-tab active" data-tab="overview">📊 Overview</div>
+        <div class="admin-nav-tab" data-tab="users">👥 Users</div>
+        <div class="admin-nav-tab" data-tab="results">📈 Test Results</div>
+        <div class="admin-nav-tab" data-tab="competitions">🏆 Competitions</div>
+        <div class="admin-nav-tab" data-tab="lessons">📚 Lessons</div>
+        <div class="admin-nav-tab" data-tab="achievements">🎖️ Achievements</div>
+        <div class="admin-nav-tab" data-tab="settings" id="settings-tab">⚙️ Settings</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-container">
+      
+      <!-- Loading State -->
+      <div id="admin-loading" class="admin-loading">
+        <div class="loader"></div>
+        <p>Loading admin dashboard...</p>
+      </div>
+
+      <!-- Access Denied -->
+      <div id="admin-access-denied" class="admin-access-denied hidden">
+        <div class="access-denied-content">
+          <div class="access-denied-icon">🚫</div>
+          <h2>Access Denied</h2>
+          <p>You don't have permission to access the admin dashboard.</p>
+          <p class="text-small text-muted">Only authorized administrators can access this area.</p>
+          <a href="main.html" class="btn" style="margin-top: 20px;">Return to Main App</a>
+        </div>
+      </div>
+
+      <!-- Admin Content (Hidden initially) -->
+      <div id="admin-content" class="hidden">
+        
+        <!-- Overview Tab -->
+        <div class="admin-tab-content active" id="overview-content">
+          <h2 class="admin-section-title">Dashboard Overview</h2>
+          
+          <!-- Stats Cards -->
+          <div class="admin-stats-grid">
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon">👥</div>
+              <div class="admin-stat-info">
+                <div class="admin-stat-value" id="total-users">0</div>
+                <div class="admin-stat-label">Total Users</div>
+              </div>
+            </div>
+            
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon">📝</div>
+              <div class="admin-stat-info">
+                <div class="admin-stat-value" id="total-tests">0</div>
+                <div class="admin-stat-label">Total Tests</div>
+              </div>
+            </div>
+            
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon">🏆</div>
+              <div class="admin-stat-info">
+                <div class="admin-stat-value" id="total-competitions">0</div>
+                <div class="admin-stat-label">Active Competitions</div>
+              </div>
+            </div>
+            
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon">⚡</div>
+              <div class="admin-stat-info">
+                <div class="admin-stat-value" id="avg-wpm">0</div>
+                <div class="admin-stat-label">Average WPM</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>Recent Activity</h3>
+              <button class="btn btn-small" id="refresh-activity">🔄 Refresh</button>
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>WPM</th>
+                    <th>Accuracy</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-activity-body">
+                  <tr>
+                    <td colspan="5" class="text-center text-muted">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Top Performers -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>Top Performers This Week</h3>
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>User</th>
+                    <th>WPM</th>
+                    <th>Accuracy</th>
+                    <th>Tests</th>
+                  </tr>
+                </thead>
+                <tbody id="top-performers-body">
+                  <tr>
+                    <td colspan="5" class="text-center text-muted">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div class="admin-tab-content" id="users-content">
+          <div class="admin-card-header">
+            <h2 class="admin-section-title">User Management</h2>
+            <div class="admin-search-box">
+              <input type="text" id="user-search" placeholder="Search users..." class="admin-search-input">
+              <button class="btn btn-small" id="search-users-btn">🔍 Search</button>
+            </div>
+          </div>
+          
+          <div class="admin-card">
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Verified</th>
+                    <th>Total Tests</th>
+                    <th>Best WPM</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table-body">
+                  <tr>
+                    <td colspan="6" class="text-center text-muted">Loading users...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Tab -->
+        <div class="admin-tab-content" id="results-content">
+          <div class="admin-card-header">
+            <h2 class="admin-section-title">Test Results</h2>
+            <div class="admin-filters">
+              <select id="results-filter" class="admin-select">
+                <option value="all">All Results</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+              </select>
+              <button class="btn btn-small" id="export-results-btn">📥 Export CSV</button>
+            </div>
+          </div>
+          
+          <div class="admin-card">
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>WPM</th>
+                    <th>Accuracy</th>
+                    <th>Duration</th>
+                    <th>Difficulty</th>
+                    <th>Mode</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="results-table-body">
+                  <tr>
+                    <td colspan="8" class="text-center text-muted">Loading results...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="admin-pagination" id="results-pagination">
+              <button class="btn btn-small" id="results-prev" disabled>← Previous</button>
+              <span id="results-page-info">Page 1</span>
+              <button class="btn btn-small" id="results-next">Next →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Competitions Tab -->
+        <div class="admin-tab-content" id="competitions-content">
+          <div class="admin-card-header">
+            <h2 class="admin-section-title">Competition Management</h2>
+            <button class="btn btn-small" id="refresh-competitions">🔄 Refresh</button>
+          </div>
+          
+          <div class="admin-card">
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Creator</th>
+                    <th>Participants</th>
+                    <th>Status</th>
+                    <th>Target WPM</th>
+                    <th>Ends</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="competitions-table-body">
+                  <tr>
+                    <td colspan="8" class="text-center text-muted">Loading competitions...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lessons Tab -->
+        <div class="admin-tab-content" id="lessons-content">
+          <h2 class="admin-section-title">Lesson Statistics</h2>
+          
+          <div class="admin-stats-grid">
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon">📚</div>
+              <div class="admin-stat-info">
+                <div class="admin-stat-value" id="total-lessons">150</div>
+                <div class="admin-stat-label">Total Lessons</div>
+              </div>
+            </div>
+            
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon">✅</div>
+              <div class="admin-stat-info">
+                <div class="admin-stat-value" id="completed-lessons">0</div>
+                <div class="admin-stat-label">Total Completions</div>
+              </div>
+            </div>
+            
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon">🎓</div>
+              <div class="admin-stat-info">
+                <div class="admin-stat-value" id="lesson-avg-wpm">0</div>
+                <div class="admin-stat-label">Avg Lesson WPM</div>
+              </div>
+            </div>
+            
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon">🏅</div>
+              <div class="admin-stat-info">
+                <div class="admin-stat-value" id="certificates-issued">0</div>
+                <div class="admin-stat-label">Certificates Issued</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>Most Completed Lessons</h3>
+            </div>
+            <div id="lesson-stats-content">
+              <p class="text-muted">Lesson completion data will appear here.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Achievements Tab -->
+        <div class="admin-tab-content" id="achievements-content">
+          <h2 class="admin-section-title">Achievement Statistics</h2>
+          
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>Most Unlocked Achievements</h3>
+            </div>
+            <div id="achievement-stats-content">
+              <p class="text-muted">Achievement data will appear here.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Tab (Super Admin Only) -->
+        <div class="admin-tab-content" id="settings-content">
+          <h2 class="admin-section-title">System Settings</h2>
+          
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>Admin Management</h3>
+              <div class="admin-badge super-admin-badge">Super Admin Only</div>
+            </div>
+            <div class="admin-card-body">
+              <div class="admin-form-group">
+                <label class="admin-label">Current Administrators</label>
+                <div class="admin-list" id="admin-list">
+                  <div class="admin-list-item">
+                    <span>mgodfred42@gmail.com</span>
+                    <span class="admin-badge super-admin-badge">Super Admin</span>
+                  </div>
+                  <div class="admin-list-item">
+                    <span>fullword17@gmail.com</span>
+                    <span class="admin-badge">Admin</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>Database Actions</h3>
+              <div class="admin-badge warning-badge">Danger Zone</div>
+            </div>
+            <div class="admin-card-body">
+              <div class="admin-warning-box">
+                <p><strong>⚠️ Warning:</strong> These actions affect the entire database and cannot be undone.</p>
+              </div>
+              
+              <div class="admin-action-buttons">
+                <button class="btn btn-secondary" id="backup-database-btn">💾 Backup Database</button>
+                <button class="btn btn-warning" id="clear-old-data-btn">🗑️ Clear Old Data (90+ days)</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>System Information</h3>
+            </div>
+            <div class="admin-card-body">
+              <div class="admin-info-grid">
+                <div class="admin-info-item">
+                  <span class="admin-info-label">Version:</span>
+                  <span class="admin-info-value">1.0.0</span>
+                </div>
+                <div class="admin-info-item">
+                  <span class="admin-info-label">Environment:</span>
+                  <span class="admin-info-value">Production</span>
+                </div>
+                <div class="admin-info-item">
+                  <span class="admin-info-label">Database:</span>
+                  <span class="admin-info-value">Firebase Firestore</span>
+                </div>
+                <div class="admin-info-item">
+                  <span class="admin-info-label">Last Updated:</span>
+                  <span class="admin-info-value" id="last-updated">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- User Details Modal -->
+  <div id="user-details-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="user-details-title">User Details</h3>
+        <button class="modal-close" id="close-user-modal">×</button>
+      </div>
+      <div class="modal-body" id="user-details-body">
+        <!-- Will be populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
