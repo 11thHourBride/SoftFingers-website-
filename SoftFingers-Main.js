@@ -3225,7 +3225,7 @@ function generateLessonText(lesson, exerciseNum = 0) {
 // Quote bank (from user)
       const QUOTES = [
         {"quote": "Be the change that you wish to see in the world.", "author": "Mahatma Gandhi"},
-         {"quote": "When you stop telling your friends all about yourself, your enemies will stop knowing much about you.", "author": "Anonymous"},
+       {"quote": "When you stop telling your friends all about yourself, your enemies will stop knowing much about you.", "author": "Anonymous"},
         {"quote": "Live as if you will die tomorrow. Learn as if you will live forever.", "author": "Anonymous"},
         {"quote": "Darkness is strong but when you stand with courage and faith, evil cannot prevail. Amen.", "author": "Anonymous"},
         {"quote": "Blessed is that man that maketh the LORD his trust, and respecteth not the proud, nor such as turn aside to lies.", "author": "King David - Psalms"},
@@ -3763,46 +3763,19 @@ typingInput.addEventListener('input', (e) => {
   }
   
   // For typing in progress (no space yet)
-// Calculate remaining text length
-const remainingLength = targetText.length - typed.length;
-
-// If user is typing beyond the current word boundary, warn them
-if (newTyped.length > remainingLength) {
-  typingInput.value = newTyped.slice(0, remainingLength);
-  return;
-}
-
-// Also check if they're trying to type beyond the current word
-const remainingText = targetText.slice(typed.length);
-const nextSpaceIndex = remainingText.indexOf(' ');
-const currentWordLength = nextSpaceIndex === -1 ? remainingText.length : nextSpaceIndex;
-
-// Allow typing only up to the current word length (with some buffer for corrections)
-if (newTyped.length > currentWordLength + 5) {
-  typingInput.value = newTyped.slice(0, currentWordLength + 5);
-  return;
-}
+  if (newTyped.length > targetText.length - typed.length) {
+    typingInput.value = newTyped.slice(0, targetText.length - typed.length);
+    return;
+  }
   
   renderPassage();
   
-  // Check if user completed a word (typed a space)
-if (newTyped.endsWith(' ')) {
-  // Calculate the expected text for this position
-  const expectedText = targetText.slice(typed.length, typed.length + newTyped.length);
-  
-  // Add the completed word to our typed string
-  typed += newTyped;
-  
-  // Clear the input box for the next word
-  typingInput.value = '';
-  renderPassage();
-  
-  // Check if test is complete
-  if (typed.length >= targetText.length) {
+  // Check if test is complete (in case no space at end)
+  if ((typed + newTyped).length >= targetText.length) {
+    typed += newTyped;
+    typingInput.value = '';
     finalizeTest();
   }
-  return;
-}
 });
 
   typingInput.addEventListener('paste', e => e.preventDefault());
@@ -3926,10 +3899,7 @@ function computeStats(typedStr, elapsedSec) {
   let correctChars = 0;
   let incorrectChars = 0;
   
-  // Compare character by character up to the length of typed string
-  const compareLength = Math.min(typedStr.length, targetText.length);
-  
-  for (let i = 0; i < compareLength; i++) {
+  for (let i = 0; i < typedStr.length; i++) {
     if (typedStr[i] === targetText[i]) {
       correctChars++;
     } else {
@@ -3937,13 +3907,12 @@ function computeStats(typedStr, elapsedSec) {
     }
   }
   
-  // Calculate accuracy - only based on what was typed
-  const totalTyped = correctChars + incorrectChars;
-  const accuracy = totalTyped > 0 ? Math.round((correctChars / totalTyped) * 100) : 100;
+  const accuracy = typedStr.length > 0 ? Math.round((correctChars / typedStr.length) * 100) : 100;
   
-  // WPM calculation - based on correct characters
-  const correctWords = correctChars / 5;
-  const wpm = Math.max(0, Math.round(correctWords / (elapsedSec / 60)));
+  // WPM calculation
+  const totalCharsTyped = typedStr.length;
+  const grossWPM = (totalCharsTyped / 5) / (elapsedSec / 60);
+  const wpm = Math.max(0, Math.round(grossWPM));
   
   return { 
     wpm, 
