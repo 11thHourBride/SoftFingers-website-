@@ -13,13 +13,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const auth = firebase.auth();
   const db = firebase.firestore();
 
+  // ==== AUTH MODAL HANDLERS (Setup immediately) ====
+  const authModalOverlay = document.getElementById('auth-modal-overlay');
+  const closeAuthModalBtn = document.getElementById('close-auth-modal');
+  
+  // Close button handler
+  if (closeAuthModalBtn) {
+    closeAuthModalBtn.addEventListener('click', () => {
+      if (authModalOverlay) {
+        authModalOverlay.classList.remove('show');
+      }
+    });
+  }
+  
+  // Click outside to close
+  if (authModalOverlay) {
+    authModalOverlay.addEventListener('click', (e) => {
+      if (e.target === authModalOverlay) {
+        authModalOverlay.classList.remove('show');
+      }
+    });
+  }
+  
+  // Function to show auth modal
+  window.showAuthModal = function() {
+    if (authModalOverlay) {
+      authModalOverlay.classList.add('show');
+      console.log('Auth modal should be visible now');
+    } else {
+      console.error('Auth modal overlay not found!');
+    }
+  };
+
   // Check for competition code in URL
   const urlParams = new URLSearchParams(window.location.search);
   const compCode = urlParams.get('comp');
-  if (compCode && currentUser) {
-    document.getElementById('join-code').value = compCode;
-    joinCompBtn.click();
-  }
 
 // ==== F5 KEY HANDLER ====
 let f5PressCount = 0;
@@ -1745,6 +1773,63 @@ function handleGameComplete(results, lesson) {
   function renderVirtualKeyboard(highlightKeys = []) {
     const keyboard = document.getElementById('virtual-keyboard');
     
+    // Add hand visualization HTML
+    const handsHTML = `
+      <div class="keyboard-hands">
+        <div class="hand-container">
+          <div class="hand-visual">
+            <div class="finger pinky" data-finger="left-pinky">
+              <div class="finger-tip"></div>
+              <div class="finger-segment"></div>
+            </div>
+            <div class="finger ring" data-finger="left-ring">
+              <div class="finger-tip"></div>
+              <div class="finger-segment"></div>
+            </div>
+            <div class="finger middle" data-finger="left-middle">
+              <div class="finger-tip"></div>
+              <div class="finger-segment"></div>
+            </div>
+            <div class="finger index" data-finger="left-index">
+              <div class="finger-tip"></div>
+              <div class="finger-segment"></div>
+            </div>
+            <div class="finger thumb" data-finger="left-thumb">
+              <div class="finger-tip"></div>
+              <div class="finger-segment"></div>
+            </div>
+          </div>
+          <div class="hand-label">Left Hand</div>
+        </div>
+        
+        <div class="hand-container">
+          <div class="hand-visual">
+            <div class="finger thumb" data-finger="right-thumb">
+              <div class="finger-tip"></div>
+              <div class="finger-segment"></div>
+            </div>
+            <div class="finger index" data-finger="right-index">
+              <div class="finger-tip"></div>
+              <div class="finger-segment"></div>
+            </div>
+            <div class="finger middle" data-finger="right-middle">
+              <div class="finger-tip"></div>
+              <div class="finger-segment"></div>
+            </div>
+            <div class="finger ring" data-finger="right-ring">
+              <div class="finger-tip"></div>
+              <div class="finger-segment"></div>
+            </div>
+            <div class="finger pinky" data-finger="right-pinky">
+              <div class="finger-tip"></div>
+              <div class="finger-segment"></div>
+            </div>
+          </div>
+          <div class="hand-label">Right Hand</div>
+        </div>
+      </div>
+    `;
+    
     const keyboardLayout = [
       [
         { main: '`', shift: '~' },
@@ -1822,13 +1907,12 @@ function handleGameComplete(results, lesson) {
       '0': 'RP', '-': 'RP', '=': 'RP', 'p': 'RP', '[': 'RP', ']': 'RP', ';': 'RP', "'": 'RP', '/': 'RP'
     };
     
-    let html = '';
+    let html = handsHTML;
     
     keyboardLayout.forEach(row => {
       html += '<div class="keyboard-row">';
       
       row.forEach(key => {
-        // Handle string keys (special keys like Backspace, Shift, etc.)
         if (typeof key === 'string') {
           let keyClass = 'key';
           if (key === 'Backspace' || key === 'Enter' || key === 'Tab' || key === 'Caps') {
@@ -1845,11 +1929,9 @@ function handleGameComplete(results, lesson) {
             </div>
           `;
         } else {
-          // Handle object keys (keys with shift alternatives)
           const mainKey = key.main;
           const shiftKey = key.shift;
           const isHomeRow = homeRowKeys.includes(mainKey.toLowerCase());
-          const isHighlighted = highlightKeys && highlightKeys.includes(mainKey.toLowerCase());
           const fingerHint = fingerHints[mainKey.toLowerCase()] || '';
           
           let keyClass = 'key';
@@ -1872,6 +1954,7 @@ function handleGameComplete(results, lesson) {
     
     keyboard.innerHTML = html;
   }
+    
   // Highlight next key on keyboard
   function highlightNextKey(nextChar) {
     // Remove all highlights
@@ -1893,6 +1976,7 @@ function handleGameComplete(results, lesson) {
   }
   
   // Flash key as pressed
+ // Flash key as pressed
   function flashKeyPressed(char) {
     const keyElement = char === ' ' ? 
       document.querySelector('[data-key="space"]') :
@@ -1903,6 +1987,50 @@ function handleGameComplete(results, lesson) {
       setTimeout(() => {
         keyElement.classList.remove('pressed');
       }, 200);
+    }
+    
+    // Also flash the finger
+    if (char === ' ') {
+      const leftThumb = document.querySelector('[data-finger="left-thumb"]');
+      const rightThumb = document.querySelector('[data-finger="right-thumb"]');
+      if (leftThumb) {
+        leftThumb.classList.add('active');
+        setTimeout(() => leftThumb.classList.remove('active'), 200);
+      }
+      if (rightThumb) {
+        rightThumb.classList.add('active');
+        setTimeout(() => rightThumb.classList.remove('active'), 200);
+      }
+    } else {
+      const fingerHints = {
+        '`': 'LP', '1': 'LP', 'q': 'LP', 'a': 'LP', 'z': 'LP',
+        '2': 'LR', 'w': 'LR', 's': 'LR', 'x': 'LR',
+        '3': 'LM', 'e': 'LM', 'd': 'LM', 'c': 'LM',
+        '4': 'LI', '5': 'LI', 'r': 'LI', 't': 'LI', 'f': 'LI', 'g': 'LI', 'v': 'LI', 'b': 'LI',
+        '6': 'RI', '7': 'RI', 'y': 'RI', 'u': 'RI', 'h': 'RI', 'j': 'RI', 'n': 'RI', 'm': 'RI',
+        '8': 'RM', 'i': 'RM', 'k': 'RM', ',': 'RM',
+        '9': 'RR', 'o': 'RR', 'l': 'RR', '.': 'RR',
+        '0': 'RP', '-': 'RP', '=': 'RP', 'p': 'RP', '[': 'RP', ']': 'RP', ';': 'RP', "'": 'RP', '/': 'RP'
+      };
+      
+      const fingerMap = {
+        'LP': 'left-pinky',
+        'LR': 'left-ring',
+        'LM': 'left-middle',
+        'LI': 'left-index',
+        'RP': 'right-pinky',
+        'RR': 'right-ring',
+        'RM': 'right-middle',
+        'RI': 'right-index'
+      };
+      
+      const fingerCode = fingerHints[char.toLowerCase()];
+      const fingerElement = fingerCode ? document.querySelector(`[data-finger="${fingerMap[fingerCode]}"]`) : null;
+      
+      if (fingerElement) {
+        fingerElement.classList.add('active');
+        setTimeout(() => fingerElement.classList.remove('active'), 200);
+      }
     }
   }
   // ==== LESSON TEXT RENDERING ====
@@ -4278,14 +4406,11 @@ function focusTypingInput() {
     });
   }
 
-  // ==== AUTH STATE CHANGE ====
+ // ==== AUTH STATE CHANGE ====
   auth.onAuthStateChanged(async user => {
     currentUser = user;
     if (user) {
-      // User is logged in - hide auth card, show dashboard
-      authCard.style.display = 'none';
-      document.getElementById('section-dashboard').style.display = 'block';
-      
+      // User is logged in
       userEmailTag.textContent = user.email;
       emailVerifStatus.innerHTML = user.emailVerified
         ? '<span class="status-success">✓ Verified</span>'
@@ -4299,6 +4424,19 @@ function focusTypingInput() {
         <div class="user-badge">${user.email}</div>
         ${user.emailVerified ? '<span class="status-success text-xs">✓</span>' : '<span class="status-warning text-xs">⚠</span>'}
       `;
+      
+      // Show logout and verify buttons, hide signin button
+      logoutBtn.style.display = 'inline-block';
+      sendVerifBtn.style.display = user.emailVerified ? 'none' : 'inline-block';
+      if (document.getElementById('signin-btn')) {
+        document.getElementById('signin-btn').style.display = 'none';
+      }
+      
+      // Hide auth modal if visible
+      const authModal = document.getElementById('auth-modal-overlay');
+      if (authModal) {
+        authModal.classList.remove('show');
+      }
       
       // Enable typing and load content
       typingInput.disabled = false;
@@ -4315,8 +4453,6 @@ function focusTypingInput() {
       await refreshDashboard();
       await renderAchievements();
       
-     
-      
       // Ensure focus after everything loads
       setTimeout(() => {
         if (typingInput && !typingInput.disabled) {
@@ -4324,18 +4460,39 @@ function focusTypingInput() {
         }
       }, 200);
     } else {
-      // User is not logged in - show auth card, hide protected sections
-      authCard.style.display = 'block';
-      document.getElementById('section-dashboard').style.display = 'block'; // Keep dashboard visible
+      // User is NOT logged in - GUEST MODE
+      // Show dashboard, allow typing, but don't save results
       
       authSummary.innerHTML = '';
-      userEmailTag.textContent = 'Guest User';
+      userEmailTag.textContent = 'Guest Mode';
       emailVerifStatus.innerHTML = '<span class="text-muted">Sign in to save results</span>';
+      
+// Hide logout and verify buttons, show signin button
+      logoutBtn.style.display = 'none';
+      sendVerifBtn.style.display = 'none';
+      
+      // Add sign in button to header if it doesn't exist
+      let signinBtn = document.getElementById('signin-btn');
+      if (!signinBtn) {
+        signinBtn = document.createElement('button');
+        signinBtn.id = 'signin-btn';
+        signinBtn.className = 'btn btn-small';
+        signinBtn.textContent = 'Sign In';
+        document.querySelector('.user-info .flex').appendChild(signinBtn);
+      }
+      
+      // Always attach the click handler (in case it was lost)
+      signinBtn.onclick = function() {
+        console.log('Sign in button clicked');
+        window.showAuthModal();
+      };
+      
+      signinBtn.style.display = 'inline-block';
       
       // Hide leaderboard and recent runs sections when not logged in
       toggleDashboardSections(false);
       
-      // Enable typing for guests too
+      // Enable typing for guests
       typingInput.disabled = false;
       
       // Initialize content for guests
@@ -4352,8 +4509,17 @@ function focusTypingInput() {
       bestAccEl.textContent = '0%';
       recentTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Sign in to view your recent tests</td></tr>';
       leaderboardBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Sign in to view the leaderboard</td></tr>';
+      
+      // Ensure focus
+      setTimeout(() => {
+        if (typingInput && !typingInput.disabled) {
+          typingInput.focus();
+        }
+      }, 200);
     }
   });
+      
+     
 
   // ==== CUSTOM TEXT FEATURE ====
   const customTextArea = document.getElementById('custom-text');
@@ -4382,8 +4548,7 @@ function focusTypingInput() {
   // ==== INITIALIZE ====
   mode = modeSelect.value || 'passage';
   
-  // Initially show dashboard but hide protected sections until user logs in
-  authCard.style.display = 'none'; // Hide auth card initially, show it in onAuthStateChanged if needed
+  // Always show dashboard
   toggleDashboardSections(false);
   
   // Load initial content
