@@ -4,7 +4,7 @@
         width: 100%; 
       padding: 32px 40px;
       background-color: black;
-      border-radius: 50px;
+      border-radius: 10px;
     }
 
     .achievements-header {
@@ -306,4 +306,5 @@
       .achievement-category-grid {
         grid-template-columns: 1fr;
       }
+
     }
