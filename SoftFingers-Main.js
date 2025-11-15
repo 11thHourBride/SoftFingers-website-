@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Auth modal overlay not found!');
     }
   };
+  
 
   // Check for competition code in URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -2682,6 +2683,9 @@ function showLessonResult(passed, wpm, accuracy, lesson) {
           }
         }
       } else if (feature === 'dashboard') {
+        // Show dashboard section
+        if (dashboardSection) dashboardSection.style.display = 'block';
+        
         // Show all dashboard elements
         if (typingCard) typingCard.style.display = 'block';
         if (sidebar) sidebar.style.display = 'block';
@@ -2693,7 +2697,7 @@ function showLessonResult(passed, wpm, accuracy, lesson) {
         competitionFullPage.classList.add('hidden');
         if (lessonsFullPage) lessonsFullPage.classList.add('hidden');
         
-        // Show/hide sidebar sections
+        // Hide sidebar sections
         sections.forEach(section => {
           section.classList.add('hidden');
         });
@@ -2704,7 +2708,11 @@ function showLessonResult(passed, wpm, accuracy, lesson) {
         if (competitionMode === 'active' && activeCompId) {
           showCompetitionIndicator(activeCompId);
         }
-      } else {
+        
+        // Ensure typing input is focused and enabled
+        focusTypingInput();
+      }
+       else {
         // Show dashboard but manage sidebar sections for other features
         if (typingCard) typingCard.style.display = 'block';
         if (sidebar) sidebar.style.display = 'block';
@@ -4147,19 +4155,72 @@ function focusTypingInput() {
 
     const user = firebase.auth().currentUser;
     
-    if (user) {
+   if (user) {
       try {
-        const payload = {
-          uid: user.uid,
-          difficulty: currentDifficulty,
-          duration,
+        const timestamp = firebase.firestore.Timestamp.now();
+        
+        // 1. Update user stats document (single document per user)
+        const userStatsRef = db.collection('users').doc(user.uid);
+        const userStatsDoc = await userStatsRef.get();
+        
+        let recentTests = [];
+        let personalBests = {};
+        
+        if (userStatsDoc.exists) {
+          const data = userStatsDoc.data();
+          recentTests = data.recentTests || [];
+          personalBests = data.personalBests || {};
+        }
+        
+        // Add current test to recent tests (keep only last 20)
+        const testRecord = {
           wpm: stats.wpm,
           accuracy: stats.accuracy,
-          mode,
-          timestamp: firebase.firestore.Timestamp.now()
+          difficulty: currentDifficulty,
+          duration: duration,
+          mode: mode,
+          timestamp: timestamp,
+          correct: stats.correct,
+          incorrect: stats.incorrect
         };
         
-        await db.collection('results').add(payload);
+        recentTests.unshift(testRecord); // Add to beginning
+        if (recentTests.length > 20) {
+          recentTests = recentTests.slice(0, 20); // Keep only last 20
+        }
+        
+        // Update personal best for this difficulty+duration combo
+        const bestKey = `${currentDifficulty}_${duration}`;
+        if (!personalBests[bestKey] || stats.wpm > personalBests[bestKey].wpm) {
+          personalBests[bestKey] = {
+            wpm: stats.wpm,
+            accuracy: stats.accuracy,
+            timestamp: timestamp
+          };
+        }
+        
+        // Update user stats document
+        await userStatsRef.set({
+          uid: user.uid,
+          email: user.email,
+          recentTests: recentTests,
+          personalBests: personalBests,
+          totalTests: firebase.firestore.FieldValue.increment(1),
+          lastActivity: timestamp
+        }, { merge: true });
+        
+        // 2. Only add to global leaderboard if score is top 100 worthy (60+ WPM)
+        if (stats.wpm >= 60) {
+          await db.collection('leaderboard').add({
+            uid: user.uid,
+            wpm: stats.wpm,
+            accuracy: stats.accuracy,
+            mode: mode,
+            difficulty: currentDifficulty,
+            duration: duration,
+            timestamp: timestamp
+          });
+        }
         
         // Simulate short delay for loader effect
         await new Promise(resolve => setTimeout(resolve, 800));
@@ -4342,25 +4403,43 @@ function focusTypingInput() {
     // Keep input disabled after test completion
    
   }
-  async function refreshDashboard() {
+ async function refreshDashboard() {
     if (!currentUser) return;
     
-    const bestQuery = db.collection('results')
-      .where('uid','==', currentUser.uid)
-      .where('difficulty','==', currentDifficulty)
-      .where('duration','==', duration)
-      .orderBy('wpm','desc')
-      .limit(1);
-    const bestSnap = await bestQuery.get();
-    if (!bestSnap.empty) {
-      const b = bestSnap.docs[0].data();
-      bestWPMEl.textContent = b.wpm;
-      bestAccEl.textContent = b.accuracy + '%';
-    } else {
-      bestWPMEl.textContent = '0';
-      bestAccEl.textContent = '0%';
+    // Get user stats from single document
+    const userStatsDoc = await db.collection('users').doc(currentUser.uid).get();
+    
+    if (userStatsDoc.exists) {
+      const data = userStatsDoc.data();
+      const bestKey = `${currentDifficulty}_${duration}`;
+      const personalBest = data.personalBests?.[bestKey];
+      
+      if (personalBest) {
+        bestWPMEl.textContent = personalBest.wpm;
+        bestAccEl.textContent = personalBest.accuracy + '%';
+      } else {
+        bestWPMEl.textContent = '0';
+        bestAccEl.textContent = '0%';
+      }
+      
+      // Recent tests from array
+      recentTableBody.innerHTML = '';
+      const recentTests = data.recentTests || [];
+      recentTests.slice(0, 5).forEach(test => {
+        const when = test.timestamp?.toDate ? test.timestamp.toDate().toLocaleDateString() : '—';
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${when}</td>
+          <td class="font-mono">${test.wpm}</td>
+          <td class="font-mono">${test.accuracy}%</td>
+          <td>${test.duration}s</td>
+          <td><span class="status-badge">${test.difficulty || test.mode}</span></td>
+          <td>${test.mode || 'Random'}</td>
+        `;
+        recentTableBody.appendChild(row);
+      });
     }
-
+    
     const recentSnap = await db.collection('results')
       .where('uid','==', currentUser.uid)
       .orderBy('timestamp','desc')
@@ -4382,9 +4461,9 @@ function focusTypingInput() {
       recentTableBody.appendChild(row);
     });
 
-    const lbSnap = await db.collection('results')
+    const lbSnap = await db.collection('leaderboard')
       .orderBy('wpm','desc')
-      .limit(10)
+      .limit(100)
       .get();
     leaderboardBody.innerHTML = '';
     let rank = 1;
@@ -4471,7 +4550,7 @@ function focusTypingInput() {
       logoutBtn.style.display = 'none';
       sendVerifBtn.style.display = 'none';
       
-      // Add sign in button to header if it doesn't exist
+// Add sign in button to header if it doesn't exist
       let signinBtn = document.getElementById('signin-btn');
       if (!signinBtn) {
         signinBtn = document.createElement('button');
@@ -4481,7 +4560,7 @@ function focusTypingInput() {
         document.querySelector('.user-info .flex').appendChild(signinBtn);
       }
       
-      // Always attach the click handler (in case it was lost)
+      // Always attach the click handler
       signinBtn.onclick = function() {
         console.log('Sign in button clicked');
         window.showAuthModal();
@@ -4556,6 +4635,13 @@ function focusTypingInput() {
   else if (mode === 'story') loadNewStory();  
   else loadNewPassage();
   focusTypingInput();
+  let modal = document.getElementById('auth-modal-overlay');
+console.log('Modal element:', modal);
+console.log('Modal display:', window.getComputedStyle(modal).display);
+console.log('Modal opacity:', window.getComputedStyle(modal).opacity);
+console.log('Modal z-index:', window.getComputedStyle(modal).zIndex);
+console.log('Modal classes:', modal.className);
+console.log('Modal inline style:', modal.style.cssText);
 
   console.log('SoftFingers Pro initialized with Firebase integration');
 });
