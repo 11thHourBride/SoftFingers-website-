@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>SoftFingers Pro - Professional Typing Platform</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="canonical" href="https://softfingers-typing.com/main.html">
+  <link rel="canonical" href="https://softfingers-typing.com/main.html">
   <!-- Firebase compat SDKs -->
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -13,8 +13,92 @@
   <link rel="stylesheet" href="achievements.css">
   <link rel="stylesheet" href="competition.css">
   <link rel="stylesheet" href="lessons.css">
+  <link rel="stylesheet" href="certificate.css">
 </head>
 <body>
+  <!-- Authentication Modal (Positioned at top level) -->
+  <div id="auth-modal-overlay" class="auth-modal-overlay">
+    <div class="card" id="auth-card">
+      <button class="modal-close" id="close-auth-modal">×</button>
+      <div class="card-content">
+        <div class="auth-form">
+          <div class="text-center mb-6">
+            <h1 class="mb-2">Welcome to SoftFingers Pro</h1>
+            <p class="text-muted">Sign in to save your progress and compete on the leaderboard</p>
+          </div>
+
+          <div class="form-tabs mb-6">
+            <div class="form-tab active" data-mode="login" id="tab-login">Sign In</div>
+            <div class="form-tab" data-mode="signup" id="tab-signup">Sign Up</div>
+          </div>
+
+          <div id="form-wrapper">
+            <!-- Login Form -->
+            <form id="login-form">
+              <div class="form-group">
+                <label class="form-label" for="login-email">Email Address</label>
+                <input 
+                  id="login-email" 
+                  type="email" 
+                  class="form-input"
+                  required 
+                  placeholder="Enter your email" 
+                  autocomplete="username"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="login-pass">Password</label>
+                <input 
+                  id="login-pass" 
+                  type="password" 
+                  class="form-input"
+                  required 
+                  placeholder="Enter your password" 
+                  autocomplete="current-password"
+                />
+              </div>
+              <div class="flex flex-between flex-center mb-4">
+                <span class="text-small text-muted link" id="forgot-btn" style="cursor: pointer;">Forgot password?</span>
+                <button class="btn" type="submit" id="login-submit">Sign In</button>
+              </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signup-form" style="display:none;">
+              <div class="form-group">
+                <label class="form-label" for="signup-email">Email Address</label>
+                <input 
+                  id="signup-email" 
+                  type="email" 
+                  class="form-input"
+                  required 
+                  placeholder="Enter your email" 
+                  autocomplete="username"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="signup-pass">Password</label>
+                <input 
+                  id="signup-pass" 
+                  type="password" 
+                  class="form-input"
+                  required 
+                  placeholder="Minimum 6 characters" 
+                  autocomplete="new-password"
+                />
+              </div>
+              <div class="form-group">
+                <button class="btn" type="submit" id="signup-submit" style="width: 100%;">Create Account</button>
+              </div>
+            </form>
+          </div>
+
+          <div id="auth-message" class="text-center mt-4"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Header -->
   <header class="header">
     <div class="container">
@@ -210,7 +294,6 @@
               </div>
             </div>
 
-           
             <div class="card hidden sidebar-section" id="section-competition">
               <div class="card-header">
                 <h3 class="card-title">Competition</h3>
@@ -316,31 +399,32 @@
           </div>
         </div>
       </div>
-      <!-- Achievements Full Page (Hidden by default) -->
-            <div id="achievements-full-page" class="hidden">
-              <div class="achievements-header">
-                <div>
-                  <h2 class="achievements-page-title">Your Achievements</h2>
-                  <p class="achievements-page-subtitle">Track your typing milestones and unlock badges</p>
-                </div>
-                <div id="achievements-stats" class="achievements-stats-summary">
-                  <div class="stat-pill">
-                    <span class="stat-pill-value" id="total-achievements">0</span>
-                    <span class="stat-pill-label">Unlocked</span>
-                  </div>
-                  <div class="stat-pill">
-                    <span class="stat-pill-value" id="achievement-percentage">0%</span>
-                    <span class="stat-pill-label">Complete</span>
-                  </div>
-                </div>
-              </div>
-              <div id="achievements-container" class="achievements-grid">
-                <p class="text-muted text-center">Complete tests to unlock achievements!</p>
-              </div>
+
+      <!-- Achievements Full Page -->
+      <div id="achievements-full-page" class="hidden">
+        <div class="achievements-header">
+          <div>
+            <h2 class="achievements-page-title">Your Achievements</h2>
+            <p class="achievements-page-subtitle">Track your typing milestones and unlock badges</p>
+          </div>
+          <div id="achievements-stats" class="achievements-stats-summary">
+            <div class="stat-pill">
+              <span class="stat-pill-value" id="total-achievements">0</span>
+              <span class="stat-pill-label">Unlocked</span>
             </div>
-            <!-- Competition Full Page (Hidden by default) -->
+            <div class="stat-pill">
+              <span class="stat-pill-value" id="achievement-percentage">0%</span>
+              <span class="stat-pill-label">Complete</span>
+            </div>
+          </div>
+        </div>
+        <div id="achievements-container" class="achievements-grid">
+          <p class="text-muted text-center">Complete tests to unlock achievements!</p>
+        </div>
+      </div>
+
+      <!-- Competition Full Page -->
       <div id="competition-full-page" class="hidden">
-        <!-- Competition Header -->
         <div class="competition-header">
           <div>
             <h2 class="competition-page-title">Typing Competitions</h2>
@@ -352,30 +436,25 @@
           </div>
         </div>
 
-        <!-- Competition Tabs -->
         <div class="competition-tabs">
           <div class="competition-tab active" data-tab="my-competitions">My Competitions</div>
           <div class="competition-tab" data-tab="active-competitions">Active Competitions</div>
           <div class="competition-tab" data-tab="completed-competitions">Completed</div>
         </div>
 
-        <!-- Tab Content -->
         <div id="competition-content">
-          <!-- My Competitions -->
           <div class="competition-tab-content active" id="my-competitions">
             <div id="my-competitions-list" class="competitions-grid">
               <p class="text-muted text-center">You haven't created or joined any competitions yet.</p>
             </div>
           </div>
 
-          <!-- Active Competitions -->
           <div class="competition-tab-content" id="active-competitions">
             <div id="active-competitions-list" class="competitions-grid">
               <p class="text-muted text-center">No active competitions.</p>
             </div>
           </div>
 
-          <!-- Completed Competitions -->
           <div class="competition-tab-content" id="completed-competitions">
             <div id="completed-competitions-list" class="competitions-grid">
               <p class="text-muted text-center">No completed competitions.</p>
@@ -384,7 +463,84 @@
         </div>
       </div>
 
-      <!-- Create Competition Modal -->
+      <!-- Lessons Full Page -->
+      <div id="lessons-full-page" class="hidden">
+        <div class="lessons-header">
+          <div>
+            <h2 class="lessons-page-title">Typing Lessons</h2>
+            <p class="lessons-page-subtitle">Master touch typing from basics to advanced</p>
+          </div>
+          <div class="lessons-progress-summary">
+            <div class="progress-pill">
+              <span class="progress-pill-value" id="total-lessons-completed">0</span>
+              <span class="progress-pill-label">Lessons Completed</span>
+            </div>
+            <div class="progress-pill">
+              <span class="progress-pill-value" id="overall-progress">0%</span>
+              <span class="progress-pill-label">Overall Progress</span>
+            </div>
+            <div class="progress-pill">
+              <span class="progress-pill-value" id="current-wpm-avg">0</span>
+              <span class="progress-pill-label">Avg WPM</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-categories">
+          <div class="lesson-category-card active" data-category="beginner">
+            <div class="category-icon">🌱</div>
+            <h3 class="category-title">Beginner</h3>
+            <p class="category-description">Start from scratch with home row keys</p>
+            <div class="category-progress">
+              <div class="category-progress-bar" id="beginner-progress"></div>
+            </div>
+          </div>
+          
+          <div class="lesson-category-card locked" data-category="intermediate">
+            <div class="category-icon">🌿</div>
+            <h3 class="category-title">Intermediate</h3>
+            <p class="category-description">Build speed and accuracy</p>
+            <div class="category-progress">
+              <div class="category-progress-bar" id="intermediate-progress"></div>
+            </div>
+            <div class="lock-badge">🔒</div>
+          </div>
+          
+          <div class="lesson-category-card locked" data-category="advanced">
+            <div class="category-icon">🌳</div>
+            <h3 class="category-title">Advanced</h3>
+            <p class="category-description">Master complex patterns and speed</p>
+            <div class="category-progress">
+              <div class="category-progress-bar" id="advanced-progress"></div>
+            </div>
+            <div class="lock-badge">🔒</div>
+          </div>
+          
+          <div class="lesson-category-card locked" data-category="games">
+            <div class="category-icon">🎮</div>
+            <h3 class="category-title">Games</h3>
+            <p class="category-description">Fun typing games and challenges</p>
+            <div class="category-progress">
+              <div class="category-progress-bar" id="games-progress"></div>
+            </div>
+            <div class="lock-badge">🔒</div>
+          </div>
+          
+          <div class="lesson-category-card locked" data-category="challenges">
+            <div class="category-icon">⚡</div>
+            <h3 class="category-title">Challenges</h3>
+            <p class="category-description">Speed and accuracy challenges</p>
+            <div class="category-progress">
+              <div class="category-progress-bar" id="challenges-progress"></div>
+            </div>
+            <div class="lock-badge">🔒</div>
+          </div>
+        </div>
+
+        <div id="lessons-list-container" class="lessons-list-container"></div>
+      </div>
+
+      <!-- Modals -->
       <div id="create-competition-modal" class="modal hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content">
@@ -475,7 +631,6 @@
         </div>
       </div>
 
-      <!-- Join Competition Modal -->
       <div id="join-competition-modal" class="modal hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content modal-small">
@@ -498,7 +653,6 @@
         </div>
       </div>
 
-      <!-- Competition Details Modal -->
       <div id="competition-details-modal" class="modal hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content modal-large">
@@ -507,95 +661,11 @@
             <button class="modal-close" id="close-details-modal">×</button>
           </div>
           <div class="modal-body">
-            <div id="competition-details-content">
-              <!-- Will be populated dynamically -->
-            </div>
+            <div id="competition-details-content"></div>
           </div>
         </div>
       </div>
-      <!-- Lessons Full Page (Hidden by default) -->
-      <div id="lessons-full-page" class="hidden">
-        <!-- Lessons Header -->
-        <div class="lessons-header">
-          <div>
-            <h2 class="lessons-page-title">Typing Lessons</h2>
-            <p class="lessons-page-subtitle">Master touch typing from basics to advanced</p>
-          </div>
-          <div class="lessons-progress-summary">
-            <div class="progress-pill">
-              <span class="progress-pill-value" id="total-lessons-completed">0</span>
-              <span class="progress-pill-label">Lessons Completed</span>
-            </div>
-            <div class="progress-pill">
-              <span class="progress-pill-value" id="overall-progress">0%</span>
-              <span class="progress-pill-label">Overall Progress</span>
-            </div>
-            <div class="progress-pill">
-              <span class="progress-pill-value" id="current-wpm-avg">0</span>
-              <span class="progress-pill-label">Avg WPM</span>
-            </div>
-          </div>
-        </div>
 
-        <!-- Lesson Categories -->
-        <div class="lesson-categories">
-          <div class="lesson-category-card active" data-category="beginner">
-            <div class="category-icon">🌱</div>
-            <h3 class="category-title">Beginner</h3>
-            <p class="category-description">Start from scratch with home row keys</p>
-            <div class="category-progress">
-              <div class="category-progress-bar" id="beginner-progress"></div>
-            </div>
-          </div>
-          
-          <div class="lesson-category-card locked" data-category="intermediate">
-            <div class="category-icon">🌿</div>
-            <h3 class="category-title">Intermediate</h3>
-            <p class="category-description">Build speed and accuracy</p>
-            <div class="category-progress">
-              <div class="category-progress-bar" id="intermediate-progress"></div>
-            </div>
-            <div class="lock-badge">🔒</div>
-          </div>
-          
-          <div class="lesson-category-card locked" data-category="advanced">
-            <div class="category-icon">🌳</div>
-            <h3 class="category-title">Advanced</h3>
-            <p class="category-description">Master complex patterns and speed</p>
-            <div class="category-progress">
-              <div class="category-progress-bar" id="advanced-progress"></div>
-            </div>
-            <div class="lock-badge">🔒</div>
-          </div>
-          
-          <div class="lesson-category-card locked" data-category="games">
-            <div class="category-icon">🎮</div>
-            <h3 class="category-title">Games</h3>
-            <p class="category-description">Fun typing games and challenges</p>
-            <div class="category-progress">
-              <div class="category-progress-bar" id="games-progress"></div>
-            </div>
-            <div class="lock-badge">🔒</div>
-          </div>
-          
-          <div class="lesson-category-card locked" data-category="challenges">
-            <div class="category-icon">⚡</div>
-            <h3 class="category-title">Challenges</h3>
-            <p class="category-description">Speed and accuracy challenges</p>
-            <div class="category-progress">
-              <div class="category-progress-bar" id="challenges-progress"></div>
-            </div>
-            <div class="lock-badge">🔒</div>
-          </div>
-        </div>
-
-        <!-- Lessons List Container -->
-        <div id="lessons-list-container" class="lessons-list-container">
-          <!-- Will be populated dynamically -->
-        </div>
-      </div>
-
-      <!-- Lesson Practice Modal -->
       <div id="lesson-practice-modal" class="modal modal-lesson hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content modal-lesson-content">
@@ -607,14 +677,12 @@
             <button class="modal-close" id="close-lesson-modal">×</button>
           </div>
          
-           <div class="modal-body">
-            <!-- Tutorial Instructions -->
+          <div class="modal-body">
             <div id="tutorial-instructions" class="tutorial-instructions hidden">
               <h4>📚 Tutorial</h4>
               <p id="tutorial-text"></p>
             </div>
 
-            <!-- Lesson Stats -->
             <div class="lesson-stats">
               <div class="lesson-stat-item">
                 <div class="lesson-stat-label">WPM</div>
@@ -638,12 +706,10 @@
               </div>
             </div>
 
-            <!-- Lesson Text Display -->
             <div class="lesson-text-container">
               <div id="lesson-text-display"></div>
             </div>
 
-            <!-- Lesson Input -->
             <textarea 
               id="lesson-input" 
               class="lesson-input"
@@ -652,111 +718,25 @@
               spellcheck="false"
             ></textarea>
 
-             <div class="modal-body">
-            <!-- Virtual Keyboard -->
-            <div id="virtual-keyboard" class="virtual-keyboard">
-              <!-- Will be generated dynamically -->
-            </div>
+            <div id="virtual-keyboard" class="virtual-keyboard"></div>
 
-
-            <!-- Lesson Actions -->
             <div class="lesson-actions">
               <button class="btn btn-secondary" id="restart-lesson-btn">Restart</button>
               <button class="btn" id="next-exercise-btn" disabled>Next Exercise</button>
               <button class="btn btn-secondary" id="exit-lesson-btn">Exit Lesson</button>
             </div>
           </div>
-
-     <!-- Authentication Modal Overlay -->
-      <div id="auth-modal-overlay" class="auth-modal-overlay">
-        <div class="card" id="auth-card">
-          <button class="modal-close" id="close-auth-modal" style="position: absolute; top: 16px; right: 16px; background: transparent; border: none; color: var(--text); font-size: 2rem; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s ease;">×</button>
-          <div class="card-content">
-            <div class="auth-form">
-              <div class="text-center mb-6">
-                <h1 class="mb-2">Welcome to SoftFingers Pro</h1>
-                <p class="text-muted">Sign in to save your progress and compete on the leaderboard</p>
-              </div>
-
-              <div class="form-tabs mb-6">
-                <div class="form-tab active" data-mode="login" id="tab-login">Sign In</div>
-                <div class="form-tab" data-mode="signup" id="tab-signup">Sign Up</div>
-              </div>
-
-              <div id="form-wrapper">
-                <!-- Login Form -->
-                <form id="login-form">
-                  <div class="form-group">
-                    <label class="form-label" for="login-email">Email Address</label>
-                    <input 
-                      id="login-email" 
-                      type="email" 
-                      class="form-input"
-                      required 
-                      placeholder="Enter your email" 
-                      autocomplete="username"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="login-pass">Password</label>
-                    <input 
-                      id="login-pass" 
-                      type="password" 
-                      class="form-input"
-                      required 
-                      placeholder="Enter your password" 
-                      autocomplete="current-password"
-                    />
-                  </div>
-                  <div class="flex flex-between flex-center mb-4">
-                    <span class="text-small text-muted link" id="forgot-btn" style="cursor: pointer;">Forgot password?</span>
-                    <button class="btn" type="submit" id="login-submit">Sign In</button>
-                  </div>
-                </form>
-
-                <!-- Signup Form -->
-                <form id="signup-form" style="display:none;">
-                  <div class="form-group">
-                    <label class="form-label" for="signup-email">Email Address</label>
-                    <input 
-                      id="signup-email" 
-                      type="email" 
-                      class="form-input"
-                      required 
-                      placeholder="Enter your email" 
-                      autocomplete="username"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="signup-pass">Password</label>
-                    <input 
-                      id="signup-pass" 
-                      type="password" 
-                      class="form-input"
-                      required 
-                      placeholder="Minimum 6 characters" 
-                      autocomplete="new-password"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <button class="btn" type="submit" id="signup-submit" style="width: 100%;">Create Account</button>
-                  </div>
-                </form>
-              </div>
-
-              <div id="auth-message" class="text-center mt-4"></div>
-            </div>
-          </div>
         </div>
       </div>
-  
     </div>
   </main>
+
   <script src="SoftFingers-Main.js"></script>
-  <script src="lessons.css"></script>
+  <script src="lessons.js"></script>
   <script src="beginner-lessons.js"></script>
   <script src="intermediate-lessons.js"></script>
   <script src="advanced-lessons.js"></script>
-  <link rel="stylesheet" href="certificate.css">
+  <script src="games-lessons.js"></script>
+  <script src="game-engine.js"></script>
 </body>
 </html>
