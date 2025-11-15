@@ -3,7 +3,7 @@
   min-height: 60vh;
   padding: 32px 40px;
   background-color: black;
-  border-radius: 50px;
+  border-radius: 10px;
 }
 
 .competition-header {
@@ -579,3 +579,4 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
