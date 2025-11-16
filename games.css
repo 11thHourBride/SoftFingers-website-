@@ -1,0 +1,401 @@
+/* ==== GAMES.CSS ==== */
+/* Styling for typing games */
+
+/* Game Arena Container */
+.game-arena {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Game Stats Bar */
+.game-stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, var(--accent-solid) 0%, var(--accent-dark) 100%);
+  border-radius: 8px;
+  color: white;
+}
+
+.game-stat {
+  text-align: center;
+}
+
+.game-stat-label {
+  display: block;
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.game-stat-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: var(--font-mono);
+}
+
+/* Game Word Display */
+.game-word-display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 8px;
+  padding: 2rem;
+  position: relative;
+}
+
+.game-current-word {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: var(--text);
+  transition: all 0.3s ease;
+  letter-spacing: 3px;
+  font-family: var(--font-mono);
+}
+
+/* Word Flash Animations */
+.game-current-word.correct-flash {
+  animation: correctFlash 0.5s ease;
+}
+
+.game-current-word.incorrect-flash {
+  animation: incorrectFlash 0.5s ease;
+}
+
+@keyframes correctFlash {
+  0%, 100% { 
+    transform: scale(1); 
+    color: var(--text); 
+  }
+  50% { 
+    transform: scale(1.15); 
+    color: var(--status-success); 
+  }
+}
+
+@keyframes incorrectFlash {
+  0%, 100% { 
+    transform: scale(1); 
+    color: var(--text); 
+  }
+  25%, 75% { 
+    transform: translateX(-10px); 
+    color: var(--status-error); 
+  }
+  50% { 
+    transform: translateX(10px); 
+    color: var(--status-error); 
+  }
+}
+
+/* Game Input */
+.game-input-container {
+  display: flex;
+  justify-content: center;
+}
+
+.game-input {
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem 1.5rem;
+  font-size: 1.5rem;
+  border: 3px solid var(--accent-solid);
+  border-radius: 8px;
+  text-align: center;
+  transition: all 0.3s ease;
+  font-family: var(--font-mono);
+  background: white;
+}
+
+.game-input:focus {
+  outline: none;
+  border-color: var(--accent-dark);
+  box-shadow: 0 0 0 4px rgba(159, 124, 255, 0.2);
+  transform: scale(1.02);
+}
+
+.game-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--card-secondary);
+}
+
+/* Game Messages */
+.game-message {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  display: none;
+  animation: slideInDown 0.3s ease;
+}
+
+.game-message.success {
+  background: var(--status-success-bg);
+  color: var(--status-success);
+}
+
+.game-message.error {
+  background: var(--status-error-bg);
+  color: var(--status-error);
+}
+
+.game-message.info {
+  background: var(--status-info-bg);
+  color: var(--status-info);
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Game Canvas */
+.game-canvas {
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  margin: 0 auto;
+  border: 2px solid var(--accent-solid);
+  border-radius: 8px;
+  background: #1a202c;
+  display: block;
+}
+
+/* Countdown Overlay */
+.game-countdown {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6rem;
+  font-weight: bold;
+  color: var(--accent-solid);
+  z-index: 1000;
+  animation: countdownPulse 1s ease-in-out;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes countdownPulse {
+  0% { 
+    transform: translate(-50%, -50%) scale(0.5); 
+    opacity: 0; 
+  }
+  50% { 
+    transform: translate(-50%, -50%) scale(1.2); 
+    opacity: 1; 
+  }
+  100% { 
+    transform: translate(-50%, -50%) scale(1); 
+    opacity: 1; 
+  }
+}
+
+/* Word Grid (Speed Challenge) */
+.game-word-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--card-secondary);
+  border-radius: 8px;
+  min-height: 250px;
+}
+
+.word-item {
+  background: white;
+  padding: 1.5rem 1rem;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  border: 2px solid var(--border);
+  transition: all 0.3s ease;
+  cursor: default;
+  font-family: var(--font-mono);
+}
+
+.word-item:hover {
+  border-color: var(--accent-solid);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(159, 124, 255, 0.2);
+}
+
+.word-item.word-completed {
+  background: var(--status-success-bg);
+  border-color: var(--status-success);
+  color: var(--status-success);
+  animation: wordComplete 0.5s ease;
+}
+
+@keyframes wordComplete {
+  0% { 
+    transform: scale(1); 
+  }
+  50% { 
+    transform: scale(1.1) rotate(3deg); 
+  }
+  100% { 
+    transform: scale(1) rotate(0deg); 
+  }
+}
+
+/* Coming Soon State */
+.game-coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 3rem;
+}
+
+.coming-soon-icon {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { 
+    transform: translateY(0); 
+  }
+  50% { 
+    transform: translateY(-20px); 
+  }
+}
+
+.game-coming-soon h3 {
+  font-size: 1.75rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.game-coming-soon p {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Racing Track (Typing Race) */
+.game-race-track {
+  position: relative;
+  height: 100px;
+  background: linear-gradient(to bottom, #48bb78 0%, #38a169 100%);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1rem 0;
+  border: 2px solid var(--border);
+}
+
+.race-car {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2.5rem;
+  transition: left 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.race-finish {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Sentence Display (Typing Race) */
+.game-sentence-display {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  font-size: 1.5rem;
+  text-align: center;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .game-arena {
+    padding: 1rem;
+  }
+  
+  .game-stats-bar {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+  
+  .game-stat-value {
+    font-size: 1.5rem;
+  }
+  
+  .game-current-word {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+  
+  .game-input {
+    font-size: 1.2rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .game-countdown {
+    font-size: 4rem;
+  }
+  
+  .word-item {
+    padding: 1rem 0.75rem;
+    font-size: 1rem;
+  }
+  
+  .game-canvas {
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-word-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  
+  .game-current-word {
+    font-size: 2rem;
+  }
+  
+  .game-countdown {
+    font-size: 3rem;
+  }
+}
