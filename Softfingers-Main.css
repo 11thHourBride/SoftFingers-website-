@@ -1,10 +1,10 @@
      :root {
-      --bg: #ffffff;
-      --card: #011e3f;
-      --card-secondary: #0c3869;
+      --bg: #c2e9ff;
+      --card: #aedcf7;
+      --card-secondary:#ffffff;
       --radius: 12px;
-      --text: #e6e8ff;
-      --text-secondary: #c7c9e6;
+      --text: #000000;
+      --text-secondary: #3b3f7a;
       --muted: #8c8fc9;
       --accent: linear-gradient(135deg, #9f7cff, #6b4eff);
       --accent-solid: #9f7cff;
@@ -35,7 +35,7 @@
 
    /* Header */
 .header {
-  background: var(--card);
+  background:white;
   border-bottom: 1px solid var(--border);
   padding: 16px 0;
   position: fixed;
@@ -97,7 +97,7 @@
   top: 73px; /* Below header */
   bottom: 0;
   width: 260px;
-  background: var(--card);
+  background: white;
   border-right: 1px solid var(--border);
   padding: 24px 0;
   overflow-y: auto;
@@ -158,6 +158,9 @@
   margin-left: 90px; /* Space for sidebar nav */
   margin-top: 73px; /* Space for fixed header */
   padding: 32px 0;
+  background: #c2e9ff;
+  background-image: url('../Images/background-pattern.png');
+  background-attachment: fixed;
   transition: margin-left 0.3s ease;
 }
     .grid {
@@ -187,6 +190,7 @@
       padding: 24px 24px 0;
       border-bottom: 1px solid var(--border);
       margin-bottom: 24px;
+      color: white;
     }
 
     .card-title {
@@ -203,6 +207,7 @@
 
     .card-content {
       padding: 24px;
+      
     }
 
     .card-no-header .card-content {
@@ -356,7 +361,7 @@
     
 
     #passage-display .correct {
-      color: #51cf66;
+      color: #0ca726;
     
     }
 
