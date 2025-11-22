@@ -9,15 +9,16 @@
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <link rel="stylesheet" href="Softfingers-Main.css">
+  <link rel="stylesheet" href="SoftFingers-Main.css">
   <link rel="stylesheet" href="achievements.css">
   <link rel="stylesheet" href="competition.css">
   <link rel="stylesheet" href="lessons.css">
   <link rel="stylesheet" href="Bible.css">
+  <link rel="stylesheet" href="hymns.css">
   <link rel="stylesheet" href="certificate.css">
 </head>
 <body>
-  <!-- Authentication Modal (Positioned at top level) -->
+  <!-- Authentication Modal -->
   <div id="auth-modal-overlay" class="auth-modal-overlay">
     <div class="card" id="auth-card">
       <button class="modal-close" id="close-auth-modal">×</button>
@@ -146,6 +147,7 @@
   <!-- Main Content -->
   <main class="main">
     <div class="container">
+      
       <!-- Dashboard Section -->
       <div id="section-dashboard">
         <div class="grid">
@@ -255,7 +257,7 @@
                   </div>
                 </div>
                 
-                <!-- Last Test Results (Hidden by default) -->
+                <!-- Last Test Results -->
                 <div id="last-test-results" class="hidden" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
                   <div class="loader" id="results-loader" style="margin: 20px auto;"></div>
                   <div id="results-content" class="hidden">
@@ -285,7 +287,7 @@
               </div>
             </div>
 
-            <!-- Feature Sections (Hidden by default) -->
+            <!-- Feature Sections -->
             <div class="card hidden sidebar-section" id="section-lessons">
               <div class="card-header">
                 <h3 class="card-title">Lessons</h3>
@@ -339,7 +341,7 @@
                 <h3 class="card-title">Bible Practice</h3>
               </div>
               <div class="card-content">
-                <p class="text-muted">Biblical passages for typing practice. Coming soon.</p>
+                <p class="text-muted">Type verses from the Holy Bible (KJV).</p>
               </div>
             </div>
 
@@ -348,13 +350,13 @@
                 <h3 class="card-title">Hymns Practice</h3>
               </div>
               <div class="card-content">
-                <p class="text-muted">Classic hymn lyrics for typing practice. Coming soon.</p>
+                <p class="text-muted">Classic hymn lyrics for typing practice.</p>
               </div>
             </div>
           </aside>
         </div>
 
-        <!-- Recent Runs -->
+        <!-- Recent Tests -->
         <div class="card mb-6">
           <div class="card-header">
             <h2 class="card-title">Recent Tests</h2>
@@ -540,48 +542,169 @@
 
         <div id="lessons-list-container" class="lessons-list-container"></div>
       </div>
+
       <!-- Bible Practice Full Page -->
-<div id="bible-full-page" class="hidden">
-  <div class="bible-header">
-    <div>
-      <h2 class="bible-page-title">📖 Holy Bible Practice</h2>
-      <p class="bible-page-subtitle">Type verses from the King James Version (KJV)</p>
-    </div>
-    <div class="bible-stats-summary">
-      <div class="stat-pill">
-        <span class="stat-pill-value" id="total-verses-typed">0</span>
-        <span class="stat-pill-label">Verses Typed</span>
-      </div>
-    </div>
-  </div>
+      <div id="bible-full-page" class="hidden">
+        <div class="bible-header">
+          <div>
+            <h2 class="bible-page-title">📖 Holy Bible Practice</h2>
+            <p class="bible-page-subtitle">Type verses from the King James Version (KJV)</p>
+          </div>
+          <div class="bible-stats-summary">
+            <div class="stat-pill">
+              <span class="stat-pill-value" id="total-verses-typed">0</span>
+              <span class="stat-pill-label">Verses Typed</span>
+            </div>
+          </div>
+        </div>
 
-  <div class="bible-testament-tabs">
-    <div class="bible-testament-tab active" data-testament="old">Old Testament</div>
-    <div class="bible-testament-tab" data-testament="new">New Testament</div>
-  </div>
+        <div class="bible-testament-tabs">
+          <div class="bible-testament-tab active" data-testament="old">Old Testament</div>
+          <div class="bible-testament-tab" data-testament="new">New Testament</div>
+        </div>
 
-  <div class="bible-books-grid" id="bible-books-grid">
-    <!-- Books will be populated by JavaScript -->
-  </div>
+        <div class="bible-books-grid" id="bible-books-grid">
+          <!-- Books will be populated by JavaScript -->
+        </div>
 
-  <div class="bible-practice-card" id="bible-practice-card" style="display: none;">
-    <button class="btn btn-secondary" id="back-to-books">← Back</button>
-    <div class="bible-verse-display" id="bible-verse-display">
-      <div class="verse-text" id="verse-text"></div>
-    </div>
-    <textarea id="bible-input" class="bible-input" placeholder="Start typing..." disabled></textarea>
-    <div class="bible-stats">
-      <div class="bible-stat-card">
-        <div class="stat-label">WPM</div>
-        <div class="stat-value" id="bible-wpm">0</div>
+        <div class="bible-practice-card" id="bible-practice-card" style="display: none;">
+          <button class="btn btn-secondary" id="back-to-books">← Back</button>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; margin: 16px 0;">
+            <div>
+              <label class="form-label">Set Time (seconds)</label>
+              <select id="bible-timer-select" class="form-input" style="width: 150px;">
+                <option value="30">30 seconds</option>
+                <option value="60" selected>60 seconds</option>
+                <option value="90">90 seconds</option>
+                <option value="120">2 minutes</option>
+                <option value="180">3 minutes</option>
+                <option value="300">5 minutes</option>
+                <option value="0">No timer</option>
+              </select>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 4px;">TIME LEFT</div>
+              <div id="bible-countdown" style="font-size: 2rem; font-weight: 700; color: var(--accent-solid);">60s</div>
+            </div>
+          </div>
+          
+          <div class="bible-verse-display" id="bible-verse-display">
+            <div class="verse-text" id="verse-text"></div>
+          </div>
+          
+          <textarea id="bible-input" class="bible-input" placeholder="Start typing..." disabled></textarea>
+          
+          <div class="bible-stats">
+            <div class="bible-stat-card">
+              <div class="stat-label">Time</div>
+              <div class="stat-value" id="bible-time">0s</div>
+            </div>
+            <div class="bible-stat-card">
+              <div class="stat-label">WPM</div>
+              <div class="stat-value" id="bible-wpm">0</div>
+            </div>
+            <div class="bible-stat-card">
+              <div class="stat-label">Accuracy</div>
+              <div class="stat-value" id="bible-accuracy">100%</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="bible-stat-card">
-        <div class="stat-label">Accuracy</div>
-        <div class="stat-value" id="bible-accuracy">100%</div>
+
+      <!-- Hymns Practice Full Page -->
+      <div id="hymns-full-page" class="hidden">
+        <div class="hymns-header">
+          <div>
+            <h2 class="hymns-page-title">🎵 Hymns Practice</h2>
+            <p class="hymns-page-subtitle">Type classic hymn lyrics with audio transcription</p>
+          </div>
+          <div class="hymns-stats-summary">
+            <div class="stat-pill">
+              <span class="stat-pill-value" id="total-hymns-practiced">0</span>
+              <span class="stat-pill-label">Hymns Completed</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-pill-value" id="total-hymn-verses">0</span>
+              <span class="stat-pill-label">Verses Typed</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hymns-mode-tabs">
+          <div class="hymns-mode-tab active" data-mode="typing">📝 Typing Mode</div>
+          <div class="hymns-mode-tab" data-mode="audio">🎧 Audio Transcription</div>
+        </div>
+
+        <div class="hymns-list-grid" id="hymns-list-grid">
+          <!-- Hymns will be populated here -->
+        </div>
+
+        <div class="hymns-practice-card" id="hymns-practice-card" style="display: none;">
+          <div class="hymns-practice-header">
+            <button class="btn btn-secondary btn-small" id="back-to-hymns">← Back</button>
+            <div class="hymn-title-info">
+              <h3 id="current-hymn-title"></h3>
+              <p id="current-hymn-author"></p>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+              <label class="form-label">Set Time (seconds)</label>
+              <select id="hymns-timer-select" class="form-input" style="width: 150px;">
+                <option value="60">60 seconds</option>
+                <option value="90" selected>90 seconds</option>
+                <option value="120">2 minutes</option>
+                <option value="180">3 minutes</option>
+                <option value="0">No timer</option>
+              </select>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 4px;">TIME LEFT</div>
+              <div id="hymns-countdown" style="font-size: 2rem; font-weight: 700; color: var(--accent-solid);">90s</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 4px;">VERSE</div>
+              <div id="hymns-verse-info" style="font-size: 1.25rem; font-weight: 600;">Verse 1 of 1</div>
+            </div>
+          </div>
+
+          <div class="hymns-audio-controls" id="hymns-audio-controls" style="display: none;">
+            <h4>🎧 Audio Transcription Mode</h4>
+            <p class="text-small text-muted" style="margin-bottom: 16px;">Listen to the verse, then type what you hear</p>
+            <div class="audio-buttons">
+              <button class="btn" id="play-hymn-audio">▶️ Play Audio</button>
+              <button class="btn btn-secondary" id="stop-hymn-audio">⏹️ Stop</button>
+            </div>
+          </div>
+
+          <div class="hymns-verse-display" id="hymns-verse-display">
+            <div class="hymns-verse-text" id="hymns-verse-text"></div>
+          </div>
+
+          <textarea id="hymns-input" class="hymns-input" placeholder="Start typing..." disabled></textarea>
+
+          <div class="hymns-stats">
+            <div class="hymns-stat-card">
+              <div class="stat-label">Time</div>
+              <div class="stat-value" id="hymns-time">0s</div>
+            </div>
+            <div class="hymns-stat-card">
+              <div class="stat-label">WPM</div>
+              <div class="stat-value" id="hymns-wpm">0</div>
+            </div>
+            <div class="hymns-stat-card">
+              <div class="stat-label">Accuracy</div>
+              <div class="stat-value" id="hymns-accuracy">100%</div>
+            </div>
+            <div class="hymns-stat-card">
+              <div class="stat-label">Progress</div>
+              <div class="stat-value" id="hymns-progress">0%</div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
       <!-- Modals -->
       <div id="create-competition-modal" class="modal hidden">
@@ -771,12 +894,14 @@
           </div>
         </div>
       </div>
+
     </div>
   </main>
 
   <script src="JS/stories.js"></script>
   <script src="JS/Softfingers-Main.js"></script>
   <script src="JS/bible-practice.js"></script>
+  <script src="JS/hymns-practice.js"></script>
   <script src="JS/advanced-lessons.js"></script>
   <script src="JS/beginner-lessons.js"></script>
   <script src="JS/game-engine.js"></script>
@@ -785,6 +910,6 @@
   <script src="JS/quotes.js"></script>
   <script src="JS/admin.js"></script>
   <script src="JS/random-words.js"></script>
-</body>
 
+</body>
 </html>
