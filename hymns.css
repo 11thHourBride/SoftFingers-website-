@@ -1,0 +1,219 @@
+/* Hymns Practice Styles */
+.hymns-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hymns-page-title {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #9f7cff, #6b4eff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hymns-page-subtitle {
+  color: var(--muted);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.hymns-stats-summary {
+  display: flex;
+  gap: 16px;
+}
+
+.hymns-mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  background: var(--card-secondary);
+  border-radius: 12px;
+  padding: 6px;
+}
+
+.hymns-mode-tab {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.hymns-mode-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.hymns-mode-tab.active {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 4px 12px rgba(159, 124, 255, 0.3);
+}
+
+.hymns-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.hymn-card {
+  background: var(--card-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.hymn-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-color: var(--accent-solid);
+}
+
+.hymn-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.hymn-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+}
+
+.hymn-category-badge {
+  background: rgba(159, 124, 255, 0.2);
+  color: var(--accent-solid);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.hymn-card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.hymn-progress-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.hymn-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.hymns-practice-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.hymns-practice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hymn-title-info h3 {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+}
+
+.hymn-title-info p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.hymns-audio-controls {
+  background: var(--card-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.hymns-audio-controls h4 {
+  margin: 0 0 16px;
+  color: var(--text);
+}
+
+.audio-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.hymns-verse-display {
+  background: linear-gradient(135deg, rgba(159, 124, 255, 0.1), rgba(107, 78, 255, 0.05));
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  min-height: 150px;
+}
+
+.hymns-verse-text {
+  font-size: 1.25rem;
+  line-height: 1.9;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-style: italic;
+}
+
+.hymns-input {
+  width: 100%;
+  min-height: 120px;
+  background: var(--card-secondary);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 1.125rem;
+  color: var(--text);
+  margin-bottom: 20px;
+  resize: vertical;
+}
+
+.hymns-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.hymns-stat-card {
+  background: var(--card-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
