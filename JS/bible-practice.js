@@ -180,9 +180,218 @@ const BIBLE_DATA = {
   "And take thou unto thee of all food that is eaten, and thou shalt gather it to thee; and it shall be for food for thee, and for them.",
   "Thus did Noah; according to all that God commanded him, so did he."
 ],
-
-
-
+        7:[
+  "And the Lord said unto Noah, Come thou and all thy house into the ark; for thee have I seen righteous before me in this generation.",
+  "Of every clean beast thou shalt take to thee by sevens, the male and his female: and of beasts that are not clean by two, the male and his female.",
+  "Of fowls also of the air by sevens, the male and the female; to keep seed alive upon the face of all the earth.",
+  "For yet seven days, and I will cause it to rain upon the earth forty days and forty nights; and every living substance that I have made will I destroy from off the face of the earth.",
+  "And Noah did according unto all that the Lord commanded him.",
+  "And Noah was six hundred years old when the flood of waters was upon the earth.",
+  "And Noah went in, and his sons, and his wife, and his sons' wives with him, into the ark, because of the waters of the flood.",
+  "Of clean beasts, and of beasts that are not clean, and of fowls, and of every thing that creepeth upon the earth,",
+  "There went in two and two unto Noah into the ark, the male and the female, as God had commanded Noah.",
+  "And it came to pass after seven days, that the waters of the flood were upon the earth.",
+  "In the six hundredth year of Noah's life, in the second month, the seventeenth day of the month, the same day were all the fountains of the great deep broken up, and the windows of heaven were opened.",
+  "And the rain was upon the earth forty days and forty nights.",
+  "In the selfsame day entered Noah, and Shem, and Ham, and Japheth, the sons of Noah, and Noah's wife, and the three wives of his sons with them, into the ark;",
+  "They, and every beast after his kind, and all the cattle after their kind, and every creeping thing that creepeth upon the earth after his kind, and every fowl after his kind, every bird of every sort.",
+  "And they went in unto Noah into the ark, two and two of all flesh, wherein is the breath of life.",
+  "And they that went in, went in male and female of all flesh, as God had commanded him: and the Lord shut him in.",
+  "And the flood was forty days upon the earth; and the waters increased, and bare up the ark, and it was lift up above the earth.",
+  "And the waters prevailed, and were increased greatly upon the earth; and the ark went upon the face of the waters.",
+  "And the waters prevailed exceedingly upon the earth; and all the high hills, that were under the whole heaven, were covered.",
+  "Fifteen cubits upward did the waters prevail; and the mountains were covered.",
+  "And all flesh died that moved upon the earth, both of fowl, and of cattle, and of beast, and of every creeping thing that creepeth upon the earth, and every man:",
+  "All in whose nostrils was the breath of life, of all that was in the dry land, died.",
+  "And every living substance was destroyed which was upon the face of the ground, both man, and cattle, and the creeping things, and the fowl of the heaven; and they were destroyed from the earth: and Noah only remained alive, and they that were with him in the ark.",
+  "And the waters prevailed upon the earth an hundred and fifty days."
+],
+    8: [
+  "And God remembered Noah, and every living thing, and all the cattle that was with him in the ark: and God made a wind to pass over the earth, and the waters assuaged;",
+  "The fountains also of the deep and the windows of heaven were stopped, and the rain from heaven was restrained;",
+  "And the waters returned from off the earth continually: and after the end of the hundred and fifty days the waters were abated.",
+  "And the ark rested in the seventh month, on the seventeenth day of the month, upon the mountains of Ararat.",
+  "And the waters decreased continually until the tenth month: in the tenth month, on the first day of the month, were the tops of the mountains seen.",
+  "And it came to pass at the end of forty days, that Noah opened the window of the ark which he had made:",
+  "And he sent forth a raven, which went forth to and fro, until the waters were dried up from off the earth.",
+  "Also he sent forth a dove from him, to see if the waters were abated from off the face of the ground;",
+  "But the dove found no rest for the sole of her foot, and she returned unto him into the ark, for the waters were on the face of the whole earth: then he put forth his hand, and took her, and pulled her in unto him into the ark.",
+  "And he stayed yet other seven days; and again he sent forth the dove out of the ark;",
+  "And the dove came in to him in the evening; and, lo, in her mouth was an olive leaf pluckt off: so Noah knew that the waters were abated from off the earth.",
+  "And he stayed yet other seven days; and sent forth the dove; which returned not again unto him any more.",
+  "And it came to pass in the six hundredth and first year, in the first month, the first day of the month, the waters were dried up from off the earth: and Noah removed the covering of the ark, and looked, and, behold, the face of the ground was dry.",
+  "And in the second month, on the seven and twentieth day of the month, was the earth dried.",
+  "And God spake unto Noah, saying,",
+  "Go forth of the ark, thou, and thy sons, and thy wife, and thy sons' wives with thee.",
+  "Bring forth with thee every living thing that is with thee, of all flesh, both of fowl, and of cattle, and of every creeping thing that creepeth upon the earth; that they may breed abundantly in the earth, and be fruitful, and multiply upon the earth.",
+  "And Noah went forth, and his sons, and his wife, and his sons' wives with him:",
+  "Every beast, every creeping thing, and every fowl, and whatsoever creepeth upon the earth, after their kinds, went forth out of the ark.",
+  "And Noah builded an altar unto the Lord; and took of every clean beast, and of every clean fowl, and offered burnt offerings on the altar.",
+  "And the Lord smelled a sweet savour; and the Lord said in his heart, I will not again curse the ground any more for man's sake; for the imagination of man's heart is evil from his youth; neither will I again smite any more every thing living, as I have done.",
+  "While the earth remaineth, seedtime and harvest, and cold and heat, and summer and winter, and day and night shall not cease."
+],
+   9: [
+  "And God blessed Noah and his sons, and said unto them, Be fruitful, and multiply, and replenish the earth.",
+  "And the fear of you and the dread of you shall be upon every beast of the earth, and upon every fowl of the air, upon all that moveth upon the earth, and upon all the fishes of the sea; into your hand are they delivered.",
+  "Every moving thing that liveth shall be meat for you; even as the green herb have I given you all things.",
+  "But flesh with the life thereof, which is the blood thereof, shall ye not eat.",
+  "And surely your blood of your lives will I require; at the hand of every beast will I require it, and at the hand of man; at the hand of every man's brother will I require the life of man.",
+  "Whoso sheddeth man's blood, by man shall his blood be shed: for in the image of God made he man.",
+  "And you, be ye fruitful, and multiply; bring forth abundantly in the earth, and multiply therein.",
+  "And God spake unto Noah, and to his sons with him, saying,",
+  "And I, behold, I establish my covenant with you, and with your seed after you;",
+  "And with every living creature that is with you, of the fowl, of the cattle, and of every beast of the earth with you; from all that go out of the ark, to every beast of the earth.",
+  "And I will establish my covenant with you; neither shall all flesh be cut off any more by the waters of a flood; neither shall there any more be a flood to destroy the earth.",
+  "And God said, This is the token of the covenant which I make between me and you and every living creature that is with you, for perpetual generations:",
+  "I do set my bow in the cloud, and it shall be for a token of a covenant between me and the earth.",
+  "And it shall come to pass, when I bring a cloud over the earth, that the bow shall be seen in the cloud:",
+  "And I will remember my covenant, which is between me and you and every living creature of all flesh; and the waters shall no more become a flood to destroy all flesh.",
+  "And the bow shall be in the cloud; and I will look upon it, that I may remember the everlasting covenant between God and every living creature of all flesh that is upon the earth.",
+  "And God said unto Noah, This is the token of the covenant, which I have established between me and all flesh that is upon the earth.",
+  "And the sons of Noah, that went forth of the ark, were Shem, and Ham, and Japheth: and Ham is the father of Canaan.",
+  "These are the three sons of Noah: and of them was the whole earth overspread.",
+  "And Noah began to be an husbandman, and he planted a vineyard:",
+  "And he drank of the wine, and was drunken; and he was uncovered within his tent.",
+  "And Ham, the father of Canaan, saw the nakedness of his father, and told his two brethren without.",
+  "And Shem and Japheth took a garment, and laid it upon both their shoulders, and went backward, and covered the nakedness of their father; and their faces were backward, and they saw not their father's nakedness.",
+  "And Noah awoke from his wine, and knew what his younger son had done unto him.",
+  "And he said, Cursed be Canaan; a servant of servants shall he be unto his brethren.",
+  "And he said, Blessed be the Lord God of Shem; and Canaan shall be his servant.",
+  "God shall enlarge Japheth, and he shall dwell in the tents of Shem; and Canaan shall be his servant.",
+  "And Noah lived after the flood three hundred and fifty years.",
+  "And all the days of Noah were nine hundred and fifty years: and he died."
+   ],
+    10: [
+      "Now these are the generations of the sons of Noah, Shem, Ham, and Japheth: and unto them were sons born after the flood.",
+      "The sons of Japheth; Gomer, and Magog, and Madai, and Javan, and Tubal, and Meshech, and Tiras.",
+      "And the sons of Gomer; Ashkenaz, and Riphath, and Togarmah.",
+      "And the sons of Javan; Elishah, and Tarshish, Kittim, and Dodanim.",
+      "By these were the isles of the Gentiles divided in their lands; every one after his tongue, after their families, in their nations.",
+      "And the sons of Ham; Cush, and Mizraim, and Phut, and Canaan.",
+      "And the sons of Cush; Seba, and Havilah, and Sabtah, and Raamah, and Sabtecha: and the sons of Raamah; Sheba, and Dedan.",
+      "And Cush begat Nimrod: he began to be a mighty man upon the earth.",
+      "And Mizraim begat Ludim, and Anamim, and Lehabim, and Naphtuhim,",
+      "And Pathrusim, and Casluhim, (out of whom came Philistim,) and Caphtorim.",
+      "And Canaan begat Sidon his firstborn, and Heth,",
+      "And the Jebusite, and the Amorite, and the Girgasite,",
+      "And the Hivite, and the Arkite, and the Sinite,",
+      "And the Arvadite, and the Zemarite, and the Hamathite: and afterward were the families of the Canaanites spread abroad.",
+      "And the border of the Canaanites was from Sidon, as thou comest to Gerar, unto Gaza; as thou goest, unto Sodom, and Gomorrah, and Admah, and Zeboim, even unto Lasha.",
+      "These are the sons of Ham, after their families, after their tongues, in their countries, and in their nations.",
+      "And the sons of Shem; Elam, and Asshur, and Arphaxad, and Lud, and Aram.",
+      "And the sons of Aram; Uz, and Hul, and Gether, and Mash.",
+      "And Arphaxad begat Salah; and Salah begat Eber.",
+      "And unto Eber were born two sons: the name of one was Peleg; for in his days was the earth divided; and his brother's name was Joktan.",
+      "And Joktan begat Almodad, and Sheleph, and Hazarmaveth, and Jerah,",
+      "And Hadoram, and Uzal, and Diklah,",
+      "And Obal, and Abimael, and Sheba,",
+      "And Ophir, and Havilah, and Jobab: all these were the sons of Joktan.",
+      "And their dwelling was from Mesha, as thou goest unto Sephar a mount of the east.",
+      "These are the sons of Shem, after their families, after their tongues, in their lands, after their nations.",
+      "These are the families of the sons of Noah, after their generations, in their nations: and by these were the nations divided in the earth after the flood."
+    ],
+      11: [
+      "And the whole earth was of one language, and of one speech.",
+      "And it came to pass, as they journeyed from the east, that they found a plain in the land of Shinar; and they dwelt there.",
+      "And they said one to another, Go to, let us make brick, and burn them thoroughly. And they had brick for stone, and slime had they for morter.",
+      "And they said, Go to, let us build us a city and a tower, whose top may reach unto heaven; and let us make us a name, lest we be scattered abroad upon the face of the whole earth.",
+      "And the Lord came down to see the city and the tower, which the children of men builded.",
+      "And the Lord said, Behold, the people is one, and they have all one language; and this they begin to do: and now nothing will be restrained from them, which they have imagined to do.",
+      "Go to, let us go down, and there confound their language, that they may not understand one another's speech.",
+      "So the Lord scattered them abroad from thence upon the face of all the earth: and they left off to build the city.",
+      "Therefore is the name of it called Babel; because the Lord did there confound the language of all the earth: and from thence did the Lord scatter them abroad upon the face of all the earth.",
+      "These are the generations of Shem: Shem was an hundred years old, and begat Arphaxad two years after the flood:",
+      "And Shem lived after he begat Arphaxad five hundred years, and begat sons and daughters.",
+      "And Arphaxad lived five and thirty years, and begat Salah:",
+      "And Arphaxad lived after he begat Salah four hundred and three years, and begat sons and daughters.",
+      "And Salah lived thirty years, and begat Eber:",
+      "And Salah lived after he begat Eber four hundred and three years, and begat sons and daughters.",
+      "And Eber lived four and thirty years, and begat Peleg:",
+      "And Eber lived after he begat Peleg four hundred and thirty years, and begat sons and daughters.",
+      "And Peleg lived thirty years, and begat Reu:",
+      "And Peleg lived after he begat Reu two hundred and nine years, and begat sons and daughters.",
+      "And Reu lived two and thirty years, and begat Serug:",
+      "And Reu lived after he begat Serug two hundred and seven years, and begat sons and daughters.",
+      "And Serug lived thirty years, and begat Nahor:",
+      "And Serug lived after he begat Nahor two hundred years, and begat sons and daughters.",
+      "And Nahor lived nine and twenty years, and begat Terah:",
+      "And Nahor lived after he begat Terah an hundred and nineteen years, and begat sons and daughters.",
+      "And Terah lived seventy years, and begat Abram, Nahor, and Haran.",
+      "Now these are the generations of Terah: Terah begat Abram, Nahor, and Haran; and Haran begat Lot.",
+      "And Haran died before his father Terah in the land of his nativity, in Ur of the Chaldees.",
+      "And Abram and Nahor took them wives: the name of Abram's wife was Sarai; and the name of Nahor's wife, Milcah, the daughter of Haran, the father of Milcah, and the father of Iscah.",
+      "But Sarai was barren; she had no child.",
+      "And Terah took Abram his son, and Lot the son of Haran his son's son, and Sarai his daughter in law, his son Abram's wife; and they went forth with them from Ur of the Chaldees, to go into the land of Canaan; and they came unto Haran, and dwelt there.",
+      "And the days of Terah were two hundred and five years: and Terah died in Haran."
+      ],
+      12: [
+      "Now the Lord had said unto Abram, Get thee out of thy country, and from thy kindred, and from thy father's house, unto a land that I will shew thee.",
+      "And I will make of thee a great nation, and I will bless thee, and make thy name great; and thou shalt be a blessing.",
+      "And I will bless them that bless thee, and curse him that curseth thee: and in thee shall all families of the earth be blessed.",
+      "So Abram departed, as the Lord had spoken unto him; and Lot went with him: and Abram was seventy and five years old when he departed out of Haran.",
+      "And Abram took Sarai his wife, and Lot his brother's son, and all their substance that they had gathered, and the souls that they had gotten in Haran; and they went forth to go into the land of Canaan; and into the land of Canaan they came.",
+      "And Abram passed through the land unto the place of Sichem, unto the plain of Moreh. And the Canaanite was then in the land.",
+      "And the Lord appeared unto Abram, and said, Unto thy seed will I give this land: and there builded he an altar unto the Lord, who appeared unto him.",
+      "And he removed from thence unto a mountain on the east of Bethel, and pitched his tent, having Bethel on the west, and Hai on the east: and there he built an altar unto the Lord, and called upon the name of the Lord.",
+      "And Abram journeyed, going on still toward the south.",
+      "And there was a ffamine in the land: and Abram went down into Egypt to sojourn there; for the famine was grievous in the land.",
+      "And it came to pass, when he was come near to enter into Egypt, that he said unto Sarai his wife, Behold now, I know that thou art a fair woman to look upon:",
+      "Therefore it shall come to pass, when the Egyptians shall see thee, that they shall say, This is his wife: and they will kill me, but they will save thee alive.",
+      "Say, I pray thee, thou art my sister: that it may be well with me for thy sake; and my soul shall live because of thee.",
+      "And it came to pass, that, when Abram was come into Egypt, the Egyptians beheld the woman that she was very fair.",
+      "The princes also of Pharaoh saw her, and commended her before Pharaoh: and the woman was taken into Pharaoh's house.",
+      "And he entreated Abram well for her sake: and he had sheep, and oxen, and he asses, and menservants, and maidservants, and she asses, and camels.",
+      "And the Lord plagued Pharaoh and his house with great plagues because of Sarai Abram's wife.",
+      "And Pharaoh called Abram, and said, What is this that thou hast done unto me? why didst thou not tell me that she was thy wife?",
+      "Why saidst thou, She is my sister? so I might have taken her to me to wife: now therefore behold thy wife, take her, and go thy way.",
+      "And Pharaoh commanded his men concerning him: and they sent him away, and his wife, and all that he had."
+      ],
+      13: [
+      "And Abram went up out of Egypt, he, and his wife, and all that he had, and Lot with him, into the south.",
+      "And Abram was very rich in cattle, in silver, and in gold.",
+      "And he went on his journeys from the south even to Bethel, unto the place where his tent had been at the beginning, between Bethel and Hai;",
+      "Unto the place of the altar, which he had made there at the first: and there Abram called on the name of the Lord.",
+      "And Lot also, which went with Abram, had flocks, and herds, and tents.",
+      "And the land was not able to bear them, that they might dwell together: for their substance was great, so that they could not dwell together.",
+      "And there was a strife between the herdmen of Abram's cattle and the herdmen of Lot's cattle: and the Canaanite and the Perizzite dwelled then in the land.",
+      "And Abram said unto Lot, Let there be no strife, I pray thee, between me and thee, and between my herdmen and thy herdmen; for we be brethren.",
+      "Is not the whole land before thee? separate thyself, I pray thee, from me: if thou wilt take the left hand, then I will go to the right; or if thou depart to the right hand, then I will go to the left.",
+      "And Lot lifted up his eyes, and beheld all the plain of Jordan, that it was well watered every where, before the Lord destroyed Sodom and Gomorrah, even as the garden of the Lord, like the land of Egypt, as thou comest unto Zoar.",
+      "Then Lot chose him all the plain of Jordan; and Lot journeyed east: and they separated themselves the one from the other.",
+      "Abram dwelled in the land of Canaan, and Lot dwelled in the cities of the plain, and pitched his tent toward Sodom.",
+      "But the men of Sodom were wicked and sinners before the Lord exceedingly.",
+      "And the Lord said unto Abram, after that Lot was separated from him, Lift up now thine eyes, and look from the place where thou art northward, and southward, and eastward, and westward:",
+      "For all the land which thou seest, to thee will I give it, and to thy seed for ever.",
+      "And I will make thy seed as the dust of the earth: so that if a man can number the dust of the earth, then shall thy seed also be numbered.",
+      "Arise, walk through the land in the length of it and in the breadth of it; for I will give it unto thee.",
+      "Then Abram moved his tent, and came and dwelt in the plain of Mamre, which is in Hebron, and built there an altar unto the Lord."
+      ],
+      14: [
+      "And it came to pass in the days of Amraphel king of Shinar, Arioch king of Ellasar, Chedorlaomer king of Elam, and Tidal king of nations;",
+      "That these made war with Bera king of Sodom, and with Birsha king of Gomorrah, Shinab king of Admah, and Shemeber king of Zeboiim, and the king of Bela, which is Zoar.",
+      "All these were joined together in the vale of Siddim, which is the salt sea.",
+      "Twelve years they served Chedorlaomer, and in the thirteenth year they rebelled.",
+      "And in the fourteenth year came Chedorlaomer, and the kings that were with him, and smote the Rephaims in Ashteroth Karnaim, and the Zuzims in Ham, and the Emims in Shaveh Kiriathaim,",
+      "And the Horites in their mount Seir, unto Elparan, which is by the wilderness.",
+      "And they returned, and came to Enmishpat, which is Kadesh, and smote all the country of the Amalekites, and also the Amorites, that dwelt in Hazezontamar.",
+      "Then went the king of Sodom and the king of Gomorrah, and the king of Admah, and the king of Zeboiim, and the king of Bela, which is Zoar, and they joined battle with them in the vale of Siddim;",
+      "With Chedorlaomer the king of Elam, and with Tidal king of nations, and Amraphel king of Shinar, and Arioch king of Ellasar; four kings against five.",
+      "And the vale of Siddim was full of slimepits; and the kings of Sodom and Gomorrah fled, and fell there; and they that remained fled to the mountain.",
+      "And they took all the goods of Sodom and Gomorrah, and all their victuals, and went their way.",
+      "And they took Lot, Abram's brother's son, who dwelt in Sodom, and his goods, and departed.",
+      "And there came one that had escaped, and told Abram the Hebrew; for he dwelt in the plain of Mamre the Amorite, brother of Eshcol, and brother of Aner: and these were confederate with Abram.",
+      "And when Abram heard that his brother was taken captive, he armed his trained servants, born in his own house, three hundred and eighteen, and pursued them unto Dan.",
+      "And he divided himself against them, he and his servants, by night, and smote them, and pursued them unto Hobah, which is on the left hand of Damascus.",
+      "And he brought back all the goods, and also brought again his brother Lot, and his goods, and the people.",
+      "And the king of Sodom went out to meet him after his return from the slaughter of Chedorlaomer, and of the kings that were with him, at the valley of Shaveh, which is the king's dale.",
+      "And Melchizedek king of Salem brought forth bread and wine: and he was the priest of the most high God.",
+      "And he blessed him, and said, Blessed be Abram of the most high God, possessor of heaven and earth:",
+      "And blessed be the most high God, which hath delivered thine enemies into thy hand. And he gave him tithes of all.",
+      "And the king of Sodom said unto Abram, Give me the persons, and take the goods to thyself.",
+      "And Abram said to the king of Sodom, I have lift up mine hand unto the Lord, the most high God, the possessor of heaven and earth,",
+      "That I will not take from a thread even to a shoelatchet, and that I will not take any thing that is thine, lest thou shouldest say, I have made Abram rich:",
+      "Save only that which the weapons of my enemies have taken away; unto me be the portion of the men which went with me: let them take their portion."
+      ]
       }
     },
     {
@@ -462,9 +671,13 @@ let currentVerseText = '';
 let bibleTyped = '';
 let bibleStartTime = null;
 let currentTestament = 'old';
+let bibleTimerDuration = 60;
+let bibleTimeLeft = 60;
+let bibleTimerInterval = null;
 
 // Initialize Bible page
 function loadBiblePage() {
+  updateBibleStats(); // Update stats on load
   loadBibleBooks(currentTestament);
   setupBibleEventListeners();
 }
@@ -478,6 +691,17 @@ function setupBibleEventListeners() {
       currentTestament = this.dataset.testament;
       loadBibleBooks(currentTestament);
     });
+    // Set up timer select
+  const timerSelect = document.getElementById('bible-timer-select');
+  if (timerSelect && !timerSelect.dataset.listenerAdded) {
+    timerSelect.dataset.listenerAdded = 'true';
+    timerSelect.addEventListener('change', (e) => {
+      bibleTimerDuration = parseInt(e.target.value);
+      bibleTimeLeft = bibleTimerDuration;
+      document.getElementById('bible-countdown').textContent = 
+        bibleTimerDuration === 0 ? '∞' : bibleTimerDuration + 's';
+    });
+  }
   });
   
   // Set up back button
@@ -495,6 +719,14 @@ function setupBibleEventListeners() {
     bibleInput.addEventListener('input', handleBibleInput);
     bibleInput.addEventListener('paste', e => e.preventDefault());
   }
+}
+
+// Update Bible stats from localStorage
+function updateBibleStats() {
+  const statsKey = 'bible_stats_global';
+  const stats = JSON.parse(localStorage.getItem(statsKey) || '{"totalVerses": 0}');
+  
+  document.getElementById('total-verses-typed').textContent = stats.totalVerses || 0;
 }
 
 // Load books for testament
@@ -639,8 +871,17 @@ function loadCurrentVerse() {
   input.disabled = false;
   input.focus();
   
-  document.getElementById('bible-wpm').textContent = '0';
-  document.getElementById('bible-accuracy').textContent = '100%';
+ // Reset stats
+document.getElementById('bible-time').textContent = '0s';
+document.getElementById('bible-wpm').textContent = '0';
+document.getElementById('bible-accuracy').textContent = '100%';
+
+// Reset timer
+stopBibleTimer();
+bibleTimeLeft = bibleTimerDuration;
+document.getElementById('bible-countdown').textContent = 
+  bibleTimerDuration === 0 ? '∞' : bibleTimerDuration + 's';
+document.getElementById('bible-countdown').style.color = 'var(--accent-solid)';
 }
 
 // Render verse with colored characters
@@ -672,7 +913,10 @@ function renderBibleVerse() {
 
 // Handle bible input
 function handleBibleInput(e) {
-  if (!bibleStartTime) bibleStartTime = Date.now();
+ if (!bibleStartTime) {
+  bibleStartTime = Date.now();
+  startBibleTimer(); // Start countdown when typing begins
+}
   
   bibleTyped = e.target.value;
   renderBibleVerse();
@@ -688,6 +932,8 @@ function handleBibleInput(e) {
   }
   const accuracy = bibleTyped.length > 0 ? Math.round((correct / bibleTyped.length) * 100) : 100;
   
+  // Update display
+  document.getElementById('bible-time').textContent = Math.floor(elapsed) + 's';
   document.getElementById('bible-wpm').textContent = wpm;
   document.getElementById('bible-accuracy').textContent = accuracy + '%';
   
@@ -700,6 +946,15 @@ function handleBibleInput(e) {
 // Complete verse
 function completeBibleVerse(wpm, accuracy) {
   document.getElementById('bible-input').disabled = true;
+  
+  // Save verse completion to localStorage
+  const statsKey = 'bible_stats_global';
+  const stats = JSON.parse(localStorage.getItem(statsKey) || '{"totalVerses": 0}');
+  stats.totalVerses = (stats.totalVerses || 0) + 1;
+  localStorage.setItem(statsKey, JSON.stringify(stats));
+  
+  // Update display
+  updateBibleStats();
   
   // Show completion message
   const toast = document.createElement('div');
@@ -740,6 +995,58 @@ function escapeHtml(text) {
     "'": '&#039;'
   };
   return text.replace(/[&<>"']/g, m => map[m]);
+}
+// Start countdown timer
+function startBibleTimer() {
+  // Clear any existing timer
+  if (bibleTimerInterval) {
+    clearInterval(bibleTimerInterval);
+  }
+  
+  // If timer is disabled (0), don't start
+  if (bibleTimerDuration === 0) {
+    document.getElementById('bible-countdown').textContent = '∞';
+    return;
+  }
+  
+  bibleTimeLeft = bibleTimerDuration;
+  document.getElementById('bible-countdown').textContent = bibleTimeLeft + 's';
+  
+  bibleTimerInterval = setInterval(() => {
+    bibleTimeLeft--;
+    
+    if (bibleTimeLeft <= 0) {
+      clearInterval(bibleTimerInterval);
+      bibleTimerInterval = null;
+      document.getElementById('bible-countdown').textContent = '0s';
+      document.getElementById('bible-countdown').style.color = '#ff6b6b';
+      
+      // Disable input
+      document.getElementById('bible-input').disabled = true;
+      
+      // Show time's up message
+      alert('Time is up! Complete the verse or move to the next one.');
+    } else {
+      document.getElementById('bible-countdown').textContent = bibleTimeLeft + 's';
+      
+      // Change color when time is running out
+      if (bibleTimeLeft <= 10) {
+        document.getElementById('bible-countdown').style.color = '#ff6b6b';
+      } else if (bibleTimeLeft <= 30) {
+        document.getElementById('bible-countdown').style.color = '#ffc107';
+      } else {
+        document.getElementById('bible-countdown').style.color = 'var(--accent-solid)';
+      }
+    }
+  }, 1000);
+}
+
+// Stop timer
+function stopBibleTimer() {
+  if (bibleTimerInterval) {
+    clearInterval(bibleTimerInterval);
+    bibleTimerInterval = null;
+  }
 }
 
 // Export for use in main file
