@@ -2570,6 +2570,7 @@ function showLessonResult(passed, wpm, accuracy, lesson) {
   const competitionFullPage = document.getElementById('competition-full-page');
   const lessonsFullPage = document.getElementById('lessons-full-page');
   const bibleFullPage = document.getElementById('bible-full-page');
+  const hymnsFullPage = document.getElementById('hymns-full-page');
   
   // Get references to all dashboard elements we need to hide
   const typingCard = document.querySelector('.typing-card');
@@ -2696,10 +2697,28 @@ function showLessonResult(passed, wpm, accuracy, lesson) {
     achievementsFullPage.classList.add('hidden');
     competitionFullPage.classList.add('hidden');
     if (lessonsFullPage) lessonsFullPage.classList.add('hidden');
+    if (hymnsFullPage) hymnsFullPage.classList.add('hidden');  // ADD THIS LINE
     
     loadBiblePage();
   }
-} else if (feature === 'dashboard') {
+}
+else if (feature === 'hymns') {
+  if (typingCard) typingCard.style.display = 'none';
+  if (sidebar) sidebar.style.display = 'none';
+  if (recentTestsCard) recentTestsCard.style.display = 'none';
+  if (leaderboardCard) leaderboardCard.style.display = 'none';
+  
+  if (hymnsFullPage) {
+    hymnsFullPage.classList.remove('hidden');
+    achievementsFullPage.classList.add('hidden');
+    competitionFullPage.classList.add('hidden');
+    if (lessonsFullPage) lessonsFullPage.classList.add('hidden');
+    if (bibleFullPage) bibleFullPage.classList.add('hidden');  // ADD THIS LINE
+    
+    loadHymnsPage();
+  }
+}
+ else if (feature === 'dashboard') {
         // Show dashboard section
         if (dashboardSection) dashboardSection.style.display = 'block';
         
@@ -2709,11 +2728,13 @@ function showLessonResult(passed, wpm, accuracy, lesson) {
         if (recentTestsCard && currentUser) recentTestsCard.style.display = 'block';
         if (leaderboardCard && currentUser) leaderboardCard.style.display = 'block';
         
+        
         // Hide achievements, competition, and lessons full pages
         achievementsFullPage.classList.add('hidden');
         competitionFullPage.classList.add('hidden');
        if (lessonsFullPage) lessonsFullPage.classList.add('hidden');
-if (bibleFullPage) bibleFullPage.classList.add('hidden');
+       if (bibleFullPage) bibleFullPage.classList.add('hidden');
+       if (hymnsFullPage) hymnsFullPage.classList.add('hidden');
         
         // Hide sidebar sections
         sections.forEach(section => {
@@ -3881,8 +3902,8 @@ function focusTypingInput() {
           lastActivity: timestamp
         }, { merge: true });
         
-        // 2. Only add to global leaderboard if score is top 100 worthy (70+ WPM)
-        if (stats.wpm >= 70) {
+        // 2. Only add to global leaderboard if score is top 100 worthy (80+ WPM)
+        if (stats.wpm >= 80) {
           await db.collection('leaderboard').add({
             uid: user.uid,
             wpm: stats.wpm,
@@ -4135,7 +4156,7 @@ function focusTypingInput() {
 
     const lbSnap = await db.collection('leaderboard')
       .orderBy('wpm','desc')
-      .limit(100)
+      .limit(10)
       .get();
     leaderboardBody.innerHTML = '';
     let rank = 1;
